@@ -4,7 +4,9 @@ import fs from 'fs';
 import { exec } from 'child_process';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
-import { Client } from 'pg';
+import { OpenProjectRepository } from './repository/openProjectRepository.js';
+import { ConectionBBDD } from './conexiones/conectionBBDD.js';
+import { ConectionAPI } from './conexiones/conectionAPI.js';
 
 
 // Inicialització d'Express
@@ -30,39 +32,13 @@ app.get('/', (_, res) => {
 
 app.post('/enviar-matricula', async (_, res) => {
     try {
-        /*fetch('http://localhost:8080/api/v3/projects', {
-            headers: {
-            'Authorization': 'Basic ' + btoa('apikey:9b8992b395a58440d18778eb4a2d19d17d91dfef4ea0f0a7c6984806c1573554')
-            }
-            })
-            .then(response => response.json())
-            .then(data => {
-            // procesar los datos de proyectos
-            console.log(data);
-        });*/
 
-        // Configura la connexió a la base de dades de OpenProject (ajusta els valors segons el teu docker-compose)
+        const repository = new OpenProjectRepository(new ConectionBBDD());
 
-        // Consulta la taula projects
-        // Obtenim els primers 5 projectes
-        // La taula es diu "projects"
-        const client = new Client({
-            host: 'localhost', // o el nom del servei docker, ex: 'db'
-            port: 5555,
-            user: 'postgres', // usuari per defecte OpenProject
-            password: 'postgres', // contrasenya per defecte OpenProject
-            database: 'openproject' // nom de la base de dades
-        });
+        repository.getProjects();
 
-        await client.connect();
-
-        // Exemple de consulta: obtenir els primers 5 usuaris
-        const result = await client.query('SELECT * FROM users LIMIT 5;');
-        console.log(result.rows);
-
-        await client.end();
-
-        res.json(result.rows);
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
 
     } catch (error) {
         console.error("Error entrant:", error);
