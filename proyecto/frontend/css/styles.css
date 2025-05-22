@@ -1,0 +1,121 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Base colors */
+  :root {
+    --background-dark: #1a1a1a;
+    --gray-dark: #2c2c2c;
+    --gray-medium: #444;
+    --gray-light: #ccc;
+    --accent-purple: #7f5af0;
+    --text-light: #f0f0f0;
+    --text-muted: #aaa;
+  }
+  
+  /* Body */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    display: flex;
+    height: 100vh;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    background-color: var(--gray-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 0;
+  }
+  
+  /* Logo */
+  .logo {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--accent-purple);
+    margin-bottom: 2rem;
+  }
+  
+  /* Nav Menu */
+  .nav-menu ul {
+    list-style: none;
+    padding: 0 20px;
+  }
+  
+  .nav-menu ul li {
+    margin-bottom: 1.2rem;
+  }
+  
+  .nav-menu ul li a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 8px;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .nav-menu ul li a:hover,
+  .nav-menu ul li a.active {
+    background-color: var(--accent-purple);
+    color: white;
+  }
+  
+  /* Logout */
+  .logout {
+    padding: 0 20px;
+    margin-top: auto;
+  }
+  
+  .logout a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: block;
+    padding: 10px;
+  }
+  
+  .logout .user {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray-light);
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    background-color: var(--gray-medium);
+    padding: 20px;
+  }
+  
+  .topbar {
+    background-color: var(--gray-dark);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--gray-light);
+    margin-bottom: 20px;
+    border-radius: 0 0 8px 8px;
+  }
+  
+  .breadcrumb {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+  
+  .logo-right img {
+    height: 40px;
+    object-fit: contain;
+  }
+  
+  
