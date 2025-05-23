@@ -1,7 +1,7 @@
 
 document.addEventListener('DOMContentLoaded',async() =>{
     try {
-        const tocken = localStorage.getItem('token');
+        const tocken = localStorage.getItem('tocken');
         if (tocken) {
             console.log(tocken);
             const response = await fetch('/tocken', {
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded',async() =>{
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ "tocken":token })
+                body: JSON.stringify({ tocken:tocken })
             });
 
             if (!response.status) {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded',async() =>{
             const data = await response.json();
             console.log("Data received:", data);
         } else {
-            console.warn("No token found in local storage.");
+            console.warn("No tocken found in local storage.");
         }
     } catch (error) {
         console.error("Error fetching data:", error);
