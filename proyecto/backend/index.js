@@ -26,11 +26,172 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Route to serve the HTML page
 app.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/html', 'index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/html', 'eleccion.html'));
 });
 
 
-app.post('/enviar-matricula', async (_, res) => {
+
+app.post('/dashboard', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/dashboard/recarga', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuarios', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuarios/filtrar/proyecto', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuarios/filtrar/id', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuarios/filtrar/nombre', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuario/mod', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuario/crear', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuario/borrar', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuario/tareas', async (req, res) => {
+    try {
+
+        const repository = new OpenProjectRepository(new ConectionBBDD());
+
+        repository.getProjects();
+
+        repository.cambiar(new ConectionAPI());
+        repository.getProjects();
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tocken', async (req, res) => {
     try {
 
         const repository = new OpenProjectRepository(new ConectionBBDD());
