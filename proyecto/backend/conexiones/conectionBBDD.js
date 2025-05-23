@@ -17,13 +17,11 @@ export class ConectionBBDD extends Conection {
     }
 
     async getProjects() {
-        console.log('Conexión a BBDD');
         try {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
             const result = await this.client.query('SELECT * FROM users LIMIT 5;');
-            console.log(result.rows);
 
             await this.client.end();
 

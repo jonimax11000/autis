@@ -17,6 +17,11 @@ const PORT = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+//Variables globales
+const repository = new OpenProjectRepository(new ConectionBBDD());
+let tocken = '';
+
 // Càrrega de middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -25,21 +30,23 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Route to serve the HTML page
-app.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/html', 'eleccion.html'));
+/*app.get('/', (_, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/html', 'jonathan.html'));
 });
+*/
+app.get('/', (_, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/html', 'tockan.html'));
+});
+
+
+
 
 
 
 app.post('/dashboard', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -50,12 +57,7 @@ app.post('/dashboard', async (req, res) => {
 app.post('/dashboard/recarga', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -66,12 +68,7 @@ app.post('/dashboard/recarga', async (req, res) => {
 app.post('/usuarios', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -82,12 +79,7 @@ app.post('/usuarios', async (req, res) => {
 app.post('/usuarios/filtrar/proyecto', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -98,12 +90,7 @@ app.post('/usuarios/filtrar/proyecto', async (req, res) => {
 app.post('/usuarios/filtrar/id', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -114,12 +101,7 @@ app.post('/usuarios/filtrar/id', async (req, res) => {
 app.post('/usuarios/filtrar/nombre', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -130,12 +112,7 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
 app.post('/usuario/mod', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -146,12 +123,7 @@ app.post('/usuario/mod', async (req, res) => {
 app.post('/usuario/crear', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -162,12 +134,7 @@ app.post('/usuario/crear', async (req, res) => {
 app.post('/usuario/borrar', async (req, res) => {
     try {
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -177,13 +144,7 @@ app.post('/usuario/borrar', async (req, res) => {
 
 app.post('/usuario/tareas', async (req, res) => {
     try {
-
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
-        repository.getProjects();
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -193,17 +154,14 @@ app.post('/usuario/tareas', async (req, res) => {
 
 app.post('/tocken', async (req, res) => {
     try {
+        tocken = req.body.tocken;
+        repository.cambiar(new ConectionAPI(tocken));
 
-        const repository = new OpenProjectRepository(new ConectionBBDD());
-
-        repository.getProjects();
-
-        repository.cambiar(new ConectionAPI());
         repository.getProjects();
 
     } catch (error) {
-        console.error("Error entrant:", error);
-        res.status(500).send('Error entrant');
+        console.error("Error en el Tocken:", error);
+        res.status(500).send('Error en el Tocken');
     }
 });
 
