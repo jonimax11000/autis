@@ -6,11 +6,20 @@
   <title>Menú Lateral</title>
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
+
+<script>
+  addEventListener('DOMContentLoaded',()=>{
+    const toggleTheme = document.getElementById('theme-toggle');
+    toggleTheme.addEventListener('click', () => {
+      window.alert("tocado");
+      document.body.classList.toggle('light');
+    });
+  })
+  
+</script>
+
 <body>
   <input type="checkbox" id="menu-toggle" hidden>
-
-  <!-- Botón toggle del menú -->
-  <label for="menu-toggle" class="menu-toggle-label">☰</label>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -24,6 +33,18 @@
         <li><a href="#">Estadísticas</a></li>
       </ul>
     </nav>
+    <!-- Botón toggle del menú -->
+      <label for="menu-toggle" class="menu-toggle-label">☰</label>
+
+    <!-- Botón deslizante modo oscuro -->
+    <div class="dark-mode-toggle" style="padding: 0 20px 10px;">
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">Usa a modo claro</span>
+    </div>
+
     <div class="logout">
       <a href="#">Cerrar Sesión<br><span class="user">autis</span></a>
     </div>
