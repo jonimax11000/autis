@@ -5,7 +5,7 @@
   box-sizing: border-box;
 }
 
-/* Base colors - Modo oscuro (default) */
+/* Base colors - Modo oscuro predefinido */
 :root {
   --background-dark: #1a1a1a;
   --gray-dark: #2c2c2c;
@@ -139,7 +139,7 @@ body {
   top: 15px;
   left: 15px;
   background-color: var(--accent-purple);
-  color: white;
+  color: rgb(255, 255, 255);
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
@@ -200,6 +200,11 @@ body {
   border-radius: 34px;
 }
 
+body.light .modo {
+  color: var(--text-light-light);
+}
+
+
 .slider:before {
   position: absolute;
   content: "";
@@ -220,6 +225,7 @@ body {
 .switch input:checked + .slider:before {
   transform: translateX(20px);
 }
+
 
 /* Clase para modo claro - se activa con JS cambiando clase body */
 
