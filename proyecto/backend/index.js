@@ -1,7 +1,5 @@
 import express from 'express';
 import path from 'path';
-import fs from 'fs';
-import { exec } from 'child_process';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { OpenProjectRepository } from './repository/openProjectRepository.js';

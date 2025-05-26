@@ -25,7 +25,7 @@ export class ConectionBBDD extends Conection {
 
             await this.client.end();
 
-            res.json(result.rows);
+            return result.rows;
         } catch (error) {
             
         }
@@ -37,11 +37,11 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query('SELECT id, firstname,lastname FROM users where id>4;');
+            const result = await this.client.query('SELECT id, firstname,lastname FROM users where id>3 order by id;');
 
             await this.client.end();
 
-            return JSON.stringify(result.rows);
+            return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }
@@ -56,7 +56,7 @@ export class ConectionBBDD extends Conection {
 
             await this.client.end();
 
-            return JSON.stringify(result.rows);
+            return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }
@@ -71,7 +71,7 @@ export class ConectionBBDD extends Conection {
 
             await this.client.end();
 
-            return JSON.stringify(result.rows);
+            return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }
@@ -86,7 +86,7 @@ export class ConectionBBDD extends Conection {
 
             await this.client.end();
 
-            return JSON.stringify(result.rows);
+            return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }

@@ -268,3 +268,10 @@ body.light .topbar {
 body.light .txtcentral {
   color: var(--text-light-light);
 }
+#content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 60px); /* Ajusta según la altura de tu topbar */
+}
