@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Route to serve the HTML page
 app.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/html', 'jonathan.html'));
+  res.sendFile(path.join(__dirname, '../frontend/html', 'index.html'));
 });
 
 /*

@@ -4,8 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Menú Lateral</title>
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
 </head>
+
+<script src="/js/index.js"></script>
 
 <script>
   addEventListener('DOMContentLoaded',()=>{
@@ -28,7 +30,7 @@
         <li><a href="#" class="active">Dashboard</a></li>
         <li><a href="#">Proyectos</a></li>
         <li><a href="#">Departamentos</a></li>
-        <li><a href="#">Empleados</a></li>
+        <li><a id="menu-empleados" href="#">Empleados</a></li>
         <li><a href="#">Estadísticas</a></li>
       </ul>
     </nav>
@@ -56,6 +58,8 @@
       <div class="logo-right">
         <img src="../img/autis_ingenieros_logo.jpeg" alt="Logo AUTIS" />
       </div>
+    </div>
+    <div id="content">
     </div>
   </div>
 </body>
