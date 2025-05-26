@@ -11,12 +11,12 @@ form.addEventListener('submit', async (e) => {
 
    
     try {
-        const response = await fetch('/usuarios', {
+        const response = await fetch('/usuarios/filtrar/id', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ tocken: "9b8992b395a58440d18778eb4a2d19d17d91dfef4ea0f0a7c6984806c1573554" })
+            body: JSON.stringify({ id: "6" })
         });
 
         console.log("Response:", response);

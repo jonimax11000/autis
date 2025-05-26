@@ -88,7 +88,17 @@ app.post('/usuarios', async (req, res) => {
 
 app.post('/usuarios/filtrar/proyecto', async (req, res) => {
     try {
-
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        repository.getUsuariosByProyecto(body.proyecto)
+            .then((json) => {
+                console.log(json);
+                res.json(json);
+            })
+            .catch((error) => {
+                console.error("Error al obtener usuarios por proyecto:", error);
+                res.status(500).send('Error al obtener usuarios por proyecto');
+            });
         
 
     } catch (error) {
@@ -99,8 +109,17 @@ app.post('/usuarios/filtrar/proyecto', async (req, res) => {
 
 app.post('/usuarios/filtrar/id', async (req, res) => {
     try {
-
-        
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        repository.getUsuariosByID(body.id)
+            .then((json) => {
+                console.log(json);
+                res.json(json);
+            })
+            .catch((error) => {
+                console.error("Error al obtener usuario por ID:", error);
+                res.status(500).send('Error al obtener usuario por ID');
+            });
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -110,8 +129,17 @@ app.post('/usuarios/filtrar/id', async (req, res) => {
 
 app.post('/usuarios/filtrar/nombre', async (req, res) => {
     try {
-
-        
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        repository.getUsuariosByName(body.nombre)
+            .then((json) => {
+                console.log(json);
+                res.json(json);
+            })
+            .catch((error) => {
+                console.error("Error al obtener usuario por nombre:", error);
+                res.status(500).send('Error al obtener usuario por nombre');
+            });
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -121,7 +149,7 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
 
 app.post('/usuario/mod', async (req, res) => {
     try {
-
+        
         
 
     } catch (error) {

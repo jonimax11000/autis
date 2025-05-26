@@ -37,7 +37,52 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query('SELECT id, firstname FROM users;');
+            const result = await this.client.query('SELECT id, firstname,lastname FROM users where id>4;');
+
+            await this.client.end();
+
+            return JSON.stringify(result.rows);
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getUsuariosByID(id) {
+        try {
+            await this.client.connect();
+
+            // Exemple de consulta: obtenir els primers 5 usuaris
+            const result = await this.client.query(`SELECT id, firstname, lastname FROM users where id=${id};`);
+
+            await this.client.end();
+
+            return JSON.stringify(result.rows);
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getUsuariosByName(nombre) {
+        try {
+            await this.client.connect();
+
+            // Exemple de consulta: obtenir els primers 5 usuaris
+            const result = await this.client.query(`SELECT id, firstname, lastname FROM users  WHERE (firstname || ' ' || lastname) ILIKE '${nombre}%';`);
+
+            await this.client.end();
+
+            return JSON.stringify(result.rows);
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getUsuariosByName(projecto) {
+        try {
+            await this.client.connect();
+
+            // Exemple de consulta: obtenir els primers 5 usuaris
+            const result = await this.client.query(`select id,firstname,lastname from users where id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '${projecto}%'));`);
 
             await this.client.end();
 
