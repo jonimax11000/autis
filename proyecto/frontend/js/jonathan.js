@@ -11,7 +11,7 @@ form.addEventListener('submit', async (e) => {
 
    
     try {
-        const response = await fetch('/tocken', {
+        const response = await fetch('/usuarios', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

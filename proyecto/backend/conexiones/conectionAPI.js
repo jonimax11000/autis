@@ -10,15 +10,12 @@ export class ConectionAPI extends Conection {
 
     async getProjects() {
         try {
-            fetch('http://localhost:8080/api/v3/projects', {
-            headers: {
-            'Authorization': 'Basic ' + btoa('apikey:'+this.tocken),
-            }
-            })
-            .then(response => response.json())
-            .then(data => {
-            // procesar los datos de proyectos
-        });
+            const response = await fetch('http://localhost:8080/api/v3/projects', {
+                headers: {
+                    'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
+                }
+            });
+            return response;
         } catch (error) {
             console.error('Error fetching projects:', error);
             throw error;

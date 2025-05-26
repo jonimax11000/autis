@@ -30,13 +30,14 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Route to serve the HTML page
-/*app.get('/', (_, res) => {
+app.get('/', (_, res) => {
   res.sendFile(path.join(__dirname, '../frontend/html', 'jonathan.html'));
 });
-*/
+
+/*
 app.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/html', 'tockan.html'));
-});
+  res.sendFile(path.join(__dirname, '../frontend/html', 'tocken.html'));
+});*/
 
 
 
@@ -45,7 +46,12 @@ app.get('/', (_, res) => {
 
 app.post('/dashboard', async (req, res) => {
     try {
-
+        const json = {
+            "tocken": tocken,
+            "proyecto": req.body.proyecto,
+            "usuario": req.body.usuario,
+            "tareas": req.body.tareas,
+        };
         
 
     } catch (error) {
@@ -67,8 +73,12 @@ app.post('/dashboard/recarga', async (req, res) => {
 
 app.post('/usuarios', async (req, res) => {
     try {
-
+        repository.cambiar(new ConectionBBDD());
         
+        const json = await repository.getUsuarios();
+
+        console.log(json);
+        res.json(json);
 
     } catch (error) {
         console.error("Error entrant:", error);

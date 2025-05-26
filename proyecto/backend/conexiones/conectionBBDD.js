@@ -31,4 +31,19 @@ export class ConectionBBDD extends Conection {
         }
     }
     
+
+    async getUsuarios() {
+        try {
+            await this.client.connect();
+
+            // Exemple de consulta: obtenir els primers 5 usuaris
+            const result = await this.client.query('SELECT id, firstname FROM users;');
+
+            await this.client.end();
+
+            return JSON.stringify(result.rows);
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
 }
