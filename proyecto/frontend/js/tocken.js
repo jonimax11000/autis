@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Si ya hay un token guardado, muestramos un mensaje y no permite volver a loguearse
     if (savedToken) {
         console.log('Token encontrado en localStorage. Mostrando mensaje de acceso.');
-        alert('¡Ya estás dentro!');
-        // window.location.href = '/html/index.html';
+        // alert('¡Ya estás dentro!');
+        window.location.href = '/html/index.html';
         return;
     } else {
         console.log('No se encontró token en localStorage.');
@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Si el backend indica que el token es válido, lo guarda y muestra mensaje
                 if (data.valido) {
                     localStorage.setItem('apiToken', tocken);
-                    alert('¡Ya estás dentro!');
-                    // window.location.href = '/html/index.html';
+                    // alert('¡Ya estás dentro!');
+                    window.location.href = '/html/index.html';
                 } else {
                     alert('No entras...');
                 }
