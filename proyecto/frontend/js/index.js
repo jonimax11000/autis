@@ -6,12 +6,39 @@ document.addEventListener('DOMContentLoaded',async() =>{
     
     
 
-    
+
 
 
     userMenu.addEventListener('click',handleUsers);
 
 })
+
+/* Cambiar el texto del topbar por el enlace pulsado */
+document.addEventListener('DOMContentLoaded', () => {
+    // Selecciona todos los enlaces del menú lateral
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Cambia el texto de la barra central por el texto del enlace pulsado
+            const txtCentral = document.querySelector('.txtcentral');
+            if (txtCentral) {
+                txtCentral.textContent = this.textContent;
+            }
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const userMenu = document.getElementById('menu-empleados');
+    userMenu.addEventListener('click', handleUsers);
+
+    // Adaptación: solo un enlace activo en el menú lateral
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', function() {
+            document.querySelectorAll('.nav-menu a').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+});
 
 
 async function handleUsers(e) {
