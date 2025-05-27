@@ -1,5 +1,6 @@
 // Importem el component de base
-import { CardComponent } from './CardComponent.js'
+import { CardComponent } from './CardComponent.js';
+import { botonModificar, botonEliminar } from '../index.js';
 
 class EmpleatCard extends CardComponent {
     constructor() {
@@ -68,13 +69,6 @@ class EmpleatCard extends CardComponent {
         
         this.shadowRoot.innerHTML = HTML;
 
-        // Una vegada afegit el component, establim els callbacks
-        if (!this.carret || !this.producte) {
-            // Comprovem primer si el carret i el producte s'han proporcionat
-            console.error("Error: No s'ha passat el carret o producte correctament!");
-            return;
-        }
-
         const counter = this.shadowRoot.querySelector("counter-component");
         // NOU: PER COMENTAR
         counter.setProducte(this.producte, this.carret);
@@ -83,8 +77,16 @@ class EmpleatCard extends CardComponent {
             () => { this.carret.afegirProducte(this.producte);  },
             () => { this.carret.eliminarProducte(this.producte);  }
         );
-
+        const mod = document.getElementById(`modificar${id}`);
+        mod.addEventListener('click', botonModificar(id));
+        if(id >4){
+            const elim = document.getElementById(`eliminar${id}`);
+            elim.addEventListener('click', botonEliminar(id));
+        }
     }
+    
+    
 }
+
 
 customElements.define('empleat-card', EmpleatCard);

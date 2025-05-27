@@ -205,3 +205,12 @@ async function handleSearch(event) {
         }
     }
 }
+
+
+async function botonModificar(id) {
+    
+}
+
+async function botonEliminar(id) {
+    /* */
+}
