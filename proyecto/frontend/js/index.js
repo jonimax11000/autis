@@ -3,12 +3,6 @@ import './components/empleatsCard.js';
 document.addEventListener('DOMContentLoaded',async() =>{
     const userMenu = document.getElementById('menu-empleados');
     const menuItems = document.querySelectorAll('.menu-item');
-    
-    
-
-
-
-
     userMenu.addEventListener('click',handleUsers);
 
 })
@@ -16,12 +10,31 @@ document.addEventListener('DOMContentLoaded',async() =>{
 /* Cambiar el texto del topbar por el enlace pulsado */
 document.addEventListener('DOMContentLoaded', () => {
     // Selecciona todos los enlaces del menú lateral
-    document.querySelectorAll('.nav-menu a').forEach(link => {
+    const menuLinks = document.querySelectorAll('.nav-menu a');
+    const contentDiv = document.getElementById('content');
+
+    menuLinks.forEach(link => {
         link.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Limpia el contenido del contenedor principal
+            contentDiv.innerHTML = '';
+
             // Cambia el texto de la barra central por el texto del enlace pulsado
             const txtCentral = document.querySelector('.txtcentral');
             if (txtCentral) {
                 txtCentral.textContent = this.textContent;
+            }
+
+            // Aquí puedes agregar lógica para cargar contenido específico según el enlace pulsado
+            // Por ejemplo:
+            if (this.id === 'menu-empleados') {
+                handleUsers(e); // Llama a la función para cargar empleados
+            } else {
+                // Si es otro enlace, puedes mostrar contenido vacío o cargar algo diferente
+                const placeholder = document.createElement('p');
+                placeholder.textContent = `Sección: ${this.textContent}`;
+                contentDiv.appendChild(placeholder);
             }
         });
     });
