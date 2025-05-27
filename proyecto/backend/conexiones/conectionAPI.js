@@ -22,5 +22,5 @@ export class ConectionAPI extends Conection {
             throw error;
         }
     }
-
+    
 }

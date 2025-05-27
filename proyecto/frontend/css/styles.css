@@ -1,0 +1,284 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base colors - Modo oscuro predefinido */
+:root {
+  --background-dark: #1a1a1a;
+  --gray-dark: #2c2c2c;
+  --gray-medium: #444;
+  --gray-light: #ccc;
+  --accent-purple: #7f5af0;
+  --text-light: #f0f0f0;
+  --text-muted: #aaa;
+
+  /* Colores para modo claro (definidos pero no activos) */
+  --background-light: #f0f0f0;
+  --gray-dark-light: #ddd;
+  --gray-medium-light: #eee;
+  --gray-light-alt: #555;
+  --accent-purple-light: #7f5af0;
+  --text-light-light: #222;
+  --text-muted-light: #666;
+}
+
+/* Body */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: var(--gray-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+/* Logo */
+.logo {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--accent-purple);
+  margin-bottom: 2rem;
+}
+
+/* Nav Menu */
+.nav-menu ul {
+  list-style: none;
+  padding: 0 20px;
+}
+
+.nav-menu ul li {
+  margin-bottom: 1.2rem;
+}
+
+.nav-menu ul li a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 10px 15px;
+  display: block;
+  border-radius: 8px;
+  transition: background 0.5s, color 0.5s;
+}
+
+.nav-menu ul li a:hover,
+.nav-menu ul li a.active {
+  background-color: var(--accent-purple);
+  color: white;
+  border: 2px solid var(--accent-purple);
+}
+
+
+/* Logout */
+.logout {
+  padding: 0 20px;
+  margin-top: auto;
+}
+
+.logout a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: block;
+  padding: 10px;
+}
+
+.logout .user {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--gray-light);
+}
+
+/* Main content */
+.main-content {
+  flex-grow: 1;
+  background-color: var(--gray-medium);
+  padding: 0px;
+  transition: margin-left 0.9s ease-in-out;
+}
+
+/* Topbar */
+.topbar {
+  background-color: var(--gray-dark);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--gray-light);
+  margin-bottom: 20px;
+}
+
+/* Central text */
+.txtcentral {
+  font-size: 2rem;
+  font-family: monospace;
+  color: var(--text-light);
+  font-weight: 900;
+  text-align: center;
+  width: 100%;
+}
+
+/* Logo right */
+.logo-right img {
+  height: 40px;
+  object-fit: contain;
+}
+
+/* Menu toggle button */
+.menu-toggle-label {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background-color: var(--accent-purple);
+  color: rgb(255, 255, 255);
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+/* Sidebar oculto*/
+.sidebar {
+  position: fixed;
+  left: -250px;
+  height: 100%;
+  transition: left 0.9s ease-in-out;
+  z-index: 1000;
+}
+
+/* Mostrar sidebar cuando el checkbox está activado */
+#menu-toggle:checked~.sidebar {
+  left: 0;
+}
+
+#menu-toggle:checked ~ .main-content {
+  margin-left: 250px;
+  transition: margin-left 0.9s ease-in-out;
+}
+
+/* Toggle Switch para modo oscuro/claro */
+
+.dark-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px 10px;
+  user-select: none;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* El interruptor slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--gray-medium);
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+body.light .modo {
+  color: var(--text-light-light);
+}
+
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+/* Cuando está checked */
+.switch input:checked + .slider {
+  background-color: var(--accent-purple);
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+
+/* Clase para modo claro - se activa con JS cambiando clase body */
+
+body.light {
+  background-color: var(--background-light);
+  color: var(--text-light-light);
+}
+
+body.light .sidebar {
+  background-color: var(--gray-dark-light);
+}
+
+body.light .nav-menu ul li a {
+  color: var(--text-light-light);
+}
+
+body.light .nav-menu ul li a:hover,
+body.light .nav-menu ul li a.active {
+  background-color: var(--accent-purple-light);
+  color: white;
+  border: 2px solid var(--accent-purple);
+}
+
+body.light .logout a {
+  color: var(--text-muted-light);
+}
+
+body.light .logout .user {
+  color: var(--gray-light-alt);
+}
+
+body.light .main-content {
+  background-color: var(--gray-medium-light);
+}
+
+body.light .topbar {
+  background-color: var(--gray-dark-light);
+  border-bottom-color: var(--gray-light-alt);
+}
+
+body.light .txtcentral {
+  color: var(--text-light-light);
+}
+#content{
+  #content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* para que los hijos ocupen todo el ancho disponible */
+    justify-content: center;
+    width: 100%;
+    height: calc(100vh - 60px);
+  }
+}

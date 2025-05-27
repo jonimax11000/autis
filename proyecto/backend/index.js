@@ -1,7 +1,5 @@
 import express from 'express';
 import path from 'path';
-import fs from 'fs';
-import { exec } from 'child_process';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { OpenProjectRepository } from './repository/openProjectRepository.js';
@@ -52,7 +50,7 @@ app.post('/dashboard', async (req, res) => {
             "usuario": req.body.usuario,
             "tareas": req.body.tareas,
         };
-
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -63,7 +61,7 @@ app.post('/dashboard', async (req, res) => {
 app.post('/dashboard/recarga', async (req, res) => {
     try {
 
-
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -74,7 +72,7 @@ app.post('/dashboard/recarga', async (req, res) => {
 app.post('/usuarios', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
-
+        
         const json = await repository.getUsuarios();
 
         console.log(json);
@@ -90,16 +88,11 @@ app.post('/usuarios/filtrar/proyecto', async (req, res) => {
     try {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
-        repository.getUsuariosByProyecto(body.proyecto)
-            .then((json) => {
-                console.log(json);
-                res.json(json);
-            })
-            .catch((error) => {
-                console.error("Error al obtener usuarios por proyecto:", error);
-                res.status(500).send('Error al obtener usuarios por proyecto');
-            });
+        const json = await repository.getUsuariosByProyecto(body.proyecto);
 
+        console.log(json);
+        res.json(json);
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -111,15 +104,12 @@ app.post('/usuarios/filtrar/id', async (req, res) => {
     try {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
-        repository.getUsuariosByID(body.id)
-            .then((json) => {
-                console.log(json);
-                res.json(json);
-            })
-            .catch((error) => {
-                console.error("Error al obtener usuario por ID:", error);
-                res.status(500).send('Error al obtener usuario por ID');
-            });
+        const id = parseInt(body.id, 10);
+        console.log(id + 3);
+        const json = await repository.getUsuariosByID(id + 3);
+
+        console.log(json);
+        res.json(json);
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -131,15 +121,10 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
     try {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
-        repository.getUsuariosByName(body.nombre)
-            .then((json) => {
-                console.log(json);
-                res.json(json);
-            })
-            .catch((error) => {
-                console.error("Error al obtener usuario por nombre:", error);
-                res.status(500).send('Error al obtener usuario por nombre');
-            });
+        const json = await repository.getUsuariosByName(body.nombre);
+
+        console.log(json);
+        res.json(json);
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -149,8 +134,8 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
 
 app.post('/usuario/mod', async (req, res) => {
     try {
-
-
+        
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -161,7 +146,7 @@ app.post('/usuario/mod', async (req, res) => {
 app.post('/usuario/crear', async (req, res) => {
     try {
 
-
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -172,7 +157,7 @@ app.post('/usuario/crear', async (req, res) => {
 app.post('/usuario/borrar', async (req, res) => {
     try {
 
-
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -182,7 +167,7 @@ app.post('/usuario/borrar', async (req, res) => {
 
 app.post('/usuario/tareas', async (req, res) => {
     try {
-
+        
 
     } catch (error) {
         console.error("Error entrant:", error);
