@@ -26,7 +26,6 @@ export class OpenProjectRepository {
     }
 
     async getUsuariosByName(nombre) {
-        console.log("entrando al repositorio");
         return await this.conexion.getUsuariosByName(nombre);
     }
 

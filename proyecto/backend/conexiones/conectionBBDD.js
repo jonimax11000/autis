@@ -68,7 +68,9 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query(`SELECT id, firstname, lastname FROM users  WHERE (firstname || ' ' || lastname) ILIKE '${nombre}%';`);
+            const query = `SELECT id, firstname, lastname FROM users WHERE (firstname || ' ' || lastname) ILIKE '%${nombre}%';`;
+            console.log("query: "+query);
+            const result = await this.client.query(query);
             await this.client.end();
             console.log("usuarios por nombre en BBDD: "+result.rows);
             return result.rows;
@@ -77,7 +79,7 @@ export class ConectionBBDD extends Conection {
         }
     }
 
-    async getUsuariosByName(projecto) {
+    async getUsuariosByProyecto(projecto) {
         try {
             await this.client.connect();
 

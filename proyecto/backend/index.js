@@ -128,9 +128,8 @@ app.post('/usuarios/filtrar/id', async (req, res) => {
 app.post('/usuarios/filtrar/nombre', async (req, res) => {
     try {
         let body = req.body;
-        console.log("usuarios por nombre: "+body.nombre);
         repository.cambiar(new ConectionBBDD());
-        const json = await repository.getUsuariosByName(body.name);
+        const json = await repository.getUsuariosByName(body.nombre);
 
         console.log(json);
         res.json(json);
