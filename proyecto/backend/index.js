@@ -88,15 +88,10 @@ app.post('/usuarios/filtrar/proyecto', async (req, res) => {
     try {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
-        repository.getUsuariosByProyecto(body.proyecto)
-            .then((json) => {
-                console.log(json);
-                res.json(json);
-            })
-            .catch((error) => {
-                console.error("Error al obtener usuarios por proyecto:", error);
-                res.status(500).send('Error al obtener usuarios por proyecto');
-            });
+        const json = await repository.getUsuariosByProyecto(body.proyecto);
+
+        console.log(json);
+        res.json(json);
         
 
     } catch (error) {
@@ -109,15 +104,12 @@ app.post('/usuarios/filtrar/id', async (req, res) => {
     try {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
-        repository.getUsuariosByID(body.id)
-            .then((json) => {
-                console.log(json);
-                res.json(json);
-            })
-            .catch((error) => {
-                console.error("Error al obtener usuario por ID:", error);
-                res.status(500).send('Error al obtener usuario por ID');
-            });
+        const id = parseInt(body.id, 10);
+        console.log(id + 3);
+        const json = await repository.getUsuariosByID(id + 3);
+
+        console.log(json);
+        res.json(json);
 
     } catch (error) {
         console.error("Error entrant:", error);
