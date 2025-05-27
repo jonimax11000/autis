@@ -21,10 +21,13 @@ export class CardComponent extends BaseComponent {
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 20px;
-            margin: 10px;
+            margin: 5px auto; /* Centrem la targeta */
             box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
             background-color: #fff;
             gap: 20px;
+            width: 80%;
+            max-width: 1000px;
+            min-width: 0;
         }
 
         .card img {

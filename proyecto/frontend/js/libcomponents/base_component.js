@@ -24,10 +24,7 @@ export class BaseComponent extends HTMLElement { // Exportem la classe per usar-
                 --text-color: #333;
                 --background-color: #fff;
             }
-
-            * {
-                box-sizing: border-box;
-            }
+        
         `;
     }
 

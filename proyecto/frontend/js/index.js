@@ -2,6 +2,11 @@ import './components/empleatsCard.js';
 
 document.addEventListener('DOMContentLoaded',async() =>{
     const userMenu = document.getElementById('menu-empleados');
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    
+
+    
 
 
     userMenu.addEventListener('click',handleUsers);
@@ -10,6 +15,7 @@ document.addEventListener('DOMContentLoaded',async() =>{
 
 
 async function handleUsers(e) {
+    
     
     e.preventDefault();
 

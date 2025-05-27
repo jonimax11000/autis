@@ -77,7 +77,9 @@ body {
 .nav-menu ul li a.active {
   background-color: var(--accent-purple);
   color: white;
+  border: 2px solid var(--accent-purple);
 }
+
 
 /* Logout */
 .logout {
@@ -246,6 +248,7 @@ body.light .nav-menu ul li a:hover,
 body.light .nav-menu ul li a.active {
   background-color: var(--accent-purple-light);
   color: white;
+  border: 2px solid var(--accent-purple);
 }
 
 body.light .logout a {
@@ -269,9 +272,12 @@ body.light .txtcentral {
   color: var(--text-light-light);
 }
 #content{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: calc(100vh - 60px); /* Ajusta según la altura de tu topbar */
+  #content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* para que los hijos ocupen todo el ancho disponible */
+    justify-content: center;
+    width: 100%;
+    height: calc(100vh - 60px);
+  }
 }
