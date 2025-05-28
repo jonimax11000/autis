@@ -1,7 +1,5 @@
 import express from 'express';
 import path from 'path';
-import fs from 'fs';
-import { exec } from 'child_process';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import { OpenProjectRepository } from './repository/openProjectRepository.js';
@@ -30,14 +28,14 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Route to serve the HTML page
-app.get('/', (_, res) => {
+/* app.get('/', (_, res) => {
   res.sendFile(path.join(__dirname, '../frontend/html', 'jonathan.html'));
-});
+}); */
 
-/*
+
 app.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/html', 'tocken.html'));
-});*/
+    res.sendFile(path.join(__dirname, '../frontend/html', 'tocken.html'));
+});
 
 
 
@@ -77,7 +75,7 @@ app.post('/usuarios', async (req, res) => {
         
         const json = await repository.getUsuarios();
 
-        console.log(json);
+        //console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -90,15 +88,10 @@ app.post('/usuarios/filtrar/proyecto', async (req, res) => {
     try {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
-        repository.getUsuariosByProyecto(body.proyecto)
-            .then((json) => {
-                console.log(json);
-                res.json(json);
-            })
-            .catch((error) => {
-                console.error("Error al obtener usuarios por proyecto:", error);
-                res.status(500).send('Error al obtener usuarios por proyecto');
-            });
+        const json = await repository.getUsuariosByProyecto(body.proyecto);
+
+        console.log(json);
+        res.json(json);
         
 
     } catch (error) {
@@ -111,15 +104,12 @@ app.post('/usuarios/filtrar/id', async (req, res) => {
     try {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
-        repository.getUsuariosByID(body.id)
-            .then((json) => {
-                console.log(json);
-                res.json(json);
-            })
-            .catch((error) => {
-                console.error("Error al obtener usuario por ID:", error);
-                res.status(500).send('Error al obtener usuario por ID');
-            });
+        const id = parseInt(body.id, 10);
+        console.log(id + 3);
+        const json = await repository.getUsuariosByID(id + 3);
+
+        console.log(json);
+        res.json(json);
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -131,15 +121,10 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
     try {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
-        repository.getUsuariosByName(body.nombre)
-            .then((json) => {
-                console.log(json);
-                res.json(json);
-            })
-            .catch((error) => {
-                console.error("Error al obtener usuario por nombre:", error);
-                res.status(500).send('Error al obtener usuario por nombre');
-            });
+        const json = await repository.getUsuariosByName(body.nombre);
+
+        console.log(json);
+        res.json(json);
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -148,6 +133,17 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
 });
 
 app.post('/usuario/mod', async (req, res) => {
+    try {
+        
+        
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuario/mod/datos', async (req, res) => {
     try {
         
         
@@ -190,20 +186,36 @@ app.post('/usuario/tareas', async (req, res) => {
     }
 });
 
+/* 
+* Endpoint para validar el token de la API externa (OpenProject)
+* Recibe un token, intenta obtener los proyectos y responde si es válido o no
+*/
 app.post('/tocken', async (req, res) => {
+    const tocken = req.body.tocken;
+
+    // Cambia la conexión del repositorio global al nuevo token recibido
+    // Así, las siguientes operaciones usarán este token
+    repository.cambiar(new ConectionAPI(tocken));
     try {
-        tocken = req.body.tocken;
-        repository.cambiar(new ConectionAPI(tocken));
+        const response = await repository.getProjects();
 
-        repository.getProjects();
+        // Comprueba que la respuesta tenga la estructura esperada de OpenProject
+        console.log('Respuesta de getProjects:', response);
 
-    } catch (error) {
-        console.error("Error en el Tocken:", error);
-        res.status(500).send('Error en el Tocken');
+        // Si la respuesta es válida, el token es correcto
+        if (response.ok) {
+            console.log('Token válido');
+            res.json({ valido: true });
+        } else {
+            console.log('Token inválido por estructura');
+            res.json({ valido: false });
+        }
+    } catch (err) {
+        // Otros errores
+        console.log('Error al obtener proyectos (token inválido):', err);
+        res.json({ valido: false });
     }
 });
-
-
 
 // Escoltem el servidor
 app.listen(PORT, () => {

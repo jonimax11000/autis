@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<title>AUTIS</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menú Lateral</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<script src="/js/index.js"  type="module" ></script>
+
+<script>
+  addEventListener('DOMContentLoaded',()=>{
+    const toggleTheme = document.getElementById('theme-toggle');
+    toggleTheme.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+  })
+  
+</script>
+
+<body>
+  <input type="checkbox" id="menu-toggle" hidden>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">AUTIS</div>
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="#" class="active">Dashboard</a></li>
+        <li><a href="#">Proyectos</a></li>
+        <li><a href="#">Departamentos</a></li>
+        <li><a id="menu-empleados" href="#">Empleados</a></li>
+        <li><a href="#">Estadísticas</a></li>
+      </ul>
+    </nav>
+    <!-- Botón toggle del menú -->
+      <label for="menu-toggle" class="menu-toggle-label">☰</label>
+
+    <!-- Botón deslizante modo oscuro -->
+    <div class="dark-mode-toggle" style="padding: 0 20px 10px;">
+      <label class="switch">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider"></span>
+      </label>
+      <span class="modo">Usa a modo claro</span>
+    </div>
+
+    <div class="logout">
+      <a href="#">Cerrar Sesión<br><span class="user">autis</span></a>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="txtcentral">INICIO</div>
+      <div class="logo-right">
+        <img src="/img/autis_ingenieros_logo.jpeg" alt="Logo AUTIS" />
+      </div>
+    </div>
+    <div id="content">
+    </div>
+  </div>
+</body>
+</html>

@@ -15,7 +15,8 @@ export class ConectionAPI extends Conection {
                     'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
                 }
             });
-            return response;
+            
+            return await response;
         } catch (error) {
             console.error('Error fetching projects:', error);
             throw error;

@@ -25,7 +25,7 @@ export class ConectionBBDD extends Conection {
 
             await this.client.end();
 
-            res.json(result.rows);
+            return result.rows;
         } catch (error) {
             
         }
@@ -37,11 +37,12 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query('SELECT id, firstname,lastname FROM users where id>4;');
+            const result = await this.client.query('SELECT id, firstname,lastname FROM users where id>3 order by id;');
+            console.log("usuarios en BBDD: "+result.rows);
 
             await this.client.end();
 
-            return JSON.stringify(result.rows);
+            return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }
@@ -56,37 +57,39 @@ export class ConectionBBDD extends Conection {
 
             await this.client.end();
 
-            return JSON.stringify(result.rows);
+            return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }
     }
 
     async getUsuariosByName(nombre) {
+        console.log("entrando a BBDD");
         try {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query(`SELECT id, firstname, lastname FROM users  WHERE (firstname || ' ' || lastname) ILIKE '${nombre}%';`);
-
+            const query = `SELECT id, firstname, lastname FROM users WHERE (firstname || ' ' || lastname) ILIKE '%${nombre}%';`;
+            console.log("query: "+query);
+            const result = await this.client.query(query);
             await this.client.end();
-
-            return JSON.stringify(result.rows);
+            console.log("usuarios por nombre en BBDD: "+result.rows);
+            return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }
     }
 
-    async getUsuariosByName(projecto) {
+    async getUsuariosByProyecto(projecto) {
         try {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query(`select id,firstname,lastname from users where id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '${projecto}%'));`);
+            const result = await this.client.query(`select id,firstname,lastname from users where id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '%${projecto}%'));`);
 
             await this.client.end();
 
-            return JSON.stringify(result.rows);
+            return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }
