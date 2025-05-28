@@ -143,6 +143,17 @@ app.post('/usuario/mod', async (req, res) => {
     }
 });
 
+app.post('/usuario/mod/datos', async (req, res) => {
+    try {
+        
+        
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuario/crear', async (req, res) => {
     try {
 

@@ -207,10 +207,12 @@ async function handleSearch(event) {
 }
 
 
-async function botonModificar(id) {
-    
+export async function botonModificar(id) {
+    // Example usage of id to avoid unused variable error
+    console.log(`Modificar usuario con id: ${id}`);
 }
 
-async function botonEliminar(id) {
-    /* */
+export async function botonEliminar(id) {
+    // Example usage of id to avoid unused variable error
+    console.log(`Eliminar usuario con id: ${id}`);
 }
