@@ -39,9 +39,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 async function handleUsers(e) {
-    
-    
-    e.preventDefault();
+    if (e) {
+        e.preventDefault();
+    }
 
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
@@ -346,7 +346,27 @@ export async function botonEliminar(id) {
 }
 
 // Función que JONATHAN completará
-function confirmar_eliminado(id) {
-    console.log(`Eliminar usuario con ID: ${id}`);
+async function confirmar_eliminado(id) {
+    try {
+        const response = await fetch('/usuario/borrar', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id })
+        });
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        else{
+            handleUsers(null); // Actualiza la lista de usuarios después de eliminar
+        }
+        
+
+
+    } catch (error) {
+        console.error("Error deleting user:", error);
+    }
 }
 
