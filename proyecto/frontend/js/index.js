@@ -87,7 +87,7 @@ async function handleUsers(e) {
     plusIcon.style.color = 'black';
     plusIcon.style.marginRight = '5px';
     createButton.prepend(plusIcon);
-    createButton.style.backgroundColor = '#06fe45';
+    createButton.style.backgroundColor = '#006400';
     createButton.style.border = 'none';
     createButton.style.padding = '10px 20px';
     createButton.style.borderRadius = '5px';
@@ -192,8 +192,76 @@ async function handleSearch(event) {
 
 
 export async function botonModificar(id) {
-    // Example usage of id to avoid unused variable error
-    console.log(`Modificar usuario con id: ${id}`);
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    const userDetailsDiv = document.createElement('div');
+    userDetailsDiv.style.display = 'grid';
+    userDetailsDiv.style.gridTemplateColumns = '1fr 2fr';
+    userDetailsDiv.style.gap = '20px';
+    userDetailsDiv.style.padding = '40px';
+    userDetailsDiv.style.border = '1px solid #ddd';
+    userDetailsDiv.style.borderRadius = '12px';
+    userDetailsDiv.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+    userDetailsDiv.style.maxWidth = '800px';
+    userDetailsDiv.style.margin = '40px auto';
+    userDetailsDiv.style.backgroundColor = '#f9f9f9';
+
+    const fields = [
+        { label: 'Estado:', id: 'estado' },
+        { label: 'Nombre de usuario:', id: 'username' },
+        { label: 'Primer nombre:', id: 'firstName' },
+        { label: 'Apellido:', id: 'lastName' },
+        { label: 'Correo electrónico:', id: 'email' },
+        { label: 'Idioma:', id: 'idioma' }
+    ];
+
+    fields.forEach(field => {
+        const label = document.createElement('label');
+        label.textContent = field.label;
+        label.style.fontWeight = 'bold';
+        label.style.fontSize = '18px';
+        label.style.color = 'black'; // Cambiar el color del texto a negro
+        label.style.alignSelf = 'center';
+
+        const input = document.createElement(field.id === 'idioma' ? 'select' : 'input');
+        input.id = field.id;
+        input.style.padding = '10px';
+        input.style.border = '1px solid #ddd';
+        input.style.borderRadius = '8px';
+        input.style.fontSize = '16px';
+        input.style.width = '100%';
+        input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+        input.style.backgroundColor = '#fff';
+
+        if (field.id === 'idioma') {
+            ['Español', 'Inglés', 'Francés', 'Alemán'].forEach(lang => {
+                const option = document.createElement('option');
+                option.value = lang.toLowerCase();
+                option.textContent = lang;
+                input.appendChild(option);
+            });
+        }
+
+        userDetailsDiv.appendChild(label);
+        userDetailsDiv.appendChild(input);
+    });
+
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'Salvar';
+    saveButton.style.backgroundColor = '#028a34'; // Cambiar el verde a un tono más oscuro
+    saveButton.style.color = 'white';
+    saveButton.style.border = 'none';
+    saveButton.style.padding = '15px 30px';
+    saveButton.style.borderRadius = '8px';
+    saveButton.style.cursor = 'pointer';
+    saveButton.style.fontSize = '18px';
+    saveButton.style.marginTop = '20px';
+    saveButton.style.alignSelf = 'center';
+    saveButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+
+    userDetailsDiv.appendChild(saveButton);
+    contentDiv.appendChild(userDetailsDiv);
 }
 
 export async function botonEliminar(id) {
