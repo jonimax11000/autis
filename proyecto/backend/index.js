@@ -38,10 +38,6 @@ app.get('/', (_, res) => {
 });
 
 
-
-
-
-
 app.post('/dashboard', async (req, res) => {
     try {
         const json = {
@@ -105,7 +101,6 @@ app.post('/usuarios/filtrar/id', async (req, res) => {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
         const id = parseInt(body.id, 10);
-        console.log(id + 3);
         const json = await repository.getUsuariosByID(id + 3);
 
         console.log(json);
@@ -145,9 +140,13 @@ app.post('/usuario/mod', async (req, res) => {
 
 app.post('/usuario/mod/datos', async (req, res) => {
     try {
-        
-        
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        const json = await repository.getUsuariosByID(id);
 
+        console.log(json);
+        res.json(json);
     } catch (error) {
         console.error("Error entrant:", error);
         res.status(500).send('Error entrant');
@@ -167,7 +166,13 @@ app.post('/usuario/crear', async (req, res) => {
 
 app.post('/usuario/borrar', async (req, res) => {
     try {
+        let body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        const id = parseInt(body.id, 10);
+        const json = await repository.deleteUsuario(id);
 
+        console.log(json);
+        res.json(json);
         
 
     } catch (error) {
@@ -191,7 +196,7 @@ app.post('/usuario/tareas', async (req, res) => {
 * Recibe un token, intenta obtener los proyectos y responde si es válido o no
 */
 app.post('/tocken', async (req, res) => {
-    const tocken = req.body.tocken;
+    tocken = req.body.tocken;
 
     // Cambia la conexión del repositorio global al nuevo token recibido
     // Así, las siguientes operaciones usarán este token

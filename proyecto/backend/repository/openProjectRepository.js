@@ -32,4 +32,12 @@ export class OpenProjectRepository {
     async getUsuariosByProyecto(proyecto) {
         return await this.conexion.getUsuariosByProyecto(proyecto);
     }
+
+    async getUsuarioMod(id){
+        return await this.conexion.getUsuarioMod(id);
+    }
+
+    async deleteUsuario(id){
+        return await this.conexion.deleteUsuario(id);
+    }
 }
