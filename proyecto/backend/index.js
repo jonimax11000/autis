@@ -75,7 +75,7 @@ app.post('/usuarios', async (req, res) => {
         
         const json = await repository.getUsuarios();
 
-        console.log(json);
+        //console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -133,6 +133,17 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
 });
 
 app.post('/usuario/mod', async (req, res) => {
+    try {
+        
+        
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/usuario/mod/datos', async (req, res) => {
     try {
         
         

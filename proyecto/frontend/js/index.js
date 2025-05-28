@@ -1,18 +1,12 @@
 import './components/empleatsCard.js';
 
-document.addEventListener('DOMContentLoaded',async() =>{
+document.addEventListener('DOMContentLoaded', async () => {
     const userMenu = document.getElementById('menu-empleados');
     const menuItems = document.querySelectorAll('.menu-item');
-    userMenu.addEventListener('click',handleUsers);
-
-})
-
-/* Cambiar el texto del topbar por el enlace pulsado */
-document.addEventListener('DOMContentLoaded', () => {
-    // Selecciona todos los enlaces del menú lateral
     const menuLinks = document.querySelectorAll('.nav-menu a');
     const contentDiv = document.getElementById('content');
 
+    // Cambiar el texto del topbar por el enlace pulsado y cargar contenido
     menuLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -26,8 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 txtCentral.textContent = this.textContent;
             }
 
-            // Aquí puedes agregar lógica para cargar contenido específico según el enlace pulsado
-            // Por ejemplo:
+            // Lógica para cargar contenido específico según el enlace pulsado
             if (this.id === 'menu-empleados') {
                 handleUsers(e); // Llama a la función para cargar empleados
             } else {
@@ -36,18 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 placeholder.textContent = `Sección: ${this.textContent}`;
                 contentDiv.appendChild(placeholder);
             }
-        });
-    });
-});
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const userMenu = document.getElementById('menu-empleados');
-    userMenu.addEventListener('click', handleUsers);
-
-    // Adaptación: solo un enlace activo en el menú lateral
-    document.querySelectorAll('.nav-menu a').forEach(link => {
-        link.addEventListener('click', function() {
-            document.querySelectorAll('.nav-menu a').forEach(l => l.classList.remove('active'));
+            // Adaptación: solo un enlace activo en el menú lateral
+            menuLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
         });
     });
@@ -204,4 +188,15 @@ async function handleSearch(event) {
             console.error("Error fetching filtered user data:", error);
         }
     }
+}
+
+
+export async function botonModificar(id) {
+    // Example usage of id to avoid unused variable error
+    console.log(`Modificar usuario con id: ${id}`);
+}
+
+export async function botonEliminar(id) {
+    // Example usage of id to avoid unused variable error
+    console.log(`Eliminar usuario con id: ${id}`);
 }
