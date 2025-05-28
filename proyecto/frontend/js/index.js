@@ -1,5 +1,6 @@
 import './components/empleatsCard.js';
 
+// Remplazar la url
 window.history.replaceState({}, '', '/');
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -7,6 +8,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const menuItems = document.querySelectorAll('.menu-item');
     const menuLinks = document.querySelectorAll('.nav-menu a');
     const contentDiv = document.getElementById('content');
+
+    // Evento para cerrar sesión
+    const logoutLink = document.querySelector('.logout a');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('apiToken'); // Borra el token almacenado en el localStorage
+            window.location.href = '/html/tocken.html'; // Redirige al loginPage
+        });
+    }
 
     // Cambiar el texto del topbar por el enlace pulsado y cargar contenido
     menuLinks.forEach(link => {
