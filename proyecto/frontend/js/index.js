@@ -1,5 +1,6 @@
 import './components/empleatsCard.js';
 
+// Remplazar la url
 window.history.replaceState({}, '', '/');
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -8,9 +9,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const menuLinks = document.querySelectorAll('.nav-menu a');
     const contentDiv = document.getElementById('content');
 
+    // Evento para cerrar sesión
+    const logoutLink = document.querySelector('.logout a');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('apiToken'); // Borra el token almacenado en el localStorage
+            window.location.href = '/html/tocken.html'; // Redirige al loginPage
+        });
+    }
+
     // Cambiar el texto del topbar por el enlace pulsado y cargar contenido
     menuLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
 
             // Limpia el contenido del contenedor principal
@@ -41,8 +52,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 async function handleUsers(e) {
-    
-    
+
+
     e.preventDefault();
 
     const contentDiv = document.getElementById('content');
@@ -117,7 +128,7 @@ async function handleUsers(e) {
             headers: {
                 'Content-Type': 'application/json'
             },
-        
+
         });
 
         if (!response.ok) {
@@ -157,14 +168,14 @@ async function handleSearch(event) {
             let body = {};
 
             if (filterOption === 'proyecto') {
-                url+='proyecto';
+                url += 'proyecto';
                 body = { proyecto: document.getElementById('bucador-usuario').value };
             } else if (filterOption === 'id') {
                 body = { id: document.getElementById('bucador-usuario').value };
-                url+='id';
+                url += 'id';
             } else if (filterOption === 'usuario') {
                 body = { nombre: document.getElementById('bucador-usuario').value };
-                url+='nombre';
+                url += 'nombre';
             }
             console.log(url);
             const response = await fetch(`${url}`, {
@@ -181,10 +192,10 @@ async function handleSearch(event) {
             const empleados = document.getElementById("empleados");
             empleados.innerHTML = '';
             data.forEach(item => {
-            const empleat = document.createElement('empleat-card');
-            empleat.setAttribute('empleats-id', item.id);
-            empleat.setAttribute('empleats-nom', `${item.firstname} ${item.lastname}`);
-            empleados.appendChild(empleat);
+                const empleat = document.createElement('empleat-card');
+                empleat.setAttribute('empleats-id', item.id);
+                empleat.setAttribute('empleats-nom', `${item.firstname} ${item.lastname}`);
+                empleados.appendChild(empleat);
             });
         } catch (error) {
             console.error("Error fetching filtered user data:", error);
@@ -202,3 +213,4 @@ export async function botonEliminar(id) {
     // Example usage of id to avoid unused variable error
     console.log(`Eliminar usuario con id: ${id}`);
 }
+
