@@ -1,5 +1,7 @@
 import './components/empleatsCard.js';
 
+window.history.replaceState({}, '', '/');
+
 document.addEventListener('DOMContentLoaded', async () => {
     const userMenu = document.getElementById('menu-empleados');
     const menuItems = document.querySelectorAll('.menu-item');
