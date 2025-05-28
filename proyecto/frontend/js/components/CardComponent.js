@@ -6,8 +6,7 @@ export class CardComponent extends BaseComponent {
     constructor() {
         super();
         // No afegim shadowDOM, ja que l'hereta de la base
-        this.serverURL = "https://pizza-rest-server-production.up.railway.app/";
-    }
+            }
 
     static get styles() {
         // Definim els estils principals de la targeta

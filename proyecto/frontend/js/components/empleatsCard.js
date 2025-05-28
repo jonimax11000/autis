@@ -2,6 +2,7 @@
 import { CardComponent } from './CardComponent.js';
 import { botonModificar, botonEliminar } from '../index.js';
 
+
 class EmpleatCard extends CardComponent {
     constructor() {
         super();
@@ -82,8 +83,14 @@ class EmpleatCard extends CardComponent {
         }
     }
     
+
     
 }
 
 
 customElements.define('empleat-card', EmpleatCard);
+
+
+
+
+

@@ -197,6 +197,88 @@ export async function botonModificar(id) {
 }
 
 export async function botonEliminar(id) {
-    // Example usage of id to avoid unused variable error
-    console.log(`Eliminar usuario con id: ${id}`);
+    // Crear el popup
+    const popup = document.createElement('div');
+    popup.style.position = 'fixed';
+    popup.style.top = '0';
+    popup.style.left = '0';
+    popup.style.width = '100vw';
+    popup.style.height = '100vh';
+    popup.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    popup.style.display = 'flex';
+    popup.style.justifyContent = 'center';
+    popup.style.alignItems = 'center';
+    popup.style.zIndex = '1000';
+
+    // Contenido del popup
+    const popupContent = document.createElement('div');
+    popupContent.style.backgroundColor = 'white';
+    popupContent.style.padding = '40px';
+    popupContent.style.borderRadius = '16px';
+    popupContent.style.textAlign = 'center';
+    // Aquí está el tamaño del cuadrado del popup
+    popupContent.style.minWidth = '400px';
+    popupContent.style.minHeight = '200px';
+    popupContent.style.display = 'flex';
+    popupContent.style.flexDirection = 'column';
+    popupContent.style.justifyContent = 'center';
+    popupContent.style.alignItems = 'center';
+
+    const message = document.createElement('p');
+    message.textContent = '¿Seguro deseas eliminar este usuario?';
+    message.style.fontSize = '20px';
+    message.style.color = 'black';
+    message.style.marginBottom = '20px'; // Separación con los botones
+    message.style.textAlign = 'center';
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.gap = '10px';
+
+    const btnCancelar = document.createElement('button');
+    btnCancelar.id = 'btnCancelar';
+    btnCancelar.textContent = 'Cancelar';
+    btnCancelar.style.backgroundColor = 'grey';
+    btnCancelar.style.color = 'white';
+    btnCancelar.style.padding = '10px 20px';
+    btnCancelar.style.border = 'none';
+    btnCancelar.style.borderRadius = '5px';
+    btnCancelar.style.fontSize = '16px';
+    btnCancelar.style.cursor = 'pointer';
+
+    const btnEliminar = document.createElement('button');
+    btnEliminar.id = 'btnEliminar';
+    btnEliminar.textContent = 'Eliminar';
+    btnEliminar.style.backgroundColor = 'red';
+    btnEliminar.style.color = 'white';
+    btnEliminar.style.padding = '10px 20px';
+    btnEliminar.style.border = 'none';
+    btnEliminar.style.borderRadius = '5px';
+    btnEliminar.style.fontSize = '16px';
+    btnEliminar.style.cursor = 'pointer';
+
+    buttonContainer.appendChild(btnCancelar);
+    buttonContainer.appendChild(btnEliminar);
+
+    popupContent.appendChild(message);
+    popupContent.appendChild(buttonContainer);
+    popup.appendChild(popupContent);
+    document.body.appendChild(popup);
+
+    // Evento cancelar
+    btnCancelar.addEventListener('click', () => {
+        document.body.removeChild(popup);
+    });
+
+    // Evento eliminar
+    btnEliminar.addEventListener('click', () => {
+        confirmar_eliminado(id);
+        document.body.removeChild(popup);
+    });
 }
+
+// Función que JONATHAN completará
+function confirmar_eliminado(id) {
+    console.log(`Eliminar usuario con ID: ${id}`);
+}
+
