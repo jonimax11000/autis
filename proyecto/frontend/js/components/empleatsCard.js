@@ -5,6 +5,9 @@ import { botonModificar, botonEliminar } from '../index.js';
 class EmpleatCard extends CardComponent {
     constructor() {
         super();
+        if (!this.shadowRoot) {
+            this.attachShadow({ mode: 'open' });
+        }
     }
 
     connectedCallback() {
@@ -12,8 +15,8 @@ class EmpleatCard extends CardComponent {
         // Funció del cicle de vida que s'invoca quan el component s'afig al DOM
         // Aci agafem els atributs
 
-        const id = this.getAttribute('empleats-id') || 'Entrant desconegut';
-        const nom = this.getAttribute('empleats-nom') || 'Entrant desconegt';
+        const id = this.getAttribute('empleats-id') || 'Empleat desconegut';
+        const nom = this.getAttribute('empleats-nom') || 'Empleat desconegt';
         let HTML = `
             <style>
                 ${CardComponent.styles} /* Afegim estils del component base !! */
@@ -69,19 +72,13 @@ class EmpleatCard extends CardComponent {
         
         this.shadowRoot.innerHTML = HTML;
 
-        const counter = this.shadowRoot.querySelector("counter-component");
-        // NOU: PER COMENTAR
-        counter.setProducte(this.producte, this.carret);
 
-        counter.setCallbacks(
-            () => { this.carret.afegirProducte(this.producte);  },
-            () => { this.carret.eliminarProducte(this.producte);  }
-        );
-        const mod = document.getElementById(`modificar${id}`);
-        mod.addEventListener('click', botonModificar(id));
+        const mod = this.shadowRoot.getElementById(`modificar${id}`);
+        console.log('Modif',mod);
+        mod.addEventListener('click', () => botonModificar(id));
         if(id >4){
-            const elim = document.getElementById(`eliminar${id}`);
-            elim.addEventListener('click', botonEliminar(id));
+            const elim = this.shadowRoot.getElementById(`eliminar${id}`);
+            elim.addEventListener('click', () => botonEliminar(id));
         }
     }
     

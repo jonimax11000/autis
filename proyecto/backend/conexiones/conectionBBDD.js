@@ -38,6 +38,7 @@ export class ConectionBBDD extends Conection {
 
             // Exemple de consulta: obtenir els primers 5 usuaris
             const result = await this.client.query('SELECT id, firstname,lastname FROM users where id>3 order by id;');
+            console.log("usuarios en BBDD: "+result.rows);
 
             await this.client.end();
 

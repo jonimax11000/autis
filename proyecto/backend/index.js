@@ -75,7 +75,7 @@ app.post('/usuarios', async (req, res) => {
         
         const json = await repository.getUsuarios();
 
-        console.log(json);
+        //console.log(json);
         res.json(json);
 
     } catch (error) {
