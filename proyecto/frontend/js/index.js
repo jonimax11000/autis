@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Cambiar el texto del topbar por el enlace pulsado y cargar contenido
     menuLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
 
             // Limpia el contenido del contenedor principal
@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 async function handleUsers(e) {
-    console.log("handleUsers called");
     if (e) {
         e.preventDefault();
     }
@@ -119,7 +118,7 @@ async function handleUsers(e) {
             headers: {
                 'Content-Type': 'application/json'
             },
-        
+
         });
 
         if (!response.ok) {
@@ -130,13 +129,11 @@ async function handleUsers(e) {
         const data = await response.json();
         data.forEach(item => {
             const empleat = document.createElement('empleat-card');
-            console.log(empleat);
             empleat.setAttribute('empleats-id', item.id);
             empleat.setAttribute('empleats-nom', `${item.firstname} ${item.lastname}`); // Muestra nombre y apellido
             empleados.appendChild(empleat);
             contentDiv.appendChild(empleados);
         });
-        console.log(contentDiv);
 
     } catch (error) {
         console.error("Error fetching user data:", error);
@@ -159,14 +156,14 @@ async function handleSearch(event) {
             let body = {};
 
             if (filterOption === 'proyecto') {
-                url+='proyecto';
+                url += 'proyecto';
                 body = { proyecto: document.getElementById('bucador-usuario').value };
             } else if (filterOption === 'id') {
                 body = { id: document.getElementById('bucador-usuario').value };
-                url+='id';
+                url += 'id';
             } else if (filterOption === 'usuario') {
                 body = { nombre: document.getElementById('bucador-usuario').value };
-                url+='nombre';
+                url += 'nombre';
             }
             console.log(url);
             const response = await fetch(`${url}`, {
@@ -183,20 +180,17 @@ async function handleSearch(event) {
             const empleados = document.getElementById("empleados");
             empleados.innerHTML = '';
             data.forEach(item => {
-            const empleat = document.createElement('empleat-card');
-            empleat.setAttribute('empleats-id', item.id);
-            empleat.setAttribute('empleats-nom', `${item.firstname} ${item.lastname}`);
-            empleados.appendChild(empleat);
+                const empleat = document.createElement('empleat-card');
+                empleat.setAttribute('empleats-id', item.id);
+                empleat.setAttribute('empleats-nom', `${item.firstname} ${item.lastname}`);
+                empleados.appendChild(empleat);
             });
         } catch (error) {
             console.error("Error fetching filtered user data:", error);
         }
     }
 }
-
-
-export async function botonCrear(id) {
-    null
+async function formularioUsuario(idSeleccionado) {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
 
@@ -213,11 +207,35 @@ export async function botonCrear(id) {
     userDetailsDiv.style.backgroundColor = '#f9f9f9';
 
     const fields = [
-        { label: 'Nombre de usuario:', id: 'username' },
-        { label: 'Primer nombre:', id: 'firstName' },
+        { label: 'Nombre de usuario:', id: 'login' },
+        { label: 'Nombre:', id: 'firstName' },
         { label: 'Apellido:', id: 'lastName' },
         { label: 'Correo electrónico:', id: 'email' }
     ];
+    let json = null;
+
+    if (idSeleccionado == null) {
+        fields.push({ label: 'Contraseña:', id: 'password' });
+    }
+    else{
+        try {
+            const response = await fetch('/usuario/mod/datos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: idSeleccionado })
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            json = await response.json();
+        } catch (error) {
+            console.error("Error obteniendo datos del usuario:", error);
+        }
+    }
 
     fields.forEach(field => {
         const label = document.createElement('label');
@@ -229,6 +247,10 @@ export async function botonCrear(id) {
 
         const input = document.createElement('input');
         input.id = field.id;
+        input.required = true;
+        if (idSeleccionado != null) {
+            input.value = json[field.id];
+        }
         input.style.padding = '10px';
         input.style.border = '1px solid #ddd';
         input.style.borderRadius = '8px';
@@ -240,6 +262,14 @@ export async function botonCrear(id) {
         userDetailsDiv.appendChild(label);
         userDetailsDiv.appendChild(input);
     });
+
+    contentDiv.appendChild(userDetailsDiv);
+    return userDetailsDiv;
+}
+
+export async function botonCrear(id) {
+    const userDetailsDiv =  await formularioUsuario(null);
+    console.log(userDetailsDiv);
 
     const createButton = document.createElement('button');
     createButton.textContent = 'Crear';
@@ -255,53 +285,39 @@ export async function botonCrear(id) {
     createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
     userDetailsDiv.appendChild(createButton);
-    contentDiv.appendChild(userDetailsDiv);
+    createButton.addEventListener('click', async () => {
+        const userData = {
+
+        };
+        const inputs = userDetailsDiv.querySelectorAll('input');
+        inputs.forEach(input => {
+            userData[input.id] = input.value;
+        });
+
+        try {
+            const response = await fetch('/usuario/crear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            alert('Usuario creado exitosamente.');
+            handleUsers(); // Recarga la lista de usuarios
+        } catch (error) {
+            console.error("Error creando usuario:", error);
+            alert('Error al crear el usuario.');
+        }
+    });
 }
 
 export async function botonModificar(id) {
-    const contentDiv = document.getElementById('content');
-    contentDiv.innerHTML = '';
-
-    const userDetailsDiv = document.createElement('div');
-    userDetailsDiv.style.display = 'grid';
-    userDetailsDiv.style.gridTemplateColumns = '1fr 2fr';
-    userDetailsDiv.style.gap = '20px';
-    userDetailsDiv.style.padding = '40px';
-    userDetailsDiv.style.border = '1px solid #ddd';
-    userDetailsDiv.style.borderRadius = '12px';
-    userDetailsDiv.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-    userDetailsDiv.style.maxWidth = '800px';
-    userDetailsDiv.style.margin = '40px auto';
-    userDetailsDiv.style.backgroundColor = '#f9f9f9';
-
-    const fields = [
-        { label: 'Nombre de usuario:', id: 'username' },
-        { label: 'Primer nombre:', id: 'firstName' },
-        { label: 'Apellido:', id: 'lastName' },
-        { label: 'Correo electrónico:', id: 'email' }
-    ];
-
-    fields.forEach(field => {
-        const label = document.createElement('label');
-        label.textContent = field.label;
-        label.style.fontWeight = 'bold';
-        label.style.fontSize = '18px';
-        label.style.color = 'black';
-        label.style.alignSelf = 'center';
-
-        const input = document.createElement('input');
-        input.id = field.id;
-        input.style.padding = '10px';
-        input.style.border = '1px solid #ddd';
-        input.style.borderRadius = '8px';
-        input.style.fontSize = '16px';
-        input.style.width = '100%';
-        input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-        input.style.backgroundColor = '#fff';
-
-        userDetailsDiv.appendChild(label);
-        userDetailsDiv.appendChild(input);
-    });
+    const userDetailsDiv = await formularioUsuario(id);
 
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Salvar';
@@ -317,8 +333,35 @@ export async function botonModificar(id) {
     saveButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
     userDetailsDiv.appendChild(saveButton);
-    contentDiv.appendChild(userDetailsDiv);
+    saveButton.addEventListener('click', async () => {
+        const userData = {};
+        const inputs = userDetailsDiv.querySelectorAll('input');
+        inputs.forEach(input => {
+            userData[input.id] = input.value;
+        });
+
+        try {
+            const response = await fetch('/usuario/modificar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            alert('Usuario modificado exitosamente.');
+            handleUsers(); // Recarga la lista de usuarios
+        } catch (error) {
+            console.error("Error modificando usuario:", error);
+            alert('Error al modificar el usuario.');
+        }
+    });
 }
+
 
 export async function botonEliminar(id) {
     // Crear el popup
@@ -396,78 +439,78 @@ export async function botonEliminar(id) {
 
     // Evento eliminar
     btnEliminar.addEventListener('click', async (e) => {
-    try {
-        const eliminado = await confirmar_eliminado(id);
-        if (eliminado) {
-            document.body.removeChild(popup);
-            setTimeout(() => handleUsers(), 100); // da tiempo a que se refleje el borrado
+        try {
+            const eliminado = await confirmar_eliminado(id);
+            if (eliminado) {
+                document.body.removeChild(popup);
+                setTimeout(() => handleUsers(), 100); // da tiempo a que se refleje el borrado
 
-        } else {
-            alert("No se pudo eliminar el usuario.");
+            } else {
+                alert("No se pudo eliminar el usuario.");
+            }
+        } catch (error) {
+            console.error("Error eliminando usuario:", error);
         }
-    } catch (error) {
-        console.error("Error eliminando usuario:", error);
-    }
-});
+    });
 
     btnEliminar.addEventListener('click', () => {
         confirmar_eliminado(id);
         document.body.removeChild(popup);
         // Crear el popup de confirmación
-    const confirmationPopup = document.createElement('div');
-    confirmationPopup.style.position = 'fixed';
-    confirmationPopup.style.top = '0';
-    confirmationPopup.style.left = '0';
-    confirmationPopup.style.width = '100vw';
-    confirmationPopup.style.height = '100vh';
-    confirmationPopup.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    confirmationPopup.style.display = 'flex';
-    confirmationPopup.style.justifyContent = 'center';
-    confirmationPopup.style.alignItems = 'center';
-    confirmationPopup.style.zIndex = '1000';
+        const confirmationPopup = document.createElement('div');
+        confirmationPopup.style.position = 'fixed';
+        confirmationPopup.style.top = '0';
+        confirmationPopup.style.left = '0';
+        confirmationPopup.style.width = '100vw';
+        confirmationPopup.style.height = '100vh';
+        confirmationPopup.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        confirmationPopup.style.display = 'flex';
+        confirmationPopup.style.justifyContent = 'center';
+        confirmationPopup.style.alignItems = 'center';
+        confirmationPopup.style.zIndex = '1000';
 
-    // Contenido del popup
-    const confirmationContent = document.createElement('div');
-    confirmationContent.style.backgroundColor = 'white';
-    confirmationContent.style.padding = '40px';
-    confirmationContent.style.borderRadius = '16px';
-    confirmationContent.style.textAlign = 'center';
-    confirmationContent.style.minWidth = '400px';
-    confirmationContent.style.minHeight = '200px';
-    confirmationContent.style.display = 'flex';
-    confirmationContent.style.flexDirection = 'column';
-    confirmationContent.style.justifyContent = 'center';
-    confirmationContent.style.alignItems = 'center';
+        // Contenido del popup
+        const confirmationContent = document.createElement('div');
+        confirmationContent.style.backgroundColor = 'white';
+        confirmationContent.style.padding = '40px';
+        confirmationContent.style.borderRadius = '16px';
+        confirmationContent.style.textAlign = 'center';
+        confirmationContent.style.minWidth = '400px';
+        confirmationContent.style.minHeight = '200px';
+        confirmationContent.style.display = 'flex';
+        confirmationContent.style.flexDirection = 'column';
+        confirmationContent.style.justifyContent = 'center';
+        confirmationContent.style.alignItems = 'center';
 
-    const confirmationMessage = document.createElement('p');
-    confirmationMessage.textContent = 'Usuario eliminado';
-    confirmationMessage.style.fontSize = '20px';
-    confirmationMessage.style.color = 'black';
-    confirmationMessage.style.marginBottom = '20px';
-    confirmationMessage.style.textAlign = 'center';
+        const confirmationMessage = document.createElement('p');
+        confirmationMessage.textContent = 'Usuario eliminado';
+        confirmationMessage.style.fontSize = '20px';
+        confirmationMessage.style.color = 'black';
+        confirmationMessage.style.marginBottom = '20px';
+        confirmationMessage.style.textAlign = 'center';
 
-    const btnAceptar = document.createElement('button');
-    btnAceptar.textContent = 'Aceptar';
-    btnAceptar.style.backgroundColor = '#003366';
-    btnAceptar.style.color = 'white';
-    btnAceptar.style.padding = '10px 20px';
-    btnAceptar.style.border = 'none';
-    btnAceptar.style.borderRadius = '5px';
-    btnAceptar.style.fontSize = '16px';
-    btnAceptar.style.cursor = 'pointer';
+        const btnAceptar = document.createElement('button');
+        btnAceptar.textContent = 'Aceptar';
+        btnAceptar.style.backgroundColor = '#003366';
+        btnAceptar.style.color = 'white';
+        btnAceptar.style.padding = '10px 20px';
+        btnAceptar.style.border = 'none';
+        btnAceptar.style.borderRadius = '5px';
+        btnAceptar.style.fontSize = '16px';
+        btnAceptar.style.cursor = 'pointer';
 
-    confirmationContent.appendChild(confirmationMessage);
-    confirmationContent.appendChild(btnAceptar);
-    confirmationPopup.appendChild(confirmationContent);
-    document.body.appendChild(confirmationPopup);
+        confirmationContent.appendChild(confirmationMessage);
+        confirmationContent.appendChild(btnAceptar);
+        confirmationPopup.appendChild(confirmationContent);
+        document.body.appendChild(confirmationPopup);
 
-    // Evento aceptar
-    btnAceptar.addEventListener('click', () => {
-        document.body.removeChild(confirmationPopup);
+        // Evento aceptar
+        btnAceptar.addEventListener('click', () => {
+            document.body.removeChild(confirmationPopup);
+        });
     });
-    });
-    
-    
+
+
 }
 
 // Función que JONATHAN completará

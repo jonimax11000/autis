@@ -147,7 +147,7 @@ app.post('/usuario/mod', async (req, res) => {
 
 app.post('/usuario/mod/datos', async (req, res) => {
     try {
-        body = req.body;
+        const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const id = parseInt(body.id, 10);
         const json = await repository.getUsuarioModificar(id);
@@ -160,7 +160,7 @@ app.post('/usuario/mod/datos', async (req, res) => {
 
 app.post('/usuario/crear', async (req, res) => {
     try {
-        body = req.body;
+        const body = req.body;
         repository.cambiar(new ConectionAPI(tocken));
         repository.crearUsuario(body);
         res.json({ success: true });

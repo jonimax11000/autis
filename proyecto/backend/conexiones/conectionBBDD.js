@@ -38,7 +38,6 @@ export class ConectionBBDD extends Conection {
 
             // Consulta: obtener usuarios con id mayor a 3
             const result = await this.client.query('SELECT id, firstname, lastname FROM users WHERE id > 3 ORDER BY id;');
-            console.log("usuarios en BBDD: ", result.rows);
 
             await this.client.end();
 
@@ -64,8 +63,6 @@ export class ConectionBBDD extends Conection {
     }
 
     async getUsuariosByName(nombre) {
-        console.log("entrando a BBDD");
-        console.log("nombre: ", nombre);
         try {
             await this.client.connect();
 
@@ -103,9 +100,9 @@ export class ConectionBBDD extends Conection {
 
             const json = {
                 login: result.rows[0].login,
-                firstname: result.rows[0].firstname,
-                lastname: result.rows[0].lastname,
-                mail: result.rows[0].mail
+                firstName: result.rows[0].firstname,
+                lastName: result.rows[0].lastname,
+                email: result.rows[0].mail
             };
 
             await this.client.end();

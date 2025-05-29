@@ -75,7 +75,6 @@ class EmpleatCard extends CardComponent {
 
 
         const mod = this.shadowRoot.getElementById(`modificar${id}`);
-        console.log('Modif',mod);
         mod.addEventListener('click', () => botonModificar(id));
         if(id >4){
             const elim = this.shadowRoot.getElementById(`eliminar${id}`);
