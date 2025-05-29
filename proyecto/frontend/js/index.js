@@ -209,7 +209,6 @@ export async function botonModificar(id) {
     userDetailsDiv.style.backgroundColor = '#f9f9f9';
 
     const fields = [
-        { label: 'Estado:', id: 'estado' },
         { label: 'Nombre de usuario:', id: 'username' },
         { label: 'Primer nombre:', id: 'firstName' },
         { label: 'Apellido:', id: 'lastName' },
@@ -222,7 +221,7 @@ export async function botonModificar(id) {
         label.textContent = field.label;
         label.style.fontWeight = 'bold';
         label.style.fontSize = '18px';
-        label.style.color = 'black'; // Cambiar el color del texto a negro
+        label.style.color = 'black';
         label.style.alignSelf = 'center';
 
         const input = document.createElement(field.id === 'idioma' ? 'select' : 'input');
@@ -250,7 +249,7 @@ export async function botonModificar(id) {
 
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Salvar';
-    saveButton.style.backgroundColor = '#028a34'; // Cambiar el verde a un tono más oscuro
+    saveButton.style.backgroundColor = '#028a34';
     saveButton.style.color = 'white';
     saveButton.style.border = 'none';
     saveButton.style.padding = '15px 30px';
@@ -355,6 +354,64 @@ export async function botonEliminar(id) {
     }
 });
 
+    btnEliminar.addEventListener('click', () => {
+        confirmar_eliminado(id);
+        document.body.removeChild(popup);
+        // Crear el popup de confirmación
+    const confirmationPopup = document.createElement('div');
+    confirmationPopup.style.position = 'fixed';
+    confirmationPopup.style.top = '0';
+    confirmationPopup.style.left = '0';
+    confirmationPopup.style.width = '100vw';
+    confirmationPopup.style.height = '100vh';
+    confirmationPopup.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    confirmationPopup.style.display = 'flex';
+    confirmationPopup.style.justifyContent = 'center';
+    confirmationPopup.style.alignItems = 'center';
+    confirmationPopup.style.zIndex = '1000';
+
+    // Contenido del popup
+    const confirmationContent = document.createElement('div');
+    confirmationContent.style.backgroundColor = 'white';
+    confirmationContent.style.padding = '40px';
+    confirmationContent.style.borderRadius = '16px';
+    confirmationContent.style.textAlign = 'center';
+    confirmationContent.style.minWidth = '400px';
+    confirmationContent.style.minHeight = '200px';
+    confirmationContent.style.display = 'flex';
+    confirmationContent.style.flexDirection = 'column';
+    confirmationContent.style.justifyContent = 'center';
+    confirmationContent.style.alignItems = 'center';
+
+    const confirmationMessage = document.createElement('p');
+    confirmationMessage.textContent = 'Usuario eliminado';
+    confirmationMessage.style.fontSize = '20px';
+    confirmationMessage.style.color = 'black';
+    confirmationMessage.style.marginBottom = '20px';
+    confirmationMessage.style.textAlign = 'center';
+
+    const btnAceptar = document.createElement('button');
+    btnAceptar.textContent = 'Aceptar';
+    btnAceptar.style.backgroundColor = '#003366';
+    btnAceptar.style.color = 'white';
+    btnAceptar.style.padding = '10px 20px';
+    btnAceptar.style.border = 'none';
+    btnAceptar.style.borderRadius = '5px';
+    btnAceptar.style.fontSize = '16px';
+    btnAceptar.style.cursor = 'pointer';
+
+    confirmationContent.appendChild(confirmationMessage);
+    confirmationContent.appendChild(btnAceptar);
+    confirmationPopup.appendChild(confirmationContent);
+    document.body.appendChild(confirmationPopup);
+
+    // Evento aceptar
+    btnAceptar.addEventListener('click', () => {
+        document.body.removeChild(confirmationPopup);
+    });
+    });
+    
+    
 }
 
 // Función que JONATHAN completará
