@@ -82,6 +82,9 @@ async function handleUsers(e) {
 
     const createButton = document.createElement('button');
     createButton.textContent = 'Crear';
+    createButton.addEventListener('click', () => {
+        botonCrear(null); // Llama a la función para crear, pasando null como id
+    });
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
     plusIcon.style.fontSize = '32px';
@@ -189,6 +192,81 @@ async function handleSearch(event) {
             console.error("Error fetching filtered user data:", error);
         }
     }
+}
+
+
+
+
+export async function botonCrear(id) {
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    const userDetailsDiv = document.createElement('div');
+    userDetailsDiv.style.display = 'grid';
+    userDetailsDiv.style.gridTemplateColumns = '1fr 2fr';
+    userDetailsDiv.style.gap = '20px';
+    userDetailsDiv.style.padding = '40px';
+    userDetailsDiv.style.border = '1px solid #ddd';
+    userDetailsDiv.style.borderRadius = '12px';
+    userDetailsDiv.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+    userDetailsDiv.style.maxWidth = '800px';
+    userDetailsDiv.style.margin = '40px auto';
+    userDetailsDiv.style.backgroundColor = '#f9f9f9';
+
+    const fields = [
+        { label: 'Nombre de usuario:', id: 'username' },
+        { label: 'Primer nombre:', id: 'firstName' },
+        { label: 'Apellido:', id: 'lastName' },
+        { label: 'Correo electrónico:', id: 'email' },
+        { label: 'Idioma:', id: 'idioma' }
+    ];
+
+    fields.forEach(field => {
+        const label = document.createElement('label');
+        label.textContent = field.label;
+        label.style.fontWeight = 'bold';
+        label.style.fontSize = '18px';
+        label.style.color = 'black';
+        label.style.alignSelf = 'center';
+
+        const input = document.createElement(field.id === 'idioma' ? 'select' : 'input');
+        input.id = field.id;
+        input.style.padding = '10px';
+        input.style.border = '1px solid #ddd';
+        input.style.borderRadius = '8px';
+        input.style.fontSize = '16px';
+        input.style.width = '100%';
+        input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+        input.style.backgroundColor = '#fff';
+
+        if (field.id === 'idioma') {
+            ['Español', 'Inglés', 'Francés', 'Alemán'].forEach(lang => {
+                const option = document.createElement('option');
+                option.value = lang.toLowerCase();
+                option.textContent = lang;
+                input.appendChild(option);
+            });
+        }
+
+        userDetailsDiv.appendChild(label);
+        userDetailsDiv.appendChild(input);
+    });
+
+    const createButton = document.createElement('button');
+    createButton.textContent = 'Crear';
+    createButton.style.backgroundColor = '#028a34';
+    createButton.style.color = 'white';
+    createButton.style.border = 'none';
+    createButton.style.padding = '15px 30px';
+    createButton.style.borderRadius = '8px';
+    createButton.style.cursor = 'pointer';
+    createButton.style.fontSize = '18px';
+    createButton.style.marginTop = '20px';
+    createButton.style.alignSelf = 'center';
+    createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+
+    userDetailsDiv.appendChild(createButton);
+    contentDiv.appendChild(userDetailsDiv);
 }
 
 
