@@ -341,7 +341,60 @@ export async function botonEliminar(id) {
     btnEliminar.addEventListener('click', () => {
         confirmar_eliminado(id);
         document.body.removeChild(popup);
+        // Crear el popup de confirmación
+    const confirmationPopup = document.createElement('div');
+    confirmationPopup.style.position = 'fixed';
+    confirmationPopup.style.top = '0';
+    confirmationPopup.style.left = '0';
+    confirmationPopup.style.width = '100vw';
+    confirmationPopup.style.height = '100vh';
+    confirmationPopup.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    confirmationPopup.style.display = 'flex';
+    confirmationPopup.style.justifyContent = 'center';
+    confirmationPopup.style.alignItems = 'center';
+    confirmationPopup.style.zIndex = '1000';
+
+    // Contenido del popup
+    const confirmationContent = document.createElement('div');
+    confirmationContent.style.backgroundColor = 'white';
+    confirmationContent.style.padding = '40px';
+    confirmationContent.style.borderRadius = '16px';
+    confirmationContent.style.textAlign = 'center';
+    confirmationContent.style.minWidth = '400px';
+    confirmationContent.style.minHeight = '200px';
+    confirmationContent.style.display = 'flex';
+    confirmationContent.style.flexDirection = 'column';
+    confirmationContent.style.justifyContent = 'center';
+    confirmationContent.style.alignItems = 'center';
+
+    const confirmationMessage = document.createElement('p');
+    confirmationMessage.textContent = 'Usuario eliminado';
+    confirmationMessage.style.fontSize = '20px';
+    confirmationMessage.style.color = 'black';
+    confirmationMessage.style.marginBottom = '20px';
+    confirmationMessage.style.textAlign = 'center';
+
+    const btnAceptar = document.createElement('button');
+    btnAceptar.textContent = 'Aceptar';
+    btnAceptar.style.backgroundColor = '#003366';
+    btnAceptar.style.color = 'white';
+    btnAceptar.style.padding = '10px 20px';
+    btnAceptar.style.border = 'none';
+    btnAceptar.style.borderRadius = '5px';
+    btnAceptar.style.fontSize = '16px';
+    btnAceptar.style.cursor = 'pointer';
+
+    confirmationContent.appendChild(confirmationMessage);
+    confirmationContent.appendChild(btnAceptar);
+    confirmationPopup.appendChild(confirmationContent);
+    document.body.appendChild(confirmationPopup);
+
+    // Evento aceptar
+    btnAceptar.addEventListener('click', () => {
+        document.body.removeChild(confirmationPopup);
     });
+    });
+    
     
 }
 
