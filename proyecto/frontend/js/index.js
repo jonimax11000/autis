@@ -195,9 +195,8 @@ async function handleSearch(event) {
 }
 
 
-
-
 export async function botonCrear(id) {
+    null
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
 
@@ -217,8 +216,7 @@ export async function botonCrear(id) {
         { label: 'Nombre de usuario:', id: 'username' },
         { label: 'Primer nombre:', id: 'firstName' },
         { label: 'Apellido:', id: 'lastName' },
-        { label: 'Correo electrónico:', id: 'email' },
-        { label: 'Idioma:', id: 'idioma' }
+        { label: 'Correo electrónico:', id: 'email' }
     ];
 
     fields.forEach(field => {
@@ -229,7 +227,7 @@ export async function botonCrear(id) {
         label.style.color = 'black';
         label.style.alignSelf = 'center';
 
-        const input = document.createElement(field.id === 'idioma' ? 'select' : 'input');
+        const input = document.createElement('input');
         input.id = field.id;
         input.style.padding = '10px';
         input.style.border = '1px solid #ddd';
@@ -238,15 +236,6 @@ export async function botonCrear(id) {
         input.style.width = '100%';
         input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
         input.style.backgroundColor = '#fff';
-
-        if (field.id === 'idioma') {
-            ['Español', 'Inglés', 'Francés', 'Alemán'].forEach(lang => {
-                const option = document.createElement('option');
-                option.value = lang.toLowerCase();
-                option.textContent = lang;
-                input.appendChild(option);
-            });
-        }
 
         userDetailsDiv.appendChild(label);
         userDetailsDiv.appendChild(input);
@@ -269,7 +258,6 @@ export async function botonCrear(id) {
     contentDiv.appendChild(userDetailsDiv);
 }
 
-
 export async function botonModificar(id) {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
@@ -290,8 +278,7 @@ export async function botonModificar(id) {
         { label: 'Nombre de usuario:', id: 'username' },
         { label: 'Primer nombre:', id: 'firstName' },
         { label: 'Apellido:', id: 'lastName' },
-        { label: 'Correo electrónico:', id: 'email' },
-        { label: 'Idioma:', id: 'idioma' }
+        { label: 'Correo electrónico:', id: 'email' }
     ];
 
     fields.forEach(field => {
@@ -302,7 +289,7 @@ export async function botonModificar(id) {
         label.style.color = 'black';
         label.style.alignSelf = 'center';
 
-        const input = document.createElement(field.id === 'idioma' ? 'select' : 'input');
+        const input = document.createElement('input');
         input.id = field.id;
         input.style.padding = '10px';
         input.style.border = '1px solid #ddd';
@@ -311,15 +298,6 @@ export async function botonModificar(id) {
         input.style.width = '100%';
         input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
         input.style.backgroundColor = '#fff';
-
-        if (field.id === 'idioma') {
-            ['Español', 'Inglés', 'Francés', 'Alemán'].forEach(lang => {
-                const option = document.createElement('option');
-                option.value = lang.toLowerCase();
-                option.textContent = lang;
-                input.appendChild(option);
-            });
-        }
 
         userDetailsDiv.appendChild(label);
         userDetailsDiv.appendChild(input);
