@@ -208,7 +208,6 @@ export async function botonModificar(id) {
     userDetailsDiv.style.backgroundColor = '#f9f9f9';
 
     const fields = [
-        { label: 'Estado:', id: 'estado' },
         { label: 'Nombre de usuario:', id: 'username' },
         { label: 'Primer nombre:', id: 'firstName' },
         { label: 'Apellido:', id: 'lastName' },
@@ -221,7 +220,7 @@ export async function botonModificar(id) {
         label.textContent = field.label;
         label.style.fontWeight = 'bold';
         label.style.fontSize = '18px';
-        label.style.color = 'black'; // Cambiar el color del texto a negro
+        label.style.color = 'black';
         label.style.alignSelf = 'center';
 
         const input = document.createElement(field.id === 'idioma' ? 'select' : 'input');
@@ -249,7 +248,7 @@ export async function botonModificar(id) {
 
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Salvar';
-    saveButton.style.backgroundColor = '#028a34'; // Cambiar el verde a un tono más oscuro
+    saveButton.style.backgroundColor = '#028a34';
     saveButton.style.color = 'white';
     saveButton.style.border = 'none';
     saveButton.style.padding = '15px 30px';
@@ -343,6 +342,7 @@ export async function botonEliminar(id) {
         confirmar_eliminado(id);
         document.body.removeChild(popup);
     });
+    
 }
 
 // Función que JONATHAN completará
