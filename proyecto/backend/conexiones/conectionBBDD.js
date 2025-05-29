@@ -53,7 +53,7 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query(`SELECT id, firstname, lastname FROM users where id=${id};`);
+            const result = await this.client.query(`SELECT id, firstname, lastname FROM users where id=${id} and id>3;`);
 
             await this.client.end();
 
@@ -69,7 +69,7 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const query = `SELECT id, firstname, lastname FROM users WHERE (firstname || ' ' || lastname) ILIKE '%${nombre}%';`;
+            const query = `SELECT id, firstname, lastname FROM users WHERE (firstname || ' ' || lastname) ILIKE '%${nombre}%' and id>3;`;
             console.log("query: "+query);
             const result = await this.client.query(query);
             await this.client.end();
@@ -85,7 +85,7 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query(`select id,firstname,lastname from users where id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '%${projecto}%'));`);
+            const result = await this.client.query(`select id,firstname,lastname from users where id>3 and id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '%${projecto}%'));`);
 
             await this.client.end();
 
