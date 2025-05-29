@@ -6,11 +6,31 @@ export class ConectionAPI extends Conection {
         super();
         // Tu código adicional aquí
         this.tocken = tocken;
+        console.log('Tocken en ConectionAPI:', this.tocken);
     }
 
     async getProjects() {
         try {
             const response = await fetch('http://localhost:8080/api/v3/projects', {
+                headers: {
+                    'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
+                }
+            });
+            
+            return await response;
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+            throw error;
+        }
+    }
+
+
+    async deleteUsuario(id) {
+        console.log(`http://localhost:8080/api/v3/users/${id}`);
+        console.log('tocken',this.tocken);
+        try {
+            const response = await fetch(`http://localhost:8080/api/v3/users/${id}`, {
+                method: 'DELETE',
                 headers: {
                     'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
                 }

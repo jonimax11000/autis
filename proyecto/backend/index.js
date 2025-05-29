@@ -167,8 +167,13 @@ app.post('/usuario/crear', async (req, res) => {
 
 app.post('/usuario/borrar', async (req, res) => {
     try {
-
-        
+        console.log('Borrar usuario');
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        const id = parseInt(body.id, 10);
+        const response = await repository.deleteUsuario(id);
+        console.log('Respuesta de borrar usuario:', response);
+        res.json({ success: response.ok });
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -191,7 +196,7 @@ app.post('/usuario/tareas', async (req, res) => {
 * Recibe un token, intenta obtener los proyectos y responde si es válido o no
 */
 app.post('/tocken', async (req, res) => {
-    const tocken = req.body.tocken;
+    tocken = req.body.tocken;
 
     // Cambia la conexión del repositorio global al nuevo token recibido
     // Así, las siguientes operaciones usarán este token
@@ -200,14 +205,11 @@ app.post('/tocken', async (req, res) => {
         const response = await repository.getProjects();
 
         // Comprueba que la respuesta tenga la estructura esperada de OpenProject
-        console.log('Respuesta de getProjects:', response);
 
         // Si la respuesta es válida, el token es correcto
         if (response.ok) {
-            console.log('Token válido');
             res.json({ valido: true });
         } else {
-            console.log('Token inválido por estructura');
             res.json({ valido: false });
         }
     } catch (err) {
