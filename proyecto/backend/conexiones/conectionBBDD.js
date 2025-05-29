@@ -36,9 +36,9 @@ export class ConectionBBDD extends Conection {
         try {
             await this.client.connect();
 
-            // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query('SELECT id, firstname,lastname FROM users where id>3 order by id;');
-            console.log("usuarios en BBDD: "+result.rows);
+            // Consulta: obtener usuarios con id mayor a 3
+            const result = await this.client.query('SELECT id, firstname, lastname FROM users WHERE id > 3 ORDER BY id;');
+            console.log("usuarios en BBDD: ", result.rows);
 
             await this.client.end();
 
@@ -53,7 +53,7 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query(`SELECT id, firstname, lastname FROM users where id=${id} and id>3;`);
+            const result = await this.client.query(`SELECT id, firstname, lastname FROM users where id=${id};`);
 
             await this.client.end();
 
@@ -65,15 +65,15 @@ export class ConectionBBDD extends Conection {
 
     async getUsuariosByName(nombre) {
         console.log("entrando a BBDD");
+        console.log("nombre: ", nombre);
         try {
             await this.client.connect();
 
-            // Exemple de consulta: obtenir els primers 5 usuaris
-            const query = `SELECT id, firstname, lastname FROM users WHERE (firstname || ' ' || lastname) ILIKE '%${nombre}%' and id>3;`;
-            console.log("query: "+query);
+            let query;
+            query = `SELECT id, firstname, lastname FROM users WHERE id > 3 AND (firstname || ' ' || lastname) ILIKE '%${nombre}%' order by id;`;
+           
             const result = await this.client.query(query);
             await this.client.end();
-            console.log("usuarios por nombre en BBDD: "+result.rows);
             return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
@@ -85,7 +85,7 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query(`select id,firstname,lastname from users where id>3 and id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '%${projecto}%'));`);
+            const result = await this.client.query(`select id,firstname,lastname from users where id>3 and id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '%${projecto}%')) order by id;`);
 
             await this.client.end();
 
