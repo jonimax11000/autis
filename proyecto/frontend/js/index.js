@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 async function handleUsers(e) {
+    console.log("handleUsers called");
     if (e) {
         e.preventDefault();
     }
@@ -339,10 +340,20 @@ export async function botonEliminar(id) {
     });
 
     // Evento eliminar
-    btnEliminar.addEventListener('click', () => {
-        confirmar_eliminado(id);
-        document.body.removeChild(popup);
-    });
+    btnEliminar.addEventListener('click', async (e) => {
+    try {
+        const eliminado = await confirmar_eliminado(id);
+        if (eliminado) {
+            document.body.removeChild(popup);
+            await handleUsers(); // espera correctamente la recarga
+        } else {
+            alert("No se pudo eliminar el usuario.");
+        }
+    } catch (error) {
+        console.error("Error eliminando usuario:", error);
+    }
+});
+
 }
 
 // Función que JONATHAN completará
@@ -351,7 +362,7 @@ async function confirmar_eliminado(id) {
         const response = await fetch('/usuario/borrar', {
             method: 'POST',
             headers: {
-            'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ id: id })
         });
@@ -359,14 +370,11 @@ async function confirmar_eliminado(id) {
         if (!response.ok) {
             throw new Error(response.statusText);
         }
-        else{
-            handleUsers(null); // Actualiza la lista de usuarios después de eliminar
-        }
-        
 
-
+        return true;
     } catch (error) {
         console.error("Error deleting user:", error);
+        return false;
     }
 }
 
