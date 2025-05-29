@@ -277,7 +277,8 @@ export async function botonEliminar(id) {
         const eliminado = await confirmar_eliminado(id);
         if (eliminado) {
             document.body.removeChild(popup);
-            await handleUsers(); // espera correctamente la recarga
+            setTimeout(() => handleUsers(), 100); // da tiempo a que se refleje el borrado
+
         } else {
             alert("No se pudo eliminar el usuario.");
         }
