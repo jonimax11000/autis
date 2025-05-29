@@ -52,6 +52,7 @@ class TareaCard extends CardComponent {
                 </div>
                 <div class="buttons">
                     <button id="modificar${id}">Modificar</button>
+                    <button id="eliminar${id}">Eliminar</button>
                 </div>
                 <counter-component></counter-component>
             </div>
