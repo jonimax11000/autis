@@ -1,5 +1,6 @@
 import './components/empleatsCard.js';
 import './components/projectsList.js';
+import './components/tareasList.js';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
@@ -36,6 +37,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (this.textContent.trim() === 'Proyectos') {
             const projectsList = document.createElement('projects-list');
             contentDiv.appendChild(projectsList);
+            } else if (this.textContent.trim() === 'Departamentos') {
+            const tareasList = document.createElement('tareas-list');
+            contentDiv.appendChild(tareasList);
             // Lógica para cargar contenido específico según el enlace pulsado
             } else if (this.id === 'menu-empleados') {
                 handleUsers(e); // Llama a la función para cargar empleados
