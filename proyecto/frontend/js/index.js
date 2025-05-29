@@ -194,9 +194,7 @@ async function handleSearch(event) {
     }
 }
 
-
-export async function botonCrear(id) {
-    null
+function formularioUsuario(idPedido) {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
 
@@ -213,11 +211,15 @@ export async function botonCrear(id) {
     userDetailsDiv.style.backgroundColor = '#f9f9f9';
 
     const fields = [
-        { label: 'Nombre de usuario:', id: 'username' },
-        { label: 'Primer nombre:', id: 'firstName' },
-        { label: 'Apellido:', id: 'lastName' },
-        { label: 'Correo electrónico:', id: 'email' }
+        { label: 'Login:', id: 'login' },
+        { label: 'Primer nombre:', id: 'firstname' },
+        { label: 'Apellido:', id: 'lastname' },
+        { label: 'Correo electrónico:', id: 'mail' }
     ];
+
+    if (idPedido === null) {
+        fields.push({ label: 'Contraseña:', id: 'password' });
+    }
 
     fields.forEach(field => {
         const label = document.createElement('label');
@@ -236,10 +238,18 @@ export async function botonCrear(id) {
         input.style.width = '100%';
         input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
         input.style.backgroundColor = '#fff';
+        input.required = true;
 
         userDetailsDiv.appendChild(label);
         userDetailsDiv.appendChild(input);
     });
+
+    contentDiv.appendChild(userDetailsDiv);
+    return userDetailsDiv;
+}
+
+export async function botonCrear() {
+    const userDetailsDiv = formularioUsuario(null);
 
     const createButton = document.createElement('button');
     createButton.textContent = 'Crear';
@@ -255,53 +265,10 @@ export async function botonCrear(id) {
     createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
     userDetailsDiv.appendChild(createButton);
-    contentDiv.appendChild(userDetailsDiv);
 }
 
 export async function botonModificar(id) {
-    const contentDiv = document.getElementById('content');
-    contentDiv.innerHTML = '';
-
-    const userDetailsDiv = document.createElement('div');
-    userDetailsDiv.style.display = 'grid';
-    userDetailsDiv.style.gridTemplateColumns = '1fr 2fr';
-    userDetailsDiv.style.gap = '20px';
-    userDetailsDiv.style.padding = '40px';
-    userDetailsDiv.style.border = '1px solid #ddd';
-    userDetailsDiv.style.borderRadius = '12px';
-    userDetailsDiv.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-    userDetailsDiv.style.maxWidth = '800px';
-    userDetailsDiv.style.margin = '40px auto';
-    userDetailsDiv.style.backgroundColor = '#f9f9f9';
-
-    const fields = [
-        { label: 'Nombre de usuario:', id: 'username' },
-        { label: 'Primer nombre:', id: 'firstName' },
-        { label: 'Apellido:', id: 'lastName' },
-        { label: 'Correo electrónico:', id: 'email' }
-    ];
-
-    fields.forEach(field => {
-        const label = document.createElement('label');
-        label.textContent = field.label;
-        label.style.fontWeight = 'bold';
-        label.style.fontSize = '18px';
-        label.style.color = 'black';
-        label.style.alignSelf = 'center';
-
-        const input = document.createElement('input');
-        input.id = field.id;
-        input.style.padding = '10px';
-        input.style.border = '1px solid #ddd';
-        input.style.borderRadius = '8px';
-        input.style.fontSize = '16px';
-        input.style.width = '100%';
-        input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-        input.style.backgroundColor = '#fff';
-
-        userDetailsDiv.appendChild(label);
-        userDetailsDiv.appendChild(input);
-    });
+    const userDetailsDiv = formularioUsuario(id);
 
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Salvar';
@@ -317,7 +284,6 @@ export async function botonModificar(id) {
     saveButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
     userDetailsDiv.appendChild(saveButton);
-    contentDiv.appendChild(userDetailsDiv);
 }
 
 export async function botonEliminar(id) {
