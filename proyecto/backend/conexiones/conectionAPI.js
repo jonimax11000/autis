@@ -42,5 +42,23 @@ export class ConectionAPI extends Conection {
             throw error;
         }
     }
+
+    async deleteUsuario(json) {
+        console.log(`http://localhost:8080/api/v3/users/`);
+        console.log('tocken',this.tocken);
+        try {
+            const response = await fetch(`http://localhost:8080/api/v3/users/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
+                }
+            });
+            
+            return await response;
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+            throw error;
+        }
+    }
     
 }
