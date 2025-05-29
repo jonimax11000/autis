@@ -94,4 +94,25 @@ export class ConectionBBDD extends Conection {
             return JSON.stringify({ error: error.message });
         }
     }
+
+    async getUsuarioModificar(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`SELECT login,firstname,lastname,mail FROM users where id=${id} Limit 1;`);
+
+            const json = {
+                login: result.rows[0].login,
+                firstname: result.rows[0].firstname,
+                lastname: result.rows[0].lastname,
+                mail: result.rows[0].mail
+            };
+
+            await this.client.end();
+
+            return json;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
 }
