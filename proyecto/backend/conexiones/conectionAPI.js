@@ -55,6 +55,8 @@ export class ConectionAPI extends Conection {
                 body: JSON.stringify(json)
             });
 
+            const data = await response.json();
+            console.log('Respuesta crear usuario:', data);
             console.log(response);
             console.log(response.json);
             
