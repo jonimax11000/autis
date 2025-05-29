@@ -99,6 +99,21 @@ app.post('/proyectos', async (req, res) => {
     }
 });
 
+app.post('/tareas', async (req, res) => {
+    try {
+        repository.cambiar(new ConectionBBDD());
+        
+        const json = await repository.getTareas();
+
+        //console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuarios/filtrar/proyecto', async (req, res) => {
     try {
         let body = req.body;
