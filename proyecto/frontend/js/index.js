@@ -347,14 +347,14 @@ export async function botonModificar(id) {
 
     userDetailsDiv.appendChild(saveButton);
     saveButton.addEventListener('click', async () => {
-        const userData = {};
+        const userData = { id }; // Incluye el ID
         const inputs = userDetailsDiv.querySelectorAll('input');
         inputs.forEach(input => {
             userData[input.id] = input.value;
         });
 
         try {
-            const response = await fetch('/usuario/modificar', {
+            const response = await fetch('/usuario/mod', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

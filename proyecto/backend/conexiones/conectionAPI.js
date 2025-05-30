@@ -70,9 +70,9 @@ export class ConectionAPI extends Conection {
     async modificarUsuario(json) {
         const body = {
             login: json.login,
-            firstname: json.firstname,
-            lastname: json.lastname,
-            mail: json.mail,
+            firstName: json.firstname,
+            lastName: json.lastname,
+            email: json.email,
         }
         try {
             const response = await fetch(`http://localhost:8080/api/v3/users/${json.id}`, {
