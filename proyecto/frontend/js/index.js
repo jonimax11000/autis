@@ -589,7 +589,7 @@ async function handleDashboard() {
     dashboardContainer.style.padding = '20px';
 
     try {
-        const response = await fetch('/dashboard', {
+        /*const response = await fetch('/dashboard', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -602,12 +602,10 @@ async function handleDashboard() {
 
         const data = await response.json();
         data.forEach(item => {
-            const dashboardCard = document.createElement('dashboard-card');
-            dashboardCard.setAttribute('dashboard-id', item.id);
-            dashboardCard.setAttribute('dashboard-title', item.title);
-            dashboardCard.setAttribute('dashboard-description', item.description);
             dashboardContainer.appendChild(dashboardCard);
-        });
+        });*/
+        const dashboard = document.createElement('dashboard-card');
+        dashboardContainer.appendChild(dashboard);
 
         contentDiv.appendChild(dashboardContainer);
     } catch (error) {

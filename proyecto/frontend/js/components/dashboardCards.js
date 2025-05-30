@@ -18,22 +18,12 @@ class DashboardCard extends HTMLElement {
         this.render(this.getAttribute('empleats-id'), this.getAttribute('empleats-nom'));
     }
 
-    addMiniCard() {
-        this.miniCards.push({ text: '', color: 'red' });
-        this.render(this.getAttribute('empleats-id'), this.getAttribute('empleats-nom'));
-    }
-
-    changeMiniCardColor(index) {
-        this.miniCards[index].color = this.miniCards[index].color === 'red' ? 'green' : 'red';
-        this.render(this.getAttribute('empleats-id'), this.getAttribute('empleats-nom'));
-    }
-
     render(id, nom) {
         const miniCardsHTML = this.miniCards
             .map(
-                (card, index) => `
-                <div class="mini-card" style="background-color: ${card.color}">
-                    <input type="text" value="${card.text}" placeholder="Escribe aquí" />
+                (miniCard, index) => `
+                <div class="mini-card">
+                    <input type="text" value="${miniCard.text}" placeholder="Escribe aquí" />
                     <button class="toggle-color" data-index="${index}">+</button>
                 </div>
             `
@@ -43,17 +33,8 @@ class DashboardCard extends HTMLElement {
         const expandedContent = this.expanded
             ? `
             <div class="expanded-content">
-                <div class="round-chart"></div>
-                <div class="horizontal-chart"></div>
-                <div class="sliders">
-                    ${this.miniCards
-                        .map(
-                            (_, index) => `
-                        <input type="range" min="0" max="1" step="1" data-index="${index}" />
-                    `
-                        )
-                        .join('')}
-                </div>
+                <!-- aqui estructura de grafica -->
+                <!-- aqui poner lo de las tareas -->
             </div>
         `
             : '';
@@ -63,24 +44,34 @@ class DashboardCard extends HTMLElement {
                 .card {
                     display: flex;
                     flex-direction: column;
-                    align-items: center;
-                    padding: 10px;
-                    border: 1px solid #ccc;
+                    align-items: flex-start;
+                    padding: 20px;
+                    border: 3px solid #000; /* Bordes más gruesos */
                     border-radius: 5px;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                    background-color: #fff;
+                    margin: 0 auto;
+                    width: 80%;
+                    max-width: 1200px;
+                    height: ${this.expanded ? 'auto' : 'calc(100% - 10px)'}; /* Reducir altura antes de expansión */
                     transition: all 0.3s ease;
-                    width: ${this.expanded ? '400px' : '200px'};
-                    height: ${this.expanded ? '400px' : '200px'};
+                    color: #000; /* Letras negras */
                 }
                 .header {
                     display: flex;
                     align-items: center;
                     gap: 10px;
+                    width: 100%;
                 }
                 .header img {
                     width: 50px;
                     height: 50px;
                     border-radius: 50%;
+                }
+                .header div {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start; /* Alineación a la izquierda */
                 }
                 .mini-cards {
                     display: flex;
@@ -101,24 +92,12 @@ class DashboardCard extends HTMLElement {
                     display: flex;
                     flex-direction: column;
                     gap: 10px;
-                }
-                .round-chart {
-                    width: 100px;
-                    height: 100px;
-                    border: 2px solid #ccc;
-                    border-radius: 50%;
-                }
-                .horizontal-chart {
-                    width: 100%;
-                    height: 20px;
-                    background-color: #ccc;
-                }
-                .sliders input {
                     width: 100%;
                 }
                 .expand-button {
                     margin-top: 10px;
                     cursor: pointer;
+                    align-self: center; /* Centrar el botón */
                 }
             </style>
             <div class="card">
@@ -132,22 +111,14 @@ class DashboardCard extends HTMLElement {
                 <div class="mini-cards">
                     ${miniCardsHTML}
                 </div>
-                <button class="add-mini-card">Añadir mini tarjeta</button>
                 <button class="expand-button">v</button>
                 ${expandedContent}
             </div>
         `;
 
         this.shadowRoot.querySelector('.expand-button').addEventListener('click', () => this.toggleExpand());
-        this.shadowRoot.querySelector('.add-mini-card').addEventListener('click', () => this.addMiniCard());
         this.shadowRoot.querySelectorAll('.toggle-color').forEach((button) =>
             button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                this.changeMiniCardColor(index);
-            })
-        );
-        this.shadowRoot.querySelectorAll('.sliders input').forEach((slider) =>
-            slider.addEventListener('input', (e) => {
                 const index = e.target.dataset.index;
                 this.changeMiniCardColor(index);
             })
