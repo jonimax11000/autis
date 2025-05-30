@@ -21,6 +21,10 @@ export class OpenProjectRepository {
         return await this.conexion.getUsuarios();
     }
 
+    async getTareas() {
+        return await this.conexion.getTareas();
+    }
+
     async getUsuariosByID(id) {
         return await this.conexion.getUsuariosByID(id);
     }

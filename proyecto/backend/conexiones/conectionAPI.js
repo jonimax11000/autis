@@ -45,6 +45,7 @@ export class ConectionAPI extends Conection {
 
     async crearUsuario(json) {
         try {
+            console.log(json);
             const response = await fetch(`http://localhost:8080/api/v3/users/`, {
                 method: 'POST',
                 headers: {
@@ -53,6 +54,11 @@ export class ConectionAPI extends Conection {
                 },
                 body: JSON.stringify(json)
             });
+
+            const data = await response.json();
+            console.log('Respuesta crear usuario:', data);
+            console.log(response);
+            console.log(response.json);
             
             return await response.ok;
         } catch (error) {
@@ -64,9 +70,9 @@ export class ConectionAPI extends Conection {
     async modificarUsuario(json) {
         const body = {
             login: json.login,
-            firstname: json.firstname,
-            lastname: json.lastname,
-            mail: json.mail,
+            firstName: json.firstname,
+            lastName: json.lastname,
+            email: json.email,
         }
         try {
             const response = await fetch(`http://localhost:8080/api/v3/users/${json.id}`, {
