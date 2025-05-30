@@ -214,7 +214,7 @@ async function formularioUsuario(idSeleccionado) {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
 
-    const userDetailsDiv = document.createElement('div');
+    const userDetailsDiv = document.createElement('form');
     userDetailsDiv.style.display = 'grid';
     userDetailsDiv.style.gridTemplateColumns = '1fr 2fr';
     userDetailsDiv.style.gap = '20px';
@@ -271,6 +271,15 @@ async function formularioUsuario(idSeleccionado) {
         if (idSeleccionado != null) {
             input.value = json[field.id];
         }
+        if(field.id == 'password'){
+            input.type = 'password';
+            input.minLength = 10;
+        }
+        else if(field.id == 'email'){
+            input.type = 'email';
+            input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
+            input.title = "Introduce un correo válido, como usuario@dominio.com";
+        }
         input.style.padding = '10px';
         input.style.border = '1px solid #ddd';
         input.style.borderRadius = '8px';
@@ -291,9 +300,12 @@ export async function botonCrear(id) {
     const userDetailsDiv =  await formularioUsuario(null);
     console.log(userDetailsDiv);
 
-    const createButton = document.createElement('button');
-    createButton.textContent = 'Crear';
+    const createButton = document.createElement('input');
+    createButton.type="submit";
+    createButton.value = 'Crear';
+
     createButton.style.backgroundColor = '#028a34';
+
     createButton.style.color = 'white';
     createButton.style.border = 'none';
     createButton.style.padding = '15px 30px';
@@ -304,8 +316,10 @@ export async function botonCrear(id) {
     createButton.style.alignSelf = 'center';
     createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
+    createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
     userDetailsDiv.appendChild(createButton);
-    createButton.addEventListener('click', async () => {
+    userDetailsDiv.addEventListener('submit', async (event) => {
+        event.preventDefault();
         const userData = {
 
         };
@@ -339,8 +353,9 @@ export async function botonCrear(id) {
 export async function botonModificar(id) {
     const userDetailsDiv = await formularioUsuario(id);
 
-    const saveButton = document.createElement('button');
-    saveButton.textContent = 'Salvar';
+    const saveButton = document.createElement('input');
+    saveButton.type = "submit";
+    saveButton.value = 'Guardar';
     saveButton.style.backgroundColor = '#028a34';
     saveButton.style.color = 'white';
     saveButton.style.border = 'none';
@@ -353,7 +368,8 @@ export async function botonModificar(id) {
     saveButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
     userDetailsDiv.appendChild(saveButton);
-    saveButton.addEventListener('click', async () => {
+    userDetailsDiv.addEventListener('submit', async (event) => {
+        event.preventDefault();
         const userData = { id }; // Incluye el ID
         const inputs = userDetailsDiv.querySelectorAll('input');
         inputs.forEach(input => {
