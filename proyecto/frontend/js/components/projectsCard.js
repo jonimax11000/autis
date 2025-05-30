@@ -49,19 +49,22 @@ class ProjectCard extends CardComponent {
                     <p>ID: ${id}</p>
                 </div>
                 <div class="buttons">
-                    <button id="modificar${id}">Modificar</button>`;
-        HTML += `
+                    <button id="modificar${id}">Modificar</button>
+                    <button id="eliminar${id}">Eliminar</button>
                 </div>
                 <counter-component></counter-component>
             </div>
         `;
 
-        
         this.shadowRoot.innerHTML = HTML;
         
+        const mod = this.shadowRoot.getElementById(`modificar${id}`);
+        mod.addEventListener('click', () => botonModificar(id));
+        
+        const elim = this.shadowRoot.getElementById(`eliminar${id}`);
+        elim.addEventListener('click', () => botonEliminar(id));
+        
     }
-    
-    
 }
 
 

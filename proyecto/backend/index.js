@@ -164,8 +164,10 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
 
 app.post('/usuario/mod', async (req, res) => {
     try {
-        
-        
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        const json = await repository.modificarUsuario(body);
+        res.json({ success: json.ok });
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -175,9 +177,11 @@ app.post('/usuario/mod', async (req, res) => {
 
 app.post('/usuario/mod/datos', async (req, res) => {
     try {
-        
-        
-
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        const json = await repository.getUsuarioModificar(id);
+        res.json(json);
     } catch (error) {
         console.error("Error entrant:", error);
         res.status(500).send('Error entrant');
@@ -186,9 +190,10 @@ app.post('/usuario/mod/datos', async (req, res) => {
 
 app.post('/usuario/crear', async (req, res) => {
     try {
-
-        
-
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        repository.crearUsuario(body);
+        res.json({ success: true });
     } catch (error) {
         console.error("Error entrant:", error);
         res.status(500).send('Error entrant');
@@ -197,8 +202,13 @@ app.post('/usuario/crear', async (req, res) => {
 
 app.post('/usuario/borrar', async (req, res) => {
     try {
-
-        
+        console.log('Borrar usuario');
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        const id = parseInt(body.id, 10);
+        const response = await repository.deleteUsuario(id);
+        console.log('Respuesta de borrar usuario:', response);
+        res.json({ success: response.ok });
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -221,7 +231,7 @@ app.post('/usuario/tareas', async (req, res) => {
 * Recibe un token, intenta obtener los proyectos y responde si es válido o no
 */
 app.post('/tocken', async (req, res) => {
-    const tocken = req.body.tocken;
+    tocken = req.body.tocken;
 
     // Cambia la conexión del repositorio global al nuevo token recibido
     // Así, las siguientes operaciones usarán este token
@@ -230,14 +240,11 @@ app.post('/tocken', async (req, res) => {
         const response = await repository.getProjects();
 
         // Comprueba que la respuesta tenga la estructura esperada de OpenProject
-        console.log('Respuesta de getProjects:', response);
 
         // Si la respuesta es válida, el token es correcto
         if (response.ok) {
-            console.log('Token válido');
             res.json({ valido: true });
         } else {
-            console.log('Token inválido por estructura');
             res.json({ valido: false });
         }
     } catch (err) {

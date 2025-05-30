@@ -52,9 +52,8 @@ export class ConectionBBDD extends Conection {
         try {
             await this.client.connect();
 
-            // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query('SELECT id, firstname,lastname FROM users where id>3 order by id;');
-            console.log("usuarios en BBDD: "+result.rows);
+            // Consulta: obtener usuarios con id mayor a 3
+            const result = await this.client.query('SELECT id, firstname, lastname FROM users WHERE id > 3 ORDER BY id;');
 
             await this.client.end();
 
@@ -80,16 +79,14 @@ export class ConectionBBDD extends Conection {
     }
 
     async getUsuariosByName(nombre) {
-        console.log("entrando a BBDD");
         try {
             await this.client.connect();
 
-            // Exemple de consulta: obtenir els primers 5 usuaris
-            const query = `SELECT id, firstname, lastname FROM users WHERE (firstname || ' ' || lastname) ILIKE '%${nombre}%';`;
-            console.log("query: "+query);
+            let query;
+            query = `SELECT id, firstname, lastname FROM users WHERE id > 3 AND (firstname || ' ' || lastname) ILIKE '%${nombre}%' order by id;`;
+           
             const result = await this.client.query(query);
             await this.client.end();
-            console.log("usuarios por nombre en BBDD: "+result.rows);
             return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
@@ -101,11 +98,32 @@ export class ConectionBBDD extends Conection {
             await this.client.connect();
 
             // Exemple de consulta: obtenir els primers 5 usuaris
-            const result = await this.client.query(`select id,firstname,lastname from users where id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '%${projecto}%'));`);
+            const result = await this.client.query(`select id,firstname,lastname from users where id>3 and id IN (Select user_id from members where project_id IN (Select id from projects where name ILIKE '%${projecto}%')) order by id;`);
 
             await this.client.end();
 
             return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getUsuarioModificar(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`SELECT login,firstname,lastname,mail FROM users where id=${id} Limit 1;`);
+
+            const json = {
+                login: result.rows[0].login,
+                firstName: result.rows[0].firstname,
+                lastName: result.rows[0].lastname,
+                email: result.rows[0].mail
+            };
+
+            await this.client.end();
+
+            return json;
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }

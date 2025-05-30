@@ -85,7 +85,6 @@ body{
     width: 100%;
 }
 .forms .login{
-    /* border: 2px solid red; */
     width: 27rem;
     height: 35rem;
     border-radius: 2rem;
@@ -98,7 +97,6 @@ body{
     justify-content: center;
 }
 .forms .welcome-message{
-    /* border: 2px solid blue; */
     font-size: 1.7rem;
     font-weight: 700;
     margin-bottom: 0.2rem;
@@ -106,16 +104,10 @@ body{
     width: 100%;
 }
 .forms .login-description{
-    /* border: 2px solid rebeccapurple; */
     font-size: 0.7rem;
     text-align: center;
     margin-bottom: 1.6rem;
 }
-/* login-option */
-/* img */
-/* login-with-text */
-
-/* form */
 form,
 form .input-container{
     /* border: 2px solid green; */
@@ -135,7 +127,7 @@ form .input-container input{
     
 }
 form button{
-    background-color: var(--color-black);
+    background-color: #e65500;
     color: var(--color-white);
     border-radius: 0.3rem;
     cursor: pointer;

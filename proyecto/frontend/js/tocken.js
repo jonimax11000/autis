@@ -1,7 +1,7 @@
 // Remplazar la url
 window.history.replaceState({}, '', '/');
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Intenta recuperar el token guardado en localStorage    
     const savedToken = localStorage.getItem('apiToken');
     console.log('Comprobando apiToken en localStorage:', savedToken);
@@ -9,6 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Si ya hay un token guardado, muestramos un mensaje y no permite volver a loguearse
     if (savedToken) {
         console.log('Token encontrado en localStorage. Mostrando mensaje de acceso.');
+         try {
+            // Envía el token al backend para validarlo
+            const response = await fetch('/tocken', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tocken: savedToken })
+            });
+        } catch (err) {
+            console.error('Error de conexión con el servidor:', err);
+            alert('Error de conexión con el servidor.');
+        }
         // alert('¡Ya estás dentro!');
         window.location.href = '/html/index.html';
         return;
