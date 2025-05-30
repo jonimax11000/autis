@@ -28,7 +28,7 @@
 /* Body */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--background-dark);
+  background-color: var(--gray-medium);
   color: var(--text-light);
   display: flex;
   height: 100vh;
@@ -104,7 +104,7 @@ body {
 /* Main content */
 .main-content {
   flex-grow: 1;
-  background-color: var(--gray-medium);
+  /* background-color: var(--gray-medium); */
   padding: 0px;
   transition: margin-left 0.9s ease-in-out;
 }

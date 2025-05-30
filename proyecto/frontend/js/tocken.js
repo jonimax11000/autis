@@ -1,3 +1,6 @@
+// Remplazar la url
+window.history.replaceState({}, '', '/');
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Intenta recuperar el token guardado en localStorage    
     const savedToken = localStorage.getItem('apiToken');

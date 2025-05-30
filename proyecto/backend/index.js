@@ -84,6 +84,36 @@ app.post('/usuarios', async (req, res) => {
     }
 });
 
+app.post('/proyectos', async (req, res) => {
+    try {
+        repository.cambiar(new ConectionBBDD());
+        
+        const json = await repository.getProjects();
+
+        //console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tareas', async (req, res) => {
+    try {
+        repository.cambiar(new ConectionBBDD());
+        
+        const json = await repository.getTareas();
+
+        //console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuarios/filtrar/proyecto', async (req, res) => {
     try {
         let body = req.body;
@@ -134,8 +164,10 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
 
 app.post('/usuario/mod', async (req, res) => {
     try {
-        
-        
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        const json = await repository.modificarUsuario(body);
+        res.json({ success: json.ok });
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -145,9 +177,11 @@ app.post('/usuario/mod', async (req, res) => {
 
 app.post('/usuario/mod/datos', async (req, res) => {
     try {
-        
-        
-
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        const json = await repository.getUsuarioModificar(id);
+        res.json(json);
     } catch (error) {
         console.error("Error entrant:", error);
         res.status(500).send('Error entrant');
@@ -156,9 +190,10 @@ app.post('/usuario/mod/datos', async (req, res) => {
 
 app.post('/usuario/crear', async (req, res) => {
     try {
-
-        
-
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        repository.crearUsuario(body);
+        res.json({ success: true });
     } catch (error) {
         console.error("Error entrant:", error);
         res.status(500).send('Error entrant');

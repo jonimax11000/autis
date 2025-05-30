@@ -21,6 +21,10 @@ export class OpenProjectRepository {
         return await this.conexion.getUsuarios();
     }
 
+    async getTareas() {
+        return await this.conexion.getTareas();
+    }
+
     async getUsuariosByID(id) {
         return await this.conexion.getUsuariosByID(id);
     }
@@ -35,5 +39,17 @@ export class OpenProjectRepository {
 
     async deleteUsuario(id) {
         return await this.conexion.deleteUsuario(id);
+    }
+     
+    async getUsuarioModificar(id) {
+        return await this.conexion.getUsuarioModificar(id);
+    }
+
+    async crearUsuario(json) {
+        return await this.conexion.crearUsuario(json);
+    }
+
+    async modificarUsuario(json) {
+        return await this.conexion.modificarUsuario(json);
     }
 }

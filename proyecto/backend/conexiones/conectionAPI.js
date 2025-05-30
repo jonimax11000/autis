@@ -42,5 +42,53 @@ export class ConectionAPI extends Conection {
             throw error;
         }
     }
+
+    async crearUsuario(json) {
+        try {
+            console.log(json);
+            const response = await fetch(`http://localhost:8080/api/v3/users/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(json)
+            });
+
+            const data = await response.json();
+            console.log('Respuesta crear usuario:', data);
+            console.log(response);
+            console.log(response.json);
+            
+            return await response.ok;
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+            throw error;
+        }
+    }
+
+    async modificarUsuario(json) {
+        const body = {
+            login: json.login,
+            firstName: json.firstname,
+            lastName: json.lastname,
+            email: json.email,
+        }
+        try {
+            const response = await fetch(`http://localhost:8080/api/v3/users/${json.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(json)
+            });
+            
+            return await response.ok;
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+            throw error;
+        }
+    }
     
 }
