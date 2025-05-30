@@ -258,7 +258,7 @@ async function formularioUsuario(idSeleccionado) {
         }
     }
 
-    if (idPedido === null) {
+    if (idSeleccionado === null) {
         fields.push({ label: 'Contraseña:', id: 'password' });
     }
 

@@ -139,13 +139,15 @@ export class ConectionBBDD extends Conection {
                 activo: false
             };
 
-            if (result.rows[0].count > 0) {
-                json.activo = true;
-            }
+            
 
             await this.client.end();
-
-            return json;
+            if (result.rows[0].count > 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
         } catch (error) {
             return JSON.stringify({ error: error.message });
         }
