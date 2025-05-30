@@ -1,6 +1,7 @@
 import './components/empleatsCard.js';
 import './components/projectsList.js';
 import './components/tareasList.js';
+import './components/dashboardCards.js';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
@@ -560,3 +561,55 @@ async function confirmar_eliminado(id) {
     }
 }
 
+
+async function handleDashboard() {
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    const dashboardContainer = document.createElement('div');
+    dashboardContainer.style.display = 'grid';
+    dashboardContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
+    dashboardContainer.style.gap = '20px';
+    dashboardContainer.style.padding = '20px';
+
+    try {
+        const response = await fetch('/dashboard', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+        data.forEach(item => {
+            const dashboardCard = document.createElement('dashboard-card');
+            dashboardCard.setAttribute('dashboard-id', item.id);
+            dashboardCard.setAttribute('dashboard-title', item.title);
+            dashboardCard.setAttribute('dashboard-description', item.description);
+            dashboardContainer.appendChild(dashboardCard);
+        });
+
+        contentDiv.appendChild(dashboardContainer);
+    } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = 'Error loading data.';
+        errorMessage.style.color = 'red';
+        contentDiv.appendChild(errorMessage);
+    }
+}
+
+// Add event listener for the dashboard menu item
+document.addEventListener('DOMContentLoaded', () => {
+    const dashboardMenuItem = document.getElementById('menu-dashboard');
+    if (dashboardMenuItem) {
+        dashboardMenuItem.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleDashboard();
+        });
+    }
+});
