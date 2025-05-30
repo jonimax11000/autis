@@ -589,11 +589,11 @@ async function handleDashboard() {
     dashboardContainer.style.padding = '20px';
 
     try {
-        /*const response = await fetch('/dashboard', {
-            method: 'GET',
+        const response = await fetch('/dashboard', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
         });
 
         if (!response.ok) {
@@ -601,11 +601,12 @@ async function handleDashboard() {
         }
 
         const data = await response.json();
-        data.forEach(item => {
+        console.log(data);
+        /*data.forEach(item => {
             dashboardContainer.appendChild(dashboardCard);
-        });*/
+        });
         const dashboard = document.createElement('dashboard-card');
-        dashboardContainer.appendChild(dashboard);
+        dashboardContainer.appendChild(dashboard);*/
 
         contentDiv.appendChild(dashboardContainer);
     } catch (error) {

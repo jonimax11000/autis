@@ -159,8 +159,6 @@ export class ConectionBBDD extends Conection {
     
             await this.client.end();
 
-            console.log("usuarios2: "+result.rows);
-
             return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
@@ -174,8 +172,6 @@ export class ConectionBBDD extends Conection {
             const result = await this.client.query(`select * from work_packages where assigned_to_id=${id} and status_id IN (select id from statuses where is_closed=false);`);
     
             await this.client.end();
-
-            console.log("usuarios2: "+result.rows);
 
             return result.rows;
         } catch (error) {

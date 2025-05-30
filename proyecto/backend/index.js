@@ -44,28 +44,33 @@ app.get('/', (_, res) => {
 
 app.post('/dashboard', async (req, res) => {
     try {
-        body = req.body;
         repository.cambiar(new ConectionBBDD());
-        const json = {
-            usuarios:[]
-        }
+        let json = {
+            usuarios: []
+        };
         let usuarios = await repository.getUsuarios2();
 
-        usuarios.forEach(async (aux) => {
+        for (const aux of usuarios) {
             const usuario = {
                 id: aux.id,
-                nombre: aux.name,
+                nombre: aux.nombre,
                 activo: false,
                 tareas: []
-            }
-            usuario.activo = await repository.usuarioActivo(aux.id);
-            usuario.tareas = await repository.getTareasHoyUsuario(aux.id);
-            
-            json.usuarios.push(usuario);
+            };
 
-        });
-        
+            repository.cambiar(new ConectionBBDD());
+            usuario.activo = await repository.usuarioActivo(aux.id);
+
+            repository.cambiar(new ConectionBBDD());
+            usuario.tareas = await repository.getTareasHoyUsuario(aux.id);
+
+            console.log(usuario.nombre);
+            json.usuarios.push(usuario);
+        }
+
+        console.log(json);
         res.json(json);
+
     } catch (error) {
         console.error("Error entrant:", error);
         res.status(500).send('Error entrant');
