@@ -78,7 +78,7 @@ class EmpleatCard extends CardComponent {
         mod.addEventListener('click', () => botonModificar(id));
         if(id >4){
             const elim = this.shadowRoot.getElementById(`eliminar${id}`);
-            elim.addEventListener('click', () => botonEliminar(id));
+            elim.addEventListener('click', () => botonEliminar(id, "usuario"));
         }
     }
     

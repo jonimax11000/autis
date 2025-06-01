@@ -399,7 +399,7 @@ export async function botonModificar(id) {
 }
 
 
-export async function botonEliminar(id) {
+export async function botonEliminar(id, entidad = "usuario") {
     // Crear el popup
     const popup = document.createElement('div');
     popup.style.position = 'fixed';
@@ -428,7 +428,9 @@ export async function botonEliminar(id) {
     popupContent.style.alignItems = 'center';
 
     const message = document.createElement('p');
-    message.textContent = '¿Seguro deseas eliminar este usuario?';
+    message.textContent = entidad === "usuario"
+        ? '¿Seguro deseas eliminar este usuario?'
+        : '¿Seguro deseas eliminar este proyecto?';
     message.style.fontSize = '20px';
     message.style.color = 'black';
     message.style.marginBottom = '20px'; // Separación con los botones
@@ -475,89 +477,87 @@ export async function botonEliminar(id) {
 
     // Evento eliminar
     btnEliminar.addEventListener('click', async (e) => {
-        try {
-            const eliminado = await confirmar_eliminado(id);
-            if (eliminado) {
-                document.body.removeChild(popup);
-                setTimeout(() => handleUsers(), 100); // da tiempo a que se refleje el borrado
-
-            } else {
-                alert("No se pudo eliminar el usuario.");
-            }
-        } catch (error) {
-            console.error("Error eliminando usuario:", error);
-        }
-    });
-
-    btnEliminar.addEventListener('click', () => {
-        confirmar_eliminado(id);
+    try {
+        const eliminado = await confirmar_eliminado(id, entidad);
         document.body.removeChild(popup);
-        // Crear el popup de confirmación
-        const confirmationPopup = document.createElement('div');
-        confirmationPopup.style.position = 'fixed';
-        confirmationPopup.style.top = '0';
-        confirmationPopup.style.left = '0';
-        confirmationPopup.style.width = '100vw';
-        confirmationPopup.style.height = '100vh';
-        confirmationPopup.style.backgroundColor = 'rgba(0,0,0,0.5)';
-        confirmationPopup.style.display = 'flex';
-        confirmationPopup.style.justifyContent = 'center';
-        confirmationPopup.style.alignItems = 'center';
-        confirmationPopup.style.zIndex = '1000';
+        if (eliminado) {
+            // Mostrar popup de confirmación
+            const confirmationPopup = document.createElement('div');
+            confirmationPopup.style.position = 'fixed';
+            confirmationPopup.style.top = '0';
+            confirmationPopup.style.left = '0';
+            confirmationPopup.style.width = '100vw';
+            confirmationPopup.style.height = '100vh';
+            confirmationPopup.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            confirmationPopup.style.display = 'flex';
+            confirmationPopup.style.justifyContent = 'center';
+            confirmationPopup.style.alignItems = 'center';
+            confirmationPopup.style.zIndex = '1000';
 
-        // Contenido del popup
-        const confirmationContent = document.createElement('div');
-        confirmationContent.style.backgroundColor = 'white';
-        confirmationContent.style.padding = '40px';
-        confirmationContent.style.borderRadius = '16px';
-        confirmationContent.style.textAlign = 'center';
-        confirmationContent.style.minWidth = '400px';
-        confirmationContent.style.minHeight = '200px';
-        confirmationContent.style.display = 'flex';
-        confirmationContent.style.flexDirection = 'column';
-        confirmationContent.style.justifyContent = 'center';
-        confirmationContent.style.alignItems = 'center';
+            const confirmationContent = document.createElement('div');
+            confirmationContent.style.backgroundColor = 'white';
+            confirmationContent.style.padding = '40px';
+            confirmationContent.style.borderRadius = '16px';
+            confirmationContent.style.textAlign = 'center';
+            confirmationContent.style.minWidth = '400px';
+            confirmationContent.style.minHeight = '200px';
+            confirmationContent.style.display = 'flex';
+            confirmationContent.style.flexDirection = 'column';
+            confirmationContent.style.justifyContent = 'center';
+            confirmationContent.style.alignItems = 'center';
 
-        const confirmationMessage = document.createElement('p');
-        confirmationMessage.textContent = 'Usuario eliminado';
-        confirmationMessage.style.fontSize = '20px';
-        confirmationMessage.style.color = 'black';
-        confirmationMessage.style.marginBottom = '20px';
-        confirmationMessage.style.textAlign = 'center';
+            const confirmationMessage = document.createElement('p');
+            confirmationMessage.textContent = entidad === "usuario"
+                ? 'Usuario eliminado'
+                : 'Proyecto eliminado';
+            confirmationMessage.style.fontSize = '20px';
+            confirmationMessage.style.color = 'black';
+            confirmationMessage.style.marginBottom = '20px';
+            confirmationMessage.style.textAlign = 'center';
 
-        const btnAceptar = document.createElement('button');
-        btnAceptar.textContent = 'Aceptar';
-        btnAceptar.style.backgroundColor = '#003366';
-        btnAceptar.style.color = 'white';
-        btnAceptar.style.padding = '10px 20px';
-        btnAceptar.style.border = 'none';
-        btnAceptar.style.borderRadius = '5px';
-        btnAceptar.style.fontSize = '16px';
-        btnAceptar.style.cursor = 'pointer';
+            const btnAceptar = document.createElement('button');
+            btnAceptar.textContent = 'Aceptar';
+            btnAceptar.style.backgroundColor = '#003366';
+            btnAceptar.style.color = 'white';
+            btnAceptar.style.padding = '10px 20px';
+            btnAceptar.style.border = 'none';
+            btnAceptar.style.borderRadius = '5px';
+            btnAceptar.style.fontSize = '16px';
+            btnAceptar.style.cursor = 'pointer';
 
-        confirmationContent.appendChild(confirmationMessage);
-        confirmationContent.appendChild(btnAceptar);
-        confirmationPopup.appendChild(confirmationContent);
-        document.body.appendChild(confirmationPopup);
+            confirmationContent.appendChild(confirmationMessage);
+            confirmationContent.appendChild(btnAceptar);
+            confirmationPopup.appendChild(confirmationContent);
+            document.body.appendChild(confirmationPopup);
 
-        // Evento aceptar
-        btnAceptar.addEventListener('click', () => {
-            document.body.removeChild(confirmationPopup);
-        });
-    });
+            btnAceptar.addEventListener('click', () => {
+                document.body.removeChild(confirmationPopup);
+                setTimeout(() => {
+                    if (entidad === "usuario") handleUsers();
+                    else if (entidad === "proyecto") {/* recarga proyectos */ }
+                }, 100);
+            });
+        } else {
+            alert(`No se pudo eliminar el ${entidad}.`);
+        }
+    } catch (error) {
+        console.error(`Error eliminando ${entidad}:`, error);
+    }
+});
 
 
 }
 
 // Función que JONATHAN completará
-async function confirmar_eliminado(id) {
+async function confirmar_eliminado(id, entidad = "usuario") {
+    let url = entidad === "usuario" ? '/usuario/borrar' : '/proyecto/borrar';
     try {
-        const response = await fetch('/usuario/borrar', {
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: id })
+            body: JSON.stringify({"id": id})
         });
 
         if (!response.ok) {
@@ -566,7 +566,7 @@ async function confirmar_eliminado(id) {
 
         return true;
     } catch (error) {
-        console.error("Error deleting user:", error);
+        console.error(`Error deleting ${entidad}:`, error);
         return false;
     }
 }
