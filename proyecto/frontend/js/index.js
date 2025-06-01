@@ -398,6 +398,18 @@ export async function botonModificar(id) {
     });
 }
 
+const mensajePopupEliminadoEntidad = {
+    usuario: 'Usuario eliminado',
+    proyecto: 'Proyecto eliminado',
+    tarea: 'Tarea eliminada',
+};
+
+const mensajePopupEntidad = {
+    usuario: '¿Seguro deseas eliminar este usuario?',
+    proyecto: '¿Seguro deseas eliminar este proyecto?',
+    tarea: '¿Seguro deseas eliminar esta tarea?',
+};
+
 
 export async function botonEliminar(id, entidad = "usuario") {
     // Crear el popup
@@ -428,9 +440,7 @@ export async function botonEliminar(id, entidad = "usuario") {
     popupContent.style.alignItems = 'center';
 
     const message = document.createElement('p');
-    message.textContent = entidad === "usuario"
-        ? '¿Seguro deseas eliminar este usuario?'
-        : '¿Seguro deseas eliminar este proyecto?';
+    message.textContent = mensajePopupEntidad[entidad] || '¿Seguro deseas elimiar esta entidad?';
     message.style.fontSize = '20px';
     message.style.color = 'black';
     message.style.marginBottom = '20px'; // Separación con los botones
@@ -507,9 +517,7 @@ export async function botonEliminar(id, entidad = "usuario") {
             confirmationContent.style.alignItems = 'center';
 
             const confirmationMessage = document.createElement('p');
-            confirmationMessage.textContent = entidad === "usuario"
-                ? 'Usuario eliminado'
-                : 'Proyecto eliminado';
+            confirmationMessage.textContent = mensajePopupEliminadoEntidad[entidad] || 'Elemento eliminado';
             confirmationMessage.style.fontSize = '20px';
             confirmationMessage.style.color = 'black';
             confirmationMessage.style.marginBottom = '20px';
