@@ -29,6 +29,10 @@ export class OpenProjectRepository {
         return await this.conexion.getTareas();
     }
 
+    async deleteTarea(id) {
+        return await this.conexion.deleteTarea(id);
+    }
+
     async getUsuariosByID(id) {
         return await this.conexion.getUsuariosByID(id);
     }

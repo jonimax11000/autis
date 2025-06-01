@@ -232,6 +232,22 @@ app.post('/proyecto/borrar', async (req, res) => {
     }
 });
 
+app.post('/tarea/borrar', async (req, res) => {
+    try {
+        console.log('Borrar tarea');
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        const id = parseInt(body.id, 10);
+        const response = await repository.deleteTarea(id);
+        console.log('Respuesta de borrar tarea:', response);
+        res.json({ success: response.ok });
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuario/tareas', async (req, res) => {
     try {
         

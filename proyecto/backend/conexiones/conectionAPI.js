@@ -41,6 +41,24 @@ export class ConectionAPI extends Conection {
             throw error;
         }
     }
+    
+    async deleteTarea(id) {
+        console.log(`http://localhost:8080/api/v3/work_packages/${id}`);
+        console.log('tocken',this.tocken);
+        try {
+            const response = await fetch(`http://localhost:8080/api/v3/work_packages/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
+                }
+            });
+            
+            return await response;
+        } catch (error) {
+            console.error('Error fetching work_packages:', error);
+            throw error;
+        }
+    }
 
     async deleteUsuario(id) {
         console.log(`http://localhost:8080/api/v3/users/${id}`);

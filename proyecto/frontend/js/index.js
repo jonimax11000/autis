@@ -543,6 +543,7 @@ export async function botonEliminar(id, entidad = "usuario") {
                 setTimeout(() => {
                     if (entidad === "usuario") handleUsers();
                     else if (entidad === "proyecto") {/* recarga proyectos */ }
+                    else if (entidad === "tarea") {/* recarga proyectos */ }
                 }, 100);
             });
         } else {
@@ -556,9 +557,15 @@ export async function botonEliminar(id, entidad = "usuario") {
 
 }
 
+const urlEndPoint = {
+    usuario: '/usuario/borrar',
+    proyecto: '/proyecto/borrar',
+    tarea: '/tarea/borrar',
+};
+
 // Función que JONATHAN completará
 async function confirmar_eliminado(id, entidad = "usuario") {
-    let url = entidad === "usuario" ? '/usuario/borrar' : '/proyecto/borrar';
+    let url = urlEndPoint[entidad];
     try {
         const response = await fetch(url, {
             method: 'POST',
