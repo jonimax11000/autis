@@ -53,6 +53,10 @@ export class OpenProjectRepository {
         return await this.conexion.getUsuarioModificar(id);
     }
 
+    async getProyectoModificar(id) {
+        return await this.conexion.getProyectoModificar(id);
+    }
+
     async crearUsuario(json) {
         return await this.conexion.crearUsuario(json);
     }

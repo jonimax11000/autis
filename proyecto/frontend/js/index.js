@@ -215,7 +215,26 @@ async function handleSearch(event) {
         }
     }
 }
-async function formularioUsuario(idSeleccionado) {
+
+const usuarioFields = [
+    { label: 'Nombre de usuario:', id: 'login' },
+    { label: 'Nombre:', id: 'firstName' },
+    { label: 'Apellido:', id: 'lastName' },
+    { label: 'Correo electrónico:', id: 'email', type: 'email' }
+    // ...otros campos
+];
+await formularioEntidad(usuarioFields, idSeleccionado, 'usuario', '/usuario/mod/datos');
+
+const proyectoFields = [
+    { label: 'Nombre del proyecto:', id: 'nombre' },
+    { label: 'Descripción:', id: 'descripcion' },
+    { label: 'Fecha de inicio:', id: 'fecha_inicio', type: 'date' },
+    { label: 'Fecha de fin:', id: 'fecha_fin', type: 'date' }
+    // ...otros campos de proyecto
+];
+await formularioEntidad(proyectoFields, idSeleccionado, 'proyecto', '/proyecto/mod/datos');
+
+async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos) {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
 
@@ -231,15 +250,15 @@ async function formularioUsuario(idSeleccionado) {
     userDetailsDiv.style.margin = '40px auto';
     userDetailsDiv.style.backgroundColor = '#f9f9f9';
 
-    const fields = [
+    /* const fields = [
         { label: 'Nombre de usuario:', id: 'login' },
         { label: 'Nombre:', id: 'firstName' },
         { label: 'Apellido:', id: 'lastName' },
         { label: 'Correo electrónico:', id: 'email' }
-    ];
+    ]; */
     let json = null;
 
-    if (idSeleccionado == null) {
+    /* if (idSeleccionado == null) {
         fields.push({ label: 'Contraseña:', id: 'password' });
     }
     else{
@@ -260,7 +279,27 @@ async function formularioUsuario(idSeleccionado) {
         } catch (error) {
             console.error("Error obteniendo datos del usuario:", error);
         }
-    }
+    } */
+
+    if (idSeleccionado == null) {
+        try {
+            const response = await fetch(endpointDatos, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: idSeleccionado })
+            });
+    
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+    
+            json = await response.json();
+        } catch (error) {
+            console.error(`Error obteniendo datos de ${entidad}:`, error);
+        }
+    }    
 
     fields.forEach(field => {
         const label = document.createElement('label');
@@ -273,10 +312,12 @@ async function formularioUsuario(idSeleccionado) {
         const input = document.createElement('input');
         input.id = field.id;
         input.required = true;
+        
         if (idSeleccionado != null) {
-            input.value = json[field.id];
+            input.value = json[field.id] || '';
         }
-        if(field.id == 'password'){
+
+        /* if(field.id == 'password'){
             input.type = 'password';
             input.minLength = 10;
         }
@@ -284,7 +325,20 @@ async function formularioUsuario(idSeleccionado) {
             input.type = 'email';
             input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
             input.title = "Introduce un correo válido, como usuario@dominio.com";
+        } */
+
+        if(entidad === 'usuario'){
+            if(field.id == 'password') {
+                input.type = 'password';
+                input.minLength = 10;
+            } else if(field.id == 'email') {
+                input.type = 'email';
+                input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
+                input.title = "Introduce un correo válido, como usuario@dominio.com";
+            }
         }
+       
+        // if(field.type) input.type = field.type;
         input.style.padding = '10px';
         input.style.border = '1px solid #ddd';
         input.style.borderRadius = '8px';
@@ -303,7 +357,7 @@ async function formularioUsuario(idSeleccionado) {
 }
 
 export async function botonCrear(id) {
-    const userDetailsDiv =  await formularioUsuario(null);
+    const userDetailsDiv =  await formularioEntidad(null);
     console.log(userDetailsDiv);
 
     const createButton = document.createElement('input');
@@ -357,7 +411,7 @@ export async function botonCrear(id) {
 }
 
 export async function botonModificar(id) {
-    const userDetailsDiv = await formularioUsuario(id);
+    const userDetailsDiv = await formularioEntidad(id);
 
     const saveButton = document.createElement('input');
     saveButton.type = "submit";

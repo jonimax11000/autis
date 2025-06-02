@@ -211,6 +211,19 @@ app.post('/usuario/mod/datos', async (req, res) => {
     }
 });
 
+app.post('/proyecto/mod/datos', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        const json = await repository.getProyectoModificar(id);
+        res.json(json);
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuario/crear', async (req, res) => {
     try {
         const body = req.body;
