@@ -39,16 +39,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (this.textContent.trim() === 'Proyectos') {
             const projectsList = document.createElement('projects-list');
             contentDiv.appendChild(projectsList);
-            } else if (this.textContent.trim() === 'Departamentos') {
+            } 
+            else if (this.textContent.trim() === 'Departamentos') {
             const tareasList = document.createElement('tareas-list');
             contentDiv.appendChild(tareasList);
-            } else if (this.textContent.trim() === 'Estadísticas') {
+            } 
+            else if (this.textContent.trim() === 'Estadísticas') {
             const tareasList = document.createElement('estadistica-list');
             contentDiv.appendChild(tareasList);
             // Lógica para cargar contenido específico según el enlace pulsado
-            } else if (this.id === 'menu-empleados') {
+            } 
+            else if (this.id === 'menu-empleados') {
                 handleUsers(e); // Llama a la función para cargar empleados
-            } else {
+            } 
+            else if (this.id === 'menu-dashboard') {
+                handleDashboard();
+            }
+            else if (this.id === 'menu-historial') {
+                handleHistorial();
+            }
+            else {
                 // Si es otro enlace, puedes mostrar contenido vacío o cargar algo diferente
                 const placeholder = document.createElement('p');
                 placeholder.textContent = `Sección: ${this.textContent}`;
@@ -697,25 +707,6 @@ async function handleDashboard() {
     }
 }
 
-// Add event listener for the dashboard menu item
-document.addEventListener('DOMContentLoaded', () => {
-    const dashboardMenuItem = document.getElementById('menu-dashboard');
-    if (dashboardMenuItem) {
-        dashboardMenuItem.addEventListener('click', (e) => {
-            e.preventDefault();
-            handleDashboard();
-        });
-    }
-});
-document.addEventListener('DOMContentLoaded', () => {
-    const historialMenuItem = document.getElementById('menu-historial');
-    if (historialMenuItem) {
-        historialMenuItem.addEventListener('click', (e) => {
-            e.preventDefault();
-            handleHistorial();
-        });
-    }
-});
 
 //HISTORIAL
 async function handleHistorial() {
