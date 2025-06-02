@@ -56,7 +56,6 @@ class historialCard extends CardComponent {
             </style>
 
             <div class="card">
-                <img src="/img/user.png" alt="Imatge de l'empleats" />
                 <div class="content">
                     <h3>Proyecto: ${proyecto}</h3>
                     <p>Tarea: ${tarea}</p>
