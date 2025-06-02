@@ -40,6 +40,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else if (this.textContent.trim() === 'Departamentos') {
             const tareasList = document.createElement('tareas-list');
             contentDiv.appendChild(tareasList);
+            } else if (this.textContent.trim() === 'Estadísticas') {
+            const tareasList = document.createElement('estadistica-list');
+            contentDiv.appendChild(tareasList);
             // Lógica para cargar contenido específico según el enlace pulsado
             } else if (this.id === 'menu-empleados') {
                 handleUsers(e); // Llama a la función para cargar empleados
@@ -540,10 +543,20 @@ export async function botonEliminar(id, entidad = "usuario") {
 
             btnAceptar.addEventListener('click', () => {
                 document.body.removeChild(confirmationPopup);
+                const contentDiv = document.getElementById("content");
                 setTimeout(() => {
                     if (entidad === "usuario") handleUsers();
-                    else if (entidad === "proyecto") {/* recarga proyectos */ }
-                    else if (entidad === "tarea") {/* recarga proyectos */ }
+                    else if (entidad === "proyecto") {
+                        contentDiv.innerHTML = '';
+                        const projectsList = document.createElement('projects-list');
+                        contentDiv.appendChild(projectsList);
+                    }
+                    else if (entidad === "tarea") {
+                        const contentDiv = document.getElementById("content");
+                        contentDiv.innerHTML = '';
+                        const tareasList = document.createElement('tareas-list');
+                        contentDiv.appendChild(tareasList);
+                    }
                 }, 100);
             });
         } else {

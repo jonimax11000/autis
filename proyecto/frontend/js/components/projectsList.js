@@ -4,11 +4,11 @@ class ProjectsList extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this.fetchProjects();
     }
 
     connectedCallback() {
         this.render();
-        this.fetchProjects();
     }
 
     async fetchProjects() {
