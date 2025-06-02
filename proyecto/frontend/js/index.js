@@ -247,6 +247,18 @@ const proyectoFields = [
 
 await formularioEntidad(proyectoFields, idSeleccionado, 'proyecto', '/proyecto/mod/datos');
 
+const tareaFields = [
+    { label: 'Nombre de la tarea:', id: 'subject' },
+    { label: 'Tipo:', id: 'type' },
+    { label: 'Projecto:', id: 'project'}
+    /* { label: 'Descripción:', id: 'descripcion' },
+    { label: 'Fecha de inicio:', id: 'fecha_inicio', type: 'date' },
+    { label: 'Fecha de fin:', id: 'fecha_fin', type: 'date' } */
+    // ...otros campos de proyecto
+];
+
+await formularioEntidad(tareaFields, idSeleccionado, 'tarea', '/tarea/mod/datos');
+
 /* FORMULARIO BASE */
 
 async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos) {
