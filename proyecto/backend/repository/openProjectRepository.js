@@ -60,4 +60,16 @@ export class OpenProjectRepository {
     async modificarUsuario(json) {
         return await this.conexion.modificarUsuario(json);
     }
+
+    async usuarioActivo(id) {
+        return await this.conexion.usuarioActivo(id);
+    }
+
+    async getUsuarios2() {
+        return await this.conexion.getUsuarios2();
+    }
+
+    async getTareasHoyUsuario(id) {
+        return await this.conexion.getTareasHoyUsuario(id);
+    }
 }

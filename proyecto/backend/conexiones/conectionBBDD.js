@@ -128,4 +128,56 @@ export class ConectionBBDD extends Conection {
             return JSON.stringify({ error: error.message });
         }
     }
+
+    async usuarioActivo(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`select count(*) from time_entries where user_id=${id} and ongoing='true';`);
+
+            const json = {
+                activo: false
+            };
+
+            
+
+            await this.client.end();
+            if (result.rows[0].count > 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getUsuarios2() {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`SELECT id, (firstname || ' ' || lastname) AS nombre FROM users WHERE id > 3 ORDER BY id;`);
+    
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getTareasHoyUsuario(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`select * from work_packages where assigned_to_id=${id} and status_id IN (select id from statuses where is_closed=false);`);
+    
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
 }

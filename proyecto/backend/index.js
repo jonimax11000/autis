@@ -44,19 +44,41 @@ app.get('/', (_, res) => {
 
 app.post('/dashboard', async (req, res) => {
     try {
-        const json = {
-            "tocken": tocken,
-            "proyecto": req.body.proyecto,
-            "usuario": req.body.usuario,
-            "tareas": req.body.tareas,
+        repository.cambiar(new ConectionBBDD());
+        let json = {
+            usuarios: []
         };
-        
+        let usuarios = await repository.getUsuarios2();
+
+        for (const aux of usuarios) {
+            const usuario = {
+                id: aux.id,
+                nombre: aux.nombre,
+                activo: false,
+                tareas: []
+            };
+
+            repository.cambiar(new ConectionBBDD());
+            usuario.activo = await repository.usuarioActivo(aux.id);
+
+            repository.cambiar(new ConectionBBDD());
+            usuario.tareas = await repository.getTareasHoyUsuario(aux.id);
+
+            console.log(usuario.nombre);
+            json.usuarios.push(usuario);
+        }
+
+        console.log(json);
+        res.json(json);
 
     } catch (error) {
         console.error("Error entrant:", error);
         res.status(500).send('Error entrant');
     }
 });
+
+
+
 
 app.post('/dashboard/recarga', async (req, res) => {
     try {
@@ -69,13 +91,13 @@ app.post('/dashboard/recarga', async (req, res) => {
     }
 });
 
+
 app.post('/usuarios', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
         
         const json = await repository.getUsuarios();
 
-        //console.log(json);
         res.json(json);
 
     } catch (error) {
