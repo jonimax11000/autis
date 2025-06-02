@@ -274,10 +274,13 @@ app.post('/tarea/borrar', async (req, res) => {
 
 app.post('/historial', async (req, res) => {
     try {
+        console.log("entro");
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const json = {timeEntries:[]};
-        json.timeEntries = await repository.getTimeEntriesPorUsuario(body.id);
+        const entries = await repository.getTimeEntriesPorUsuario(body.id);
+        console.log(entries);
+        json.timeEntries = entries;
 
         res.json(json);
 

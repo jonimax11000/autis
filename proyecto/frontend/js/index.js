@@ -2,7 +2,7 @@ import './components/empleatsCard.js';
 import './components/projectsList.js';
 import './components/tareasList.js';
 import './components/dashboardCards.js';
-import './components/historialCard.js';
+import './components/historialList.js';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
@@ -715,9 +715,19 @@ async function handleHistorial() {
 
     
     selectUsuarios.addEventListener('change', (event) => {
+        const contentDiv = document.getElementById("content");
+
+
         const selectedUserId = event.target.value;
-        const historialList = document.createElement('historial-list');
-        historialList.setAttribute('user-name', selectedUserId);
+        console.log("id ",selectedUserId);
+        let historialList = document.getElementById("historialList");
+        console.log(historialList);
+        if(historialList !=null){
+            historialList.remove();
+        }
+        historialList = document.createElement('historial-list');
+        historialList.id = "historialList";
+        historialList.setAttribute('user-id', selectedUserId);
         contentDiv.appendChild(historialList);
     });
 }

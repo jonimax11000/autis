@@ -13,8 +13,17 @@ class historialCard extends CardComponent {
         // Funció del cicle de vida que s'invoca quan el component s'afig al DOM
         // Aci agafem els atributs
 
-        const id = this.getAttribute('empleats-id') || 'Empleat desconegut';
-        const nom = this.getAttribute('empleats-nom') || 'Empleat desconegt';
+
+        const proyecto = this.getAttribute('proyecto') || 'proyecto desconocido';
+        const tarea = this.getAttribute('tarea') || 'tarea desconocida';
+        const horas = this.getAttribute('horas') || '0';
+        const fechaAttr = this.getAttribute('fecha') || 'fecha desconocida';
+        const fecha = fechaAttr !== 'fecha desconocida' 
+            ? new Date(fechaAttr).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) 
+            : 'fecha desconocida';
+        const estado = this.hasAttribute('estado') 
+            ? (this.getAttribute('estado') === 'true' ? 'Activo' : 'Inactivo') 
+            : 'inexistente';
         let HTML = `
             <style>
                 ${CardComponent.styles} /* Afegim estils del component base !! */
@@ -49,10 +58,14 @@ class historialCard extends CardComponent {
             <div class="card">
                 <img src="/img/user.png" alt="Imatge de l'empleats" />
                 <div class="content">
-                    <h3>${nom}</h3>
-                    <p>ID: ${id - 3}</p>
+                    <h3>Proyecto: ${proyecto}</h3>
+                    <p>Tarea: ${tarea}</p>
+                    <p> Horas hechas: ${horas}</p>
+                    <p> Fecha: ${fecha}</p>
+                    <p> Estado: ${estado}</p>
+
+
                 </div>
-                <counter-component></counter-component>
             </div>
         `;
 

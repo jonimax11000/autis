@@ -32,7 +32,20 @@ class ProjectsList extends HTMLElement {
     renderEntries(data) {
         const container = this.shadowRoot.getElementById('historial');
         container.innerHTML = '';
-        data.forEach(item => {
+        if (data.timeEntries.length === 0) {
+            container.innerHTML = `
+                <p style="
+                    font-size: 1.5em; 
+                    text-align: center; 
+                    margin-top: 20px; 
+                ">
+                    No hay tareas para este usuario.
+                </p>
+            `;
+            return;
+        }
+        console.log("data ", data);
+        data.timeEntries.forEach(item => {
             const card = document.createElement('historial-card');
             card.setAttribute('proyecto', item.proyecto);
             card.setAttribute('tarea', item.tarea);
@@ -46,16 +59,18 @@ class ProjectsList extends HTMLElement {
     render() {
         this.shadowRoot.innerHTML = `
             <style>
-                #historial {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                    margin-top: 20px;
-                }
+            #historial {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 20px;
+            }
             </style>            
             <div id="historial"></div>
         `;
     }
+    
+
 }
 
 customElements.define('historial-list', ProjectsList);
