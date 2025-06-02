@@ -116,9 +116,18 @@ async function handleUsers(e) {
 
     const createButton = document.createElement('button');
     createButton.textContent = 'Crear';
-    createButton.addEventListener('click', () => {
+    /* createButton.addEventListener('click', () => {
         botonCrear('usuario', usuarioFields);
+    }); */
+    
+    createButton.addEventListener('click', () => {
+        const fieldsCrear = [
+            ...usuarioFields, //(spread operator) pa no dubplicar el array
+            { label: 'Contraseña:', id: 'password', type: 'password' }
+        ];
+        botonCrear('usuario', fieldsCrear);
     });
+
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
     plusIcon.style.fontSize = '32px';
