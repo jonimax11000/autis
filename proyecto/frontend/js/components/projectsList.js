@@ -29,7 +29,7 @@ class ProjectsList extends HTMLElement {
         const container = this.shadowRoot.getElementById('projects');
         container.innerHTML = '';
         data.forEach(item => {
-            const card = document.createElement('historial-card');
+            const card = document.createElement('project-card');
             card.setAttribute('project-id', item.id);
             card.setAttribute('project-nom', item.name);
             container.appendChild(card);
