@@ -32,6 +32,23 @@ export class ConectionBBDD extends Conection {
         }
     }
     
+    /* Pa la lista >> Crear Tarea */
+    async getTipoTareas() {
+        try {
+            await this.client.connect();
+
+            // Exemple de consulta: obtenir els primers 5 usuaris
+            const result = await this.client.query('SELECT id, name FROM types ORDER BY id;');
+            console.log("proyectos en BBDD: "+result.rows);
+
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            
+        }
+    }
+    
     async getTareas() {
         try {
             await this.client.connect();
