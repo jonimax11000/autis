@@ -180,4 +180,20 @@ export class ConectionBBDD extends Conection {
             return JSON.stringify({ error: error.message });
         }
     }
+
+    async getTimeEntriesPorUsuario(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`select p.name as proyecto,w.subject as tarea,t.hours as horas,t.spent_on as fecha,
+                t.ongoing as estado from projects as p, work_packages as w, time_entries as t where t.work_package_id=w.id 
+                and t.project_id=p.id and t.user_id=${id};`);
+    
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
 }

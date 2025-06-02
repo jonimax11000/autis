@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { OpenProjectRepository } from './repository/openProjectRepository.js';
 import { ConectionBBDD } from './conexiones/conectionBBDD.js';
 import { ConectionAPI } from './conexiones/conectionAPI.js';
+import { rmSync } from 'fs';
 
 
 // Inicialització d'Express
@@ -270,9 +271,15 @@ app.post('/tarea/borrar', async (req, res) => {
     }
 });
 
-app.post('/usuario/tareas', async (req, res) => {
+
+app.post('/historial', async (req, res) => {
     try {
-        
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = {timeEntries:[]};
+        json.timeEntries = await repository.getTimeEntriesPorUsuario(body.id);
+
+        res.json(json);
 
     } catch (error) {
         console.error("Error entrant:", error);
