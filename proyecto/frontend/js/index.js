@@ -226,6 +226,8 @@ async function handleSearch(event) {
     }
 }
 
+/* DATOS EN FUNCIÓN DE LA ENTIDAD */
+
 const usuarioFields = [
     { label: 'Nombre de usuario:', id: 'login' },
     { label: 'Nombre:', id: 'firstName' },
@@ -236,13 +238,16 @@ const usuarioFields = [
 await formularioEntidad(usuarioFields, idSeleccionado, 'usuario', '/usuario/mod/datos');
 
 const proyectoFields = [
-    { label: 'Nombre del proyecto:', id: 'nombre' },
-    { label: 'Descripción:', id: 'descripcion' },
+    { label: 'Nombre del proyecto:', id: 'name' }
+    /* { label: 'Descripción:', id: 'descripcion' },
     { label: 'Fecha de inicio:', id: 'fecha_inicio', type: 'date' },
-    { label: 'Fecha de fin:', id: 'fecha_fin', type: 'date' }
+    { label: 'Fecha de fin:', id: 'fecha_fin', type: 'date' } */
     // ...otros campos de proyecto
 ];
+
 await formularioEntidad(proyectoFields, idSeleccionado, 'proyecto', '/proyecto/mod/datos');
+
+/* FORMULARIO BASE */
 
 async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos) {
     const contentDiv = document.getElementById('content');
@@ -260,36 +265,7 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
     userDetailsDiv.style.margin = '40px auto';
     userDetailsDiv.style.backgroundColor = '#f9f9f9';
 
-    /* const fields = [
-        { label: 'Nombre de usuario:', id: 'login' },
-        { label: 'Nombre:', id: 'firstName' },
-        { label: 'Apellido:', id: 'lastName' },
-        { label: 'Correo electrónico:', id: 'email' }
-    ]; */
     let json = null;
-
-    /* if (idSeleccionado == null) {
-        fields.push({ label: 'Contraseña:', id: 'password' });
-    }
-    else{
-        try {
-            const response = await fetch('/usuario/mod/datos', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: idSeleccionado })
-            });
-
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-
-            json = await response.json();
-        } catch (error) {
-            console.error("Error obteniendo datos del usuario:", error);
-        }
-    } */
 
     if (idSeleccionado == null) {
         try {
@@ -327,16 +303,6 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
             input.value = json[field.id] || '';
         }
 
-        /* if(field.id == 'password'){
-            input.type = 'password';
-            input.minLength = 10;
-        }
-        else if(field.id == 'email'){
-            input.type = 'email';
-            input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
-            input.title = "Introduce un correo válido, como usuario@dominio.com";
-        } */
-
         if(entidad === 'usuario'){
             if(field.id == 'password') {
                 input.type = 'password';
@@ -348,7 +314,6 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
             }
         }
        
-        // if(field.type) input.type = field.type;
         input.style.padding = '10px';
         input.style.border = '1px solid #ddd';
         input.style.borderRadius = '8px';
@@ -365,6 +330,8 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
     contentDiv.appendChild(userDetailsDiv);
     return userDetailsDiv;
 }
+
+/* CREAR ENTIDAD */
 
 export async function botonCrear(id) {
     const userDetailsDiv =  await formularioEntidad(null);
@@ -420,8 +387,23 @@ export async function botonCrear(id) {
     });
 }
 
-export async function botonModificar(id) {
-    const userDetailsDiv = await formularioEntidad(id);
+/* MODIFICAR */
+
+const endpointDatos = {
+    usuario: '/usuario/mod/datos',
+    proyecto: '/proyecto/mod/datos',
+    tarea: '/tarea/mod/datos',
+};
+
+const endpointGuardar = {
+    usuario: '/usuario/mod',
+    proyecto: '/proyecto/mod',
+    tarea: '/tarea/mod',
+};
+
+export async function botonModificar(id, entidad = "usuario", fields = usuarioFields) {
+    
+    const userDetailsDiv = await formularioEntidad(fields, id, entidad, endpointDatos);
 
     const saveButton = document.createElement('input');
     saveButton.type = "submit";
@@ -447,7 +429,7 @@ export async function botonModificar(id) {
         });
 
         try {
-            const response = await fetch('/usuario/mod', {
+            const response = await fetch(endpointGuardar, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -459,8 +441,15 @@ export async function botonModificar(id) {
                 throw new Error(response.statusText);
             }
 
-            alert('Usuario modificado exitosamente.');
-            handleUsers(); // Recarga la lista de usuarios
+            alert(`${entidad} modificado exitosamente`);
+            
+            if (entidad === "usuario") handleUsers();
+            else if (entidad === "proyecto") {
+                const contentDiv = document.getElementById("content");
+                contentDiv.innerHTML = '';
+                const projectsList = document.createElement('projects-list');
+                contentDiv.appendChild(projectsList);
+            }
         } catch (error) {
             console.error("Error modificando usuario:", error);
             alert('Error al modificar el usuario.');
@@ -480,6 +469,7 @@ const mensajePopupEntidad = {
     tarea: '¿Seguro deseas eliminar esta tarea?',
 };
 
+/* ELIMINAR */
 
 export async function botonEliminar(id, entidad = "usuario") {
     // Crear el popup
@@ -637,7 +627,7 @@ export async function botonEliminar(id, entidad = "usuario") {
 
 }
 
-const urlEndPoint = {
+const endPointEliminar = {
     usuario: '/usuario/borrar',
     proyecto: '/proyecto/borrar',
     tarea: '/tarea/borrar',
@@ -645,7 +635,7 @@ const urlEndPoint = {
 
 // Función que JONATHAN completará
 async function confirmar_eliminado(id, entidad = "usuario") {
-    let url = urlEndPoint[entidad];
+    let url = endPointEliminar[entidad];
     try {
         const response = await fetch(url, {
             method: 'POST',

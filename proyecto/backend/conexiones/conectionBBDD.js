@@ -108,6 +108,7 @@ export class ConectionBBDD extends Conection {
         }
     }
 
+    /* Agarar datos del usuario de la BD */
     async getUsuarioModificar(id) {
         try {
             await this.client.connect();
@@ -119,6 +120,44 @@ export class ConectionBBDD extends Conection {
                 firstName: result.rows[0].firstname,
                 lastName: result.rows[0].lastname,
                 email: result.rows[0].mail
+            };
+
+            await this.client.end();
+
+            return json;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+    
+    /* DATOS PARA MOD DE P Y T */
+    async getProyectoModificar(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`SELECT name FROM projects where id=${id} Limit 1;`);
+
+            const json = {
+                name: result.rows[0].name
+            };
+
+            await this.client.end();
+
+            return json;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getTareaModificar(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`SELECT subject, lock_version FROM work_packages where id=${id} Limit 1;`);
+
+            const json = {
+                subject: result.rows[0].subject,
+                lockVersion: result.rows[0].lock_version
             };
 
             await this.client.end();
