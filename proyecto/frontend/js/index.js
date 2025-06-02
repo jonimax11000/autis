@@ -117,7 +117,7 @@ async function handleUsers(e) {
     const createButton = document.createElement('button');
     createButton.textContent = 'Crear';
     createButton.addEventListener('click', () => {
-        botonCrear(null); // Llama a la función para crear, pasando null como id
+        botonCrear('usuario', usuarioFields);
     });
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
@@ -228,36 +228,35 @@ async function handleSearch(event) {
 
 /* DATOS EN FUNCIÓN DE LA ENTIDAD */
 
-const usuarioFields = [
+export const usuarioFields = [
     { label: 'Nombre de usuario:', id: 'login' },
     { label: 'Nombre:', id: 'firstName' },
     { label: 'Apellido:', id: 'lastName' },
     { label: 'Correo electrónico:', id: 'email', type: 'email' }
-    // ...otros campos
+    // LO DE ABAJO DEBERÁ APARECER EN EL BOTON DE CREAR
+    // { label: 'Contraseña:', id: 'password', type: 'password' }
 ];
-await formularioEntidad(usuarioFields, idSeleccionado, 'usuario', '/usuario/mod/datos');
 
-const proyectoFields = [
+export const proyectoFields = [
     { label: 'Nombre del proyecto:', id: 'name' }
-    /* { label: 'Descripción:', id: 'descripcion' },
-    { label: 'Fecha de inicio:', id: 'fecha_inicio', type: 'date' },
-    { label: 'Fecha de fin:', id: 'fecha_fin', type: 'date' } */
-    // ...otros campos de proyecto
 ];
 
+export const tareaFields = [
+    { label: 'Nombre de la tarea:', id: 'subject' }
+    // LO DE ABAJO SOLO DEBERÁ APARECER A LA HORA DE CREAR
+    /* { label: 'Tipo:', id: 'type' },
+    { label: 'Projecto:', id: 'project'} */
+];
+
+/* await formularioEntidad(usuarioFields, idSeleccionado, 'usuario', '/usuario/mod/datos');
 await formularioEntidad(proyectoFields, idSeleccionado, 'proyecto', '/proyecto/mod/datos');
+await formularioEntidad(tareaFields, idSeleccionado, 'tarea', '/tarea/mod/datos'); */
 
-const tareaFields = [
-    { label: 'Nombre de la tarea:', id: 'subject' },
-    { label: 'Tipo:', id: 'type' },
-    { label: 'Projecto:', id: 'project'}
-    /* { label: 'Descripción:', id: 'descripcion' },
-    { label: 'Fecha de inicio:', id: 'fecha_inicio', type: 'date' },
-    { label: 'Fecha de fin:', id: 'fecha_fin', type: 'date' } */
-    // ...otros campos de proyecto
-];
-
-await formularioEntidad(tareaFields, idSeleccionado, 'tarea', '/tarea/mod/datos');
+const endpointDatos = {
+    usuario: '/usuario/mod/datos',
+    proyecto: '/proyecto/mod/datos',
+    tarea: '/tarea/mod/datos'
+};
 
 /* FORMULARIO BASE */
 
@@ -278,8 +277,8 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
     userDetailsDiv.style.backgroundColor = '#f9f9f9';
 
     let json = null;
-
-    if (idSeleccionado == null) {
+    
+    if (idSeleccionado != null) {
         try {
             const response = await fetch(endpointDatos, {
                 method: 'POST',
@@ -299,7 +298,7 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
         }
     }    
 
-    fields.forEach(field => {
+    for (const field of fields) {
         const label = document.createElement('label');
         label.textContent = field.label;
         label.style.fontWeight = 'bold';
@@ -307,7 +306,43 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
         label.style.color = 'black';
         label.style.alignSelf = 'center';
 
-        const input = document.createElement('input');
+        let input;
+        if (field.type === 'select') {
+            input = document.createElement('select');
+            input.id = field.id;
+            // Carga las opciones dinámicamente
+            try {
+                const response = await fetch(field.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+                const data = await response.json();
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.name;
+                    input.appendChild(option);
+                });
+            } catch (error) {
+                console.error(`Error cargando opciones para ${field.id}:`, error);
+            }
+        } else {
+            input = document.createElement('input');
+            input.id = field.id;
+            if (field.type) input.type = field.type;
+            if (idSeleccionado != null && json && json[field.id] !== undefined) {
+                input.value = json[field.id];
+            }
+            if (entidad === 'usuario') {
+                if (field.id === 'password') {
+                    input.type = 'password';
+                    input.minLength = 10;
+                } else if (field.id === 'email') {
+                    input.type = 'email';
+                    input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
+                    input.title = "Introduce un correo válido, como usuario@dominio.com";
+                }
+            }
+        }
+
+        /* const input = document.createElement('input');
         input.id = field.id;
         input.required = true;
         
@@ -324,7 +359,7 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
                 input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
                 input.title = "Introduce un correo válido, como usuario@dominio.com";
             }
-        }
+        } */
        
         input.style.padding = '10px';
         input.style.border = '1px solid #ddd';
@@ -337,7 +372,7 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
 
         userDetailsDiv.appendChild(label);
         userDetailsDiv.appendChild(input);
-    });
+    };
 
     contentDiv.appendChild(userDetailsDiv);
     return userDetailsDiv;
@@ -345,16 +380,20 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
 
 /* CREAR ENTIDAD */
 
-export async function botonCrear(id) {
-    const userDetailsDiv =  await formularioEntidad(null);
+const endpointCrear = {
+    usuario: '/usuario/crear',
+    proyecto: '/proyecto/crear',
+    tarea: '/tarea/crear',
+};
+
+export async function botonCrear(entidad, fields) {
+    const userDetailsDiv =  await formularioEntidad(fields, null, entidad, endpointDatos[entidad]);
     console.log(userDetailsDiv);
 
     const createButton = document.createElement('input');
     createButton.type="submit";
     createButton.value = 'Crear';
-
     createButton.style.backgroundColor = '#028a34';
-
     createButton.style.color = 'white';
     createButton.style.border = 'none';
     createButton.style.padding = '15px 30px';
@@ -364,21 +403,34 @@ export async function botonCrear(id) {
     createButton.style.marginTop = '20px';
     createButton.style.alignSelf = 'center';
     createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-
-    createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+    
     userDetailsDiv.appendChild(createButton);
+
     userDetailsDiv.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const userData = {
+        let userData = {
 
         };
-        const inputs = userDetailsDiv.querySelectorAll('input');
+
+        const inputs = userDetailsDiv.querySelectorAll('input, select');
         inputs.forEach(input => {
-            userData[input.id] = input.value;
+            if (entidad === 'tarea' && input.id === 'type') {
+                userData['type'] = { href: `/api/v3/types/${input.value}` };
+            } else if (entidad === 'tarea' && input.id === 'project') {
+                userData['_links'] = userData['_links'] || {};
+                userData['_links']['project'] = { href: `/api/v3/projects/${input.value}` };
+            } else {
+                userData[input.id] = input.value;
+            }
         });
+        
+        // Limpieza para tarea
+        if (entidad === 'tarea') {
+            delete userData.project;
+        }
 
         try {
-            const response = await fetch('/usuario/crear', {
+            const response = await fetch(endpointCrear[entidad], {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -390,8 +442,22 @@ export async function botonCrear(id) {
                 throw new Error(response.statusText);
             }
 
-            alert('Usuario creado exitosamente.');
-            handleUsers(); // Recarga la lista de usuarios
+            alert(`${entidada} creado exitosamente`);
+            // handleUsers(); // Recarga la lista de usuarios
+            // Recarga la lista según la entidad
+            if (entidad === "usuario") handleUsers();
+            else if (entidad === "proyecto") {
+                const contentDiv = document.getElementById("content");
+                contentDiv.innerHTML = '';
+                const projectsList = document.createElement('projects-list');
+                contentDiv.appendChild(projectsList);
+            }
+            else if (entidad === "tarea") {
+                const contentDiv = document.getElementById("content");
+                contentDiv.innerHTML = '';
+                const tareasList = document.createElement('tareas-list');
+                contentDiv.appendChild(tareasList);
+            }
         } catch (error) {
             console.error("Error creando usuario:", error);
             alert('Error al crear el usuario.');
@@ -401,12 +467,6 @@ export async function botonCrear(id) {
 
 /* MODIFICAR */
 
-const endpointDatos = {
-    usuario: '/usuario/mod/datos',
-    proyecto: '/proyecto/mod/datos',
-    tarea: '/tarea/mod/datos',
-};
-
 const endpointGuardar = {
     usuario: '/usuario/mod',
     proyecto: '/proyecto/mod',
@@ -415,7 +475,7 @@ const endpointGuardar = {
 
 export async function botonModificar(id, entidad = "usuario", fields = usuarioFields) {
     
-    const userDetailsDiv = await formularioEntidad(fields, id, entidad, endpointDatos);
+    const userDetailsDiv = await formularioEntidad(fields, id, entidad, endpointDatos[entidad]);
 
     const saveButton = document.createElement('input');
     saveButton.type = "submit";
@@ -432,6 +492,7 @@ export async function botonModificar(id, entidad = "usuario", fields = usuarioFi
     saveButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
     userDetailsDiv.appendChild(saveButton);
+
     userDetailsDiv.addEventListener('submit', async (event) => {
         event.preventDefault();
         const userData = { id }; // Incluye el ID
