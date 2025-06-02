@@ -1,9 +1,8 @@
 // Importem el component de base
 import { CardComponent } from './CardComponent.js';
-import { botonModificar, botonEliminar } from '../index.js';
 
 
-class EmpleatCard extends CardComponent {
+class historialCard extends CardComponent {
     constructor() {
         super();
         if (!this.shadowRoot) {
@@ -72,22 +71,13 @@ class EmpleatCard extends CardComponent {
 
         
         this.shadowRoot.innerHTML = HTML;
-
-
-        const mod = this.shadowRoot.getElementById(`modificar${id}`);
-        mod.addEventListener('click', () => botonModificar(id));
-        if(id >4){
-            const elim = this.shadowRoot.getElementById(`eliminar${id}`);
-            elim.addEventListener('click', () => botonEliminar(id));
-        }
     }
     
 
     
 }
 
-
-customElements.define('empleat-card', EmpleatCard);
+customElements.define('historial-card', historialCard);
 
 
 

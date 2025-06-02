@@ -2,6 +2,7 @@ import './components/empleatsCard.js';
 import './components/projectsList.js';
 import './components/tareasList.js';
 import './components/dashboardCards.js';
+import './components/historialCard.js';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
@@ -628,3 +629,81 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const historialMenuItem = document.getElementById('menu-historial');
+    if (historialMenuItem) {
+        historialMenuItem.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleHistorial();
+        });
+    }
+});
+async function handleHistorial() {
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    const formDiv = document.createElement('div');
+    formDiv.style.display = 'flex';
+    formDiv.style.gap = '10px';
+
+    const searchInput = document.createElement('input');
+    searchInput.id = "historial-search";
+    searchInput.type = 'text';
+    searchInput.style.marginLeft = '40px';
+    searchInput.placeholder = 'Buscar por nombre...';
+    searchInput.style.width = '50%';
+    searchInput.style.padding = '10px';
+    searchInput.style.border = '1px solid #ccc';
+    searchInput.style.borderRadius = '5px';
+    searchInput.style.fontSize = '16px';
+    searchInput.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+    formDiv.style.justifyContent = 'center';
+    formDiv.style.marginTop = '20px';
+
+    formDiv.appendChild(searchInput);
+    contentDiv.appendChild(formDiv);
+
+    searchInput.addEventListener('keypress', async (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+
+            const query = searchInput.value.trim();
+            if (!query) return;
+
+            try {
+                const response = await fetch('/historial/buscar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre: query })
+                });
+
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+
+                const data = await response.json();
+                const historialDiv = document.createElement("div");
+                historialDiv.id = "historial";
+                historialDiv.style.marginTop = '20px';
+
+                historialDiv.innerHTML = ''; // Clear previous results
+                data.forEach(item => {
+                    const historialCard = document.createElement('historial-card');
+                    historialCard.setAttribute('historial-id', item.id);
+                    historialCard.setAttribute('historial-nombre', `${item.firstname} ${item.lastname}`);
+                    historialDiv.appendChild(historialCard);
+                });
+
+                contentDiv.appendChild(historialDiv);
+            } catch (error) {
+                console.error("Error fetching historial info:", error);
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = 'Error en las tarjetas.';
+                errorMessage.style.color = 'red';
+                contentDiv.appendChild(errorMessage);
+            }
+        }
+    });
+}
