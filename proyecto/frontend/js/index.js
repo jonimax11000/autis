@@ -262,10 +262,6 @@ async function formularioUsuario(idSeleccionado) {
         }
     }
 
-    if (idSeleccionado === null) {
-        fields.push({ label: 'Contraseña:', id: 'password' });
-    }
-
     fields.forEach(field => {
         const label = document.createElement('label');
         label.textContent = field.label;
