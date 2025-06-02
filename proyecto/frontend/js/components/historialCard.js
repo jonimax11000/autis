@@ -1,7 +1,6 @@
 // Importem el component de base
 import { CardComponent } from './CardComponent.js';
 
-
 class historialCard extends CardComponent {
     constructor() {
         super();
@@ -11,7 +10,6 @@ class historialCard extends CardComponent {
     }
 
     connectedCallback() {
-
         // Funció del cicle de vida que s'invoca quan el component s'afig al DOM
         // Aci agafem els atributs
 
@@ -33,9 +31,7 @@ class historialCard extends CardComponent {
                     flex: 1;
                 }
                 .buttons {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
+                    display: none; /* Ocultem els botons */
                 }
                 .buttons button {
                     padding: 5px 10px;
@@ -48,38 +44,20 @@ class historialCard extends CardComponent {
                 .buttons button:hover {
                     background-color: #0056b3;
                 }
-
-                #
             </style>
 
             <div class="card">
                 <img src="/img/user.png" alt="Imatge de l'empleats" />
                 <div class="content">
                     <h3>${nom}</h3>
-                    <p>ID: ${id-3}</p>
-                </div>
-                <div class="buttons">
-                    <button id="modificar${id}">Modificar</button>`;
-        if(id>4){
-            HTML+=`                  <button id="eliminar${id}">Eliminar</button>`;
-        }
-        HTML += `
+                    <p>ID: ${id - 3}</p>
                 </div>
                 <counter-component></counter-component>
             </div>
         `;
 
-        
         this.shadowRoot.innerHTML = HTML;
     }
-    
-
-    
 }
 
 customElements.define('historial-card', historialCard);
-
-
-
-
-

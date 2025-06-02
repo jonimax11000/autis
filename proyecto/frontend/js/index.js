@@ -663,6 +663,12 @@ async function handleHistorial() {
     formDiv.appendChild(searchInput);
     contentDiv.appendChild(formDiv);
 
+    // Create historialDiv once and append it to contentDiv
+    const historialDiv = document.createElement("div");
+    historialDiv.id = "historial";
+    historialDiv.style.marginTop = '20px';
+    contentDiv.appendChild(historialDiv);
+
     searchInput.addEventListener('keypress', async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -684,10 +690,6 @@ async function handleHistorial() {
                 }
 
                 const data = await response.json();
-                const historialDiv = document.createElement("div");
-                historialDiv.id = "historial";
-                historialDiv.style.marginTop = '20px';
-
                 historialDiv.innerHTML = ''; // Clear previous results
                 data.forEach(item => {
                     const historialCard = document.createElement('historial-card');
@@ -695,14 +697,12 @@ async function handleHistorial() {
                     historialCard.setAttribute('historial-nombre', `${item.firstname} ${item.lastname}`);
                     historialDiv.appendChild(historialCard);
                 });
-
-                contentDiv.appendChild(historialDiv);
             } catch (error) {
                 console.error("Error fetching historial info:", error);
                 const errorMessage = document.createElement('p');
                 errorMessage.textContent = 'Error en las tarjetas.';
                 errorMessage.style.color = 'red';
-                contentDiv.appendChild(errorMessage);
+                historialDiv.appendChild(errorMessage);
             }
         }
     });
