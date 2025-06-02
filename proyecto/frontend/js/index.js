@@ -116,9 +116,6 @@ async function handleUsers(e) {
 
     const createButton = document.createElement('button');
     createButton.textContent = 'Crear';
-    /* createButton.addEventListener('click', () => {
-        botonCrear('usuario', usuarioFields);
-    }); */
     
     createButton.addEventListener('click', () => {
         const fieldsCrear = [
@@ -286,6 +283,8 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
     userDetailsDiv.style.backgroundColor = '#f9f9f9';
 
     let json = null;
+
+    let lockVersion = null;
     
     if (idSeleccionado != null) {
         try {
@@ -300,12 +299,23 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
-    
             json = await response.json();
+            // Guarda lockVersion si es una tarea
+            if (entidad === 'tarea' && json.lockVersion !== undefined) {
+                lockVersion = json.lockVersion;
+            }
         } catch (error) {
             console.error(`Error obteniendo datos de ${entidad}:`, error);
         }
     }    
+
+    if (entidad === 'tarea' && lockVersion !== null) {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.id = 'lockVersion';
+        hidden.value = lockVersion;
+        userDetailsDiv.appendChild(hidden);
+    }
 
     for (const field of fields) {
         const label = document.createElement('label');
@@ -451,7 +461,7 @@ export async function botonCrear(entidad, fields) {
                 throw new Error(response.statusText);
             }
 
-            alert(`${entidada} creado exitosamente`);
+            alert(`${entidad} creado exitosamente`);
             // handleUsers(); // Recarga la lista de usuarios
             // Recarga la lista según la entidad
             if (entidad === "usuario") handleUsers();
@@ -505,13 +515,26 @@ export async function botonModificar(id, entidad = "usuario", fields = usuarioFi
     userDetailsDiv.addEventListener('submit', async (event) => {
         event.preventDefault();
         const userData = { id }; // Incluye el ID
-        const inputs = userDetailsDiv.querySelectorAll('input');
+        
+        /* const inputs = userDetailsDiv.querySelectorAll('input');
         inputs.forEach(input => {
             userData[input.id] = input.value;
-        });
+        }); */
+
+        if (entidad === 'tarea') {
+            userData.subject = userDetailsDiv.querySelector('#subject').value;
+            userData.lockVersion = Number(userDetailsDiv.querySelector('#lockVersion').value);
+        } else {
+            const inputs = userDetailsDiv.querySelectorAll('input');
+            inputs.forEach(input => {
+                userData[input.id] = input.value;
+            });
+        }
+
+        console.log("Enviando a backend:", userData);
 
         try {
-            const response = await fetch(endpointGuardar, {
+            const response = await fetch(endpointGuardar[entidad], {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -531,6 +554,12 @@ export async function botonModificar(id, entidad = "usuario", fields = usuarioFi
                 contentDiv.innerHTML = '';
                 const projectsList = document.createElement('projects-list');
                 contentDiv.appendChild(projectsList);
+            }
+            else if (entidad === "tarea") {
+                const contentDiv = document.getElementById("content");
+                contentDiv.innerHTML = '';
+                const tareasList = document.createElement('tareas-list');
+                contentDiv.appendChild(tareasList);
             }
         } catch (error) {
             console.error("Error modificando usuario:", error);
