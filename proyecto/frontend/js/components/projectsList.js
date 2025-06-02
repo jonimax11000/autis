@@ -13,11 +13,9 @@ class ProjectsList extends HTMLElement {
 
     async fetchProjects() {
         try {
-            const apiToken = localStorage.getItem('apiToken');
             const response = await fetch('/proyectos', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tocken: apiToken })
+                headers: { 'Content-Type': 'application/json' }
             });
             if (!response.ok) throw new Error(response.statusText);
             const data = await response.json();
@@ -31,7 +29,7 @@ class ProjectsList extends HTMLElement {
         const container = this.shadowRoot.getElementById('projects');
         container.innerHTML = '';
         data.forEach(item => {
-            const card = document.createElement('project-card');
+            const card = document.createElement('historial-card');
             card.setAttribute('project-id', item.id);
             card.setAttribute('project-nom', item.name);
             container.appendChild(card);

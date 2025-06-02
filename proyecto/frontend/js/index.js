@@ -662,6 +662,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+//HISTORIAL
 async function handleHistorial() {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
@@ -670,64 +672,52 @@ async function handleHistorial() {
     formDiv.style.display = 'flex';
     formDiv.style.gap = '10px';
 
-    const searchInput = document.createElement('input');
-    searchInput.id = "historial-search";
-    searchInput.type = 'text';
-    searchInput.style.marginLeft = '40px';
-    searchInput.placeholder = 'Buscar por nombre...';
-    searchInput.style.width = '50%';
-    searchInput.style.padding = '10px';
-    searchInput.style.border = '1px solid #ccc';
-    searchInput.style.borderRadius = '5px';
-    searchInput.style.fontSize = '16px';
-    searchInput.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-    formDiv.style.justifyContent = 'center';
-    formDiv.style.marginTop = '20px';
+    const selectUsuarios = document.createElement('select');
+    selectUsuarios.id = "historial-search";
+    selectUsuarios.style.margin = '0 auto'; // Center the input horizontally
 
-    formDiv.appendChild(searchInput);
+    selectUsuarios.style.padding = '8px';
+    selectUsuarios.style.border = '1px solid #ccc';
+    selectUsuarios.style.borderRadius = '5px';
+    selectUsuarios.style.fontSize = '16px';
+    selectUsuarios.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+
+    selectUsuarios.style.display = 'block';
+    selectUsuarios.style.width = '200px';
+
+    try {
+        const response = await fetch('/usuarios', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+        data.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.firstname} ${user.lastname}`;
+            selectUsuarios.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+
+    formDiv.appendChild(selectUsuarios);
+    
+
     contentDiv.appendChild(formDiv);
 
-    // Create historialDiv once and append it to contentDiv
-    const historialDiv = document.createElement("div");
-    historialDiv.id = "historial";
-    historialDiv.style.marginTop = '20px';
-    contentDiv.appendChild(historialDiv);
-
-    searchInput.addEventListener('keypress', async (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-
-            const query = searchInput.value.trim();
-            if (!query) return;
-
-            try {
-                const response = await fetch('/historial/buscar', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ nombre: query })
-                });
-
-                if (!response.ok) {
-                    throw new Error(response.statusText);
-                }
-
-                const data = await response.json();
-                historialDiv.innerHTML = ''; // Clear previous results
-                data.forEach(item => {
-                    const historialCard = document.createElement('historial-card');
-                    historialCard.setAttribute('historial-id', item.id);
-                    historialCard.setAttribute('historial-nombre', `${item.firstname} ${item.lastname}`);
-                    historialDiv.appendChild(historialCard);
-                });
-            } catch (error) {
-                console.error("Error fetching historial info:", error);
-                const errorMessage = document.createElement('p');
-                errorMessage.textContent = 'Error en las tarjetas.';
-                errorMessage.style.color = 'red';
-                historialDiv.appendChild(errorMessage);
-            }
-        }
+    
+    selectUsuarios.addEventListener('change', (event) => {
+        const selectedUserId = event.target.value;
+        const historialList = document.createElement('historial-list');
+        historialList.setAttribute('user-name', selectedUserId);
+        contentDiv.appendChild(historialList);
     });
 }
