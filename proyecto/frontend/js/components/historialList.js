@@ -60,8 +60,9 @@ class ProjectsList extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
             #historial {
+                margin-left: 10px;
+                width: auto;
                 display: flex;
-                flex-direction: column;
                 gap: 10px;
                 margin-top: 20px;
             }
