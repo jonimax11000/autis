@@ -82,22 +82,17 @@ async function handleUsers(e) {
     contentDiv.innerHTML = '';
 
     const formDiv = document.createElement('div');
-    formDiv.style.display = 'flex';
-    formDiv.style.gap = '10px';
+    formDiv.className = "formDiv";
 
     const searchInput = document.createElement('input');
+    searchInput.class = "searchInput";
     searchInput.id = "bucador-usuario"
     searchInput.type = 'text';
-    searchInput.style.marginLeft = '40px';
     searchInput.placeholder = 'Buscar...';
-    searchInput.style.width = '50%';
-    searchInput.style.padding = '10px';
-    searchInput.style.border = '1px solid #ccc';
-    searchInput.style.borderRadius = '5px';
-    searchInput.style.fontSize = '16px';
-    searchInput.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+
 
     const selectFilter = document.createElement('select');
+    selectFilter.classList = "selectFilter";
     selectFilter.id = "filtros"
     const options = ['proyecto', 'usuario', 'id'];
     options.forEach(option => {
@@ -106,38 +101,19 @@ async function handleUsers(e) {
         opt.textContent = option;
         selectFilter.appendChild(opt);
     });
-    selectFilter.style.marginLeft = '10px';
-    selectFilter.style.padding = '8px';
-    selectFilter.style.border = '1px solid #ccc';
-    selectFilter.style.borderRadius = '5px';
-    selectFilter.style.fontSize = '16px';
-    selectFilter.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-    selectFilter.style.width = '200px';
+
 
     const createButton = document.createElement('button');
+    createButton.className = "createButton";
     createButton.textContent = 'Crear';
     createButton.addEventListener('click', () => {
         botonCrear(null); // Llama a la función para crear, pasando null como id
     });
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
-    plusIcon.style.fontSize = '32px';
-    plusIcon.style.color = 'black';
-    plusIcon.style.marginRight = '5px';
+    plusIcon.className = "plusIcon";
+
     createButton.prepend(plusIcon);
-    createButton.style.backgroundColor = '#006400';
-    createButton.style.border = 'none';
-    createButton.style.padding = '10px 20px';
-    createButton.style.borderRadius = '5px';
-    createButton.style.cursor = 'pointer';
-    createButton.style.fontSize = '20px';
-    createButton.style.color = 'white';
-    createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-    createButton.style.marginLeft = 'auto';
-    createButton.style.marginRight = '30px';
-    createButton.style.display = 'flex';
-    createButton.style.alignItems = 'center';
-    createButton.style.justifyContent = 'center';
 
     formDiv.appendChild(searchInput);
     formDiv.appendChild(selectFilter);
@@ -200,7 +176,6 @@ async function handleSearch(event) {
                 body = { nombre: document.getElementById('bucador-usuario').value };
                 url += 'nombre';
             }
-            console.log(url);
             const response = await fetch(`${url}`, {
                 method: 'POST',
                 headers: headers,
@@ -230,16 +205,7 @@ async function formularioUsuario(idSeleccionado) {
     contentDiv.innerHTML = '';
 
     const userDetailsDiv = document.createElement('form');
-    userDetailsDiv.style.display = 'grid';
-    userDetailsDiv.style.gridTemplateColumns = '1fr 2fr';
-    userDetailsDiv.style.gap = '20px';
-    userDetailsDiv.style.padding = '40px';
-    userDetailsDiv.style.border = '1px solid #ddd';
-    userDetailsDiv.style.borderRadius = '12px';
-    userDetailsDiv.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-    userDetailsDiv.style.maxWidth = '800px';
-    userDetailsDiv.style.margin = '40px auto';
-    userDetailsDiv.style.backgroundColor = '#f9f9f9';
+    userDetailsDiv.className = "userDetailsDiv";
 
     const fields = [
         { label: 'Nombre de usuario:', id: 'login' },
@@ -275,10 +241,7 @@ async function formularioUsuario(idSeleccionado) {
     fields.forEach(field => {
         const label = document.createElement('label');
         label.textContent = field.label;
-        label.style.fontWeight = 'bold';
-        label.style.fontSize = '18px';
-        label.style.color = 'black';
-        label.style.alignSelf = 'center';
+        label.className = "label";
 
         const input = document.createElement('input');
         input.id = field.id;
@@ -314,7 +277,6 @@ async function formularioUsuario(idSeleccionado) {
 
 export async function botonCrear(id) {
     const userDetailsDiv =  await formularioUsuario(null);
-    console.log(userDetailsDiv);
 
     const createButton = document.createElement('input');
     createButton.type="submit";
@@ -509,45 +471,18 @@ export async function botonEliminar(id, entidad = "usuario") {
         if (eliminado) {
             // Mostrar popup de confirmación
             const confirmationPopup = document.createElement('div');
-            confirmationPopup.style.position = 'fixed';
-            confirmationPopup.style.top = '0';
-            confirmationPopup.style.left = '0';
-            confirmationPopup.style.width = '100vw';
-            confirmationPopup.style.height = '100vh';
-            confirmationPopup.style.backgroundColor = 'rgba(0,0,0,0.5)';
-            confirmationPopup.style.display = 'flex';
-            confirmationPopup.style.justifyContent = 'center';
-            confirmationPopup.style.alignItems = 'center';
-            confirmationPopup.style.zIndex = '1000';
+            confirmationPopup.className = "confirmationPopup";
 
             const confirmationContent = document.createElement('div');
-            confirmationContent.style.backgroundColor = 'white';
-            confirmationContent.style.padding = '40px';
-            confirmationContent.style.borderRadius = '16px';
-            confirmationContent.style.textAlign = 'center';
-            confirmationContent.style.minWidth = '400px';
-            confirmationContent.style.minHeight = '200px';
-            confirmationContent.style.display = 'flex';
-            confirmationContent.style.flexDirection = 'column';
-            confirmationContent.style.justifyContent = 'center';
-            confirmationContent.style.alignItems = 'center';
+            confirmationContent.className = "confirmationContent";
 
             const confirmationMessage = document.createElement('p');
             confirmationMessage.textContent = mensajePopupEliminadoEntidad[entidad] || 'Elemento eliminado';
-            confirmationMessage.style.fontSize = '20px';
-            confirmationMessage.style.color = 'black';
-            confirmationMessage.style.marginBottom = '20px';
-            confirmationMessage.style.textAlign = 'center';
+            confirmationMessage.className = "confirmationMessage";
 
             const btnAceptar = document.createElement('button');
+            btnAceptar.className = "btnAceptar";
             btnAceptar.textContent = 'Aceptar';
-            btnAceptar.style.backgroundColor = '#003366';
-            btnAceptar.style.color = 'white';
-            btnAceptar.style.padding = '10px 20px';
-            btnAceptar.style.border = 'none';
-            btnAceptar.style.borderRadius = '5px';
-            btnAceptar.style.fontSize = '16px';
-            btnAceptar.style.cursor = 'pointer';
 
             confirmationContent.appendChild(confirmationMessage);
             confirmationContent.appendChild(btnAceptar);
@@ -618,10 +553,6 @@ async function handleDashboard() {
     contentDiv.innerHTML = '';
 
     const dashboardContainer = document.createElement('div');
-    dashboardContainer.style.display = 'grid';
-    dashboardContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
-    dashboardContainer.style.gap = '20px';
-    dashboardContainer.style.padding = '20px';
 
     try {
         const response = await fetch('/dashboard', {
@@ -636,7 +567,6 @@ async function handleDashboard() {
         }
 
         const data = await response.json();
-        console.log(data);
         /*data.forEach(item => {
             dashboardContainer.appendChild(dashboardCard);
         });
@@ -647,8 +577,8 @@ async function handleDashboard() {
     } catch (error) {
         console.error("Error fetching dashboard data:", error);
         const errorMessage = document.createElement('p');
+        errorMessage.className = "errorMessage";
         errorMessage.textContent = 'Error loading data.';
-        errorMessage.style.color = 'red';
         contentDiv.appendChild(errorMessage);
     }
 }
@@ -660,21 +590,10 @@ async function handleHistorial() {
     contentDiv.innerHTML = '';
 
     const formDiv = document.createElement('div');
-    formDiv.style.display = 'flex';
-    formDiv.style.gap = '10px';
+    formDiv.className="formDiv";
 
     const selectUsuarios = document.createElement('select');
     selectUsuarios.id = "historial-search";
-    selectUsuarios.style.margin = '0 auto'; // Center the input horizontally
-
-    selectUsuarios.style.padding = '8px';
-    selectUsuarios.style.border = '1px solid #ccc';
-    selectUsuarios.style.borderRadius = '5px';
-    selectUsuarios.style.fontSize = '16px';
-    selectUsuarios.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-
-    selectUsuarios.style.display = 'block';
-    selectUsuarios.style.width = '200px';
 
     try {
         const response = await fetch('/usuarios', {
@@ -704,21 +623,23 @@ async function handleHistorial() {
 
     contentDiv.appendChild(formDiv);
 
+    crearHistorialList();
     
-    selectUsuarios.addEventListener('change', (event) => {
-        const contentDiv = document.getElementById("content");
+    selectUsuarios.addEventListener('change', crearHistorialList);
+}
 
+async function crearHistorialList() {
 
-        const selectedUserId = event.target.value;
-        console.log("id ",selectedUserId);
-        let historialList = document.getElementById("historialList");
-        console.log(historialList);
-        if(historialList !=null){
-            historialList.remove();
-        }
-        historialList = document.createElement('historial-list');
-        historialList.id = "historialList";
-        historialList.setAttribute('user-id', selectedUserId);
-        contentDiv.appendChild(historialList);
-    });
+    const contentDiv = document.getElementById("content");
+    const selectedUserId = document.getElementById("historial-search").value;
+    
+    let historialList = document.getElementById("historialList");
+    if(historialList !=null){
+        historialList.remove();
+    }
+    historialList = document.createElement('historial-list');
+    historialList.id = "historialList";
+    historialList.setAttribute('user-id', selectedUserId);
+    contentDiv.appendChild(historialList);
+    
 }
