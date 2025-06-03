@@ -3,7 +3,6 @@ import './components/projectsList.js';
 import './components/tareasList.js';
 import './components/dashboardCards.js';
 import './components/historialList.js';
-import { type } from 'os';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
