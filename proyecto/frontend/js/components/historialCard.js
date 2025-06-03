@@ -26,7 +26,7 @@ class historialCard extends CardComponent {
             : 'inexistente';
         let HTML = `
             <style>
-            ${CardComponent.styles} /* Afegim estils del component base !! */
+            ${CardComponent.styles}
             .container {
             display: flex;
             flex-wrap: nowrap;
@@ -43,7 +43,7 @@ class historialCard extends CardComponent {
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             background-color: #fff;
-            width: 300px; /* Amplada fixa per a les targetes */
+            width: 300px;
             }
             .content {
             flex: 1;
