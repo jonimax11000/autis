@@ -167,19 +167,6 @@ export class ConectionBBDD extends Conection {
         }
     }
 
-    async getTareasHoyUsuario(id) {
-        try {
-            await this.client.connect();
-
-            const result = await this.client.query(`select * from work_packages where assigned_to_id=${id} and status_id IN (select id from statuses where is_closed=false);`);
-    
-            await this.client.end();
-
-            return result.rows;
-        } catch (error) {
-            return JSON.stringify({ error: error.message });
-        }
-    }
 
     async getTimeEntriesPorUsuario(id) {
         try {
@@ -189,6 +176,19 @@ export class ConectionBBDD extends Conection {
                 t.ongoing as estado from projects as p, work_packages as w, time_entries as t where t.work_package_id=w.id 
                 and t.project_id=p.id and t.user_id=${id};`);
     
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getTimeEntriesPorDia(fecha,id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`select hours as horas,ongoing as estado from time_entries where spent_on='${fecha}' and user_id=${id};`);     
             await this.client.end();
 
             return result.rows;

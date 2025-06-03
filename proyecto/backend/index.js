@@ -39,9 +39,35 @@ app.get('/', (_, res) => {
 });
 
 
+app.post('/dashboard', async (req, res) => {
+    try {
+        repository.cambiar(new ConectionBBDD());
+        let json = {
+            usuarios: []
+        };
+        let usuarios = await repository.getUsuarios2();
 
+        for (const aux of usuarios) {
+            const usuario = {
+                id: aux.id,
+                nombre: aux.nombre,
+                activo: false,
+            };
 
+            repository.cambiar(new ConectionBBDD());
+            usuario.activo = await repository.usuarioActivo(aux.id);
 
+            json.usuarios.push(usuario);
+        }
+
+        console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
 
 app.post('/dashboard', async (req, res) => {
     try {
@@ -56,16 +82,11 @@ app.post('/dashboard', async (req, res) => {
                 id: aux.id,
                 nombre: aux.nombre,
                 activo: false,
-                tareas: []
             };
 
             repository.cambiar(new ConectionBBDD());
             usuario.activo = await repository.usuarioActivo(aux.id);
 
-            repository.cambiar(new ConectionBBDD());
-            usuario.tareas = await repository.getTareasHoyUsuario(aux.id);
-
-            console.log(usuario.nombre);
             json.usuarios.push(usuario);
         }
 
@@ -79,25 +100,14 @@ app.post('/dashboard', async (req, res) => {
 });
 
 
-
-
-app.post('/dashboard/recarga', async (req, res) => {
+app.post('/timeEntries/dia', async (req, res) => {
     try {
-
-        
-
-    } catch (error) {
-        console.error("Error entrant:", error);
-        res.status(500).send('Error entrant');
-    }
-});
-
-
-app.post('/usuarios', async (req, res) => {
-    try {
+        const body = req.body;
+        var fecha = body.fecha;
+        var usuario = body.id;
         repository.cambiar(new ConectionBBDD());
         
-        const json = await repository.getUsuarios();
+        const json = await repository.getTimeEntriesPorDia(fecha,id);
 
         res.json(json);
 
