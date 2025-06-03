@@ -137,11 +137,11 @@ app.post('/tareas', async (req, res) => {
     }
 });
 
-app.post('/TipoTareas', async (req, res) => {
+app.post('/tipoTareas', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
         
-        const json = await repository.getTareas();
+        const json = await repository.getTipoTareas();
 
         //console.log(json);
         res.json(json);

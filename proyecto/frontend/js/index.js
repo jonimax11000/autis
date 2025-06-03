@@ -73,6 +73,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+async function fetchTipoTareas() {
+    const res = await fetch('/tipoTareas', { method: 'POST' });
+    return await res.json(); // [{id: 1, name: "Bug"}, ...]
+}
+
+async function fetchProyectos() {
+    const res = await fetch('/proyectos', { method: 'POST' });
+    return await res.json(); // [{id: 1, name: "Proyecto A"}, ...]
+}
+
 async function handleUsers(e) {
     if (e) {
         e.preventDefault();
@@ -117,11 +127,11 @@ async function handleUsers(e) {
     const createButton = document.createElement('button');
     createButton.textContent = 'Crear';
     
-    createButton.addEventListener('click', () => {
-        /* const fieldsCrear = [
-            ...usuarioFields, //(spread operator) pa no dubplicar el array
-            { label: 'Contraseña:', id: 'password', type: 'password' }
-        ]; */
+    /* createButton.addEventListener('click', () => {
+        // const fieldsCrear = [
+        //     ...usuarioFields, //(spread operator) pa no dubplicar el array
+        //     { label: 'Contraseña:', id: 'password', type: 'password' }
+        // ];
         const fieldsCrear = [
             // ...proyectoFields
             ...tareaFields,
@@ -129,7 +139,36 @@ async function handleUsers(e) {
             { label: 'Projecto:', id: 'project'}
         ];
         botonCrear('proyecto', fieldsCrear);
+    }); */
+
+    createButton.addEventListener('click', async () => {
+        const tipos = await fetchTipoTareas();
+        const proyectos = await fetchProyectos();
+
+        console.log(tipos);
+        console.log(proyectos);
+
+        const fieldsCrear = [
+            { label: 'Nombre de la tarea:', id: 'subject' },
+            {
+                label: 'Tipo:',
+                id: 'type',
+                type: 'select',
+                options: tipos.map(t => ({ value: t.id, label: t.name })),
+                endpoint: '/tipoTareas'
+            },
+            {
+                label: 'Proyecto:',
+                id: 'project',
+                type: 'select',
+                options: proyectos.map(p => ({ value: p.id, label: p.name })),
+                endpoint: '/proyectos'
+            }
+        ];
+
+        botonCrear('tarea', fieldsCrear);
     });
+
 
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
@@ -332,40 +371,53 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
         label.style.alignSelf = 'center';
 
         let input;
+
         if (field.type === 'select') {
             input = document.createElement('select');
             input.id = field.id;
-            // Carga las opciones dinámicamente
-            try {
-                const response = await fetch(field.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
-                const data = await response.json();
-                data.forEach(item => {
+
+            // Usa las opciones del campo
+            if (field.options) {
+                field.options.forEach(opt => {
                     const option = document.createElement('option');
-                    option.value = item.id;
-                    option.textContent = item.name;
+                    option.value = opt.value;
+                    option.textContent = opt.label;
                     input.appendChild(option);
                 });
-            } catch (error) {
-                console.error(`Error cargando opciones para ${field.id}:`, error);
             }
-        } else {
-            input = document.createElement('input');
-            input.id = field.id;
-            if (field.type) input.type = field.type;
-            if (idSeleccionado != null && json && json[field.id] !== undefined) {
-                input.value = json[field.id];
-            }
-            if (entidad === 'usuario') {
-                if (field.id === 'password') {
-                    input.type = 'password';
-                    input.minLength = 10;
-                } else if (field.id === 'email') {
-                    input.type = 'email';
-                    input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
-                    input.title = "Introduce un correo válido, como usuario@dominio.com";
+            } else if (field.endpoint){
+                // Carga las opciones dinámicamente
+                try {
+                    const response = await fetch(field.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+                    const data = await response.json();
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.textContent = item.name;
+                        input.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error(`Error cargando opciones para ${field.id}:`, error);
+                }
+            
+            } else {
+                input = document.createElement('input');
+                input.id = field.id;
+                if (field.type) input.type = field.type;
+                if (idSeleccionado != null && json && json[field.id] !== undefined) {
+                    input.value = json[field.id];
+                }
+                if (entidad === 'usuario') {
+                    if (field.id === 'password') {
+                        input.type = 'password';
+                        input.minLength = 10;
+                    } else if (field.id === 'email') {
+                        input.type = 'email';
+                        input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
+                        input.title = "Introduce un correo válido, como usuario@dominio.com";
+                    }
                 }
             }
-        }
 
         /* const input = document.createElement('input');
         input.id = field.id;
