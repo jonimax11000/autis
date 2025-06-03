@@ -377,6 +377,7 @@ body.light .txtcentral {
   font-size:'32px';
   color:'black';
   margin-right:'5px';
+  
 }
 
 .createButton{
@@ -413,4 +414,87 @@ body.light .txtcentral {
   font-size:'18px';
   color:'black';
   align-self:'center';
+
+}
+
+.saveButton{
+  background-color: #028a34;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  margin-top: 20px;
+  align-self: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.popupeliminar{
+  position: 'fixed';
+  top: '0';
+  left: '0';
+  width: '100vw';
+  height: '100vh';
+  background-color: 'rgba(0,0,0,0.5)';
+  display: 'flex';
+  justify-content: 'center';
+  align-Items: 'center';
+  z-index: '1000';
+}
+
+.popupContent{
+    background-color: white;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    min-width: 400px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.message {
+  font-Size: '20px';
+  color: 'black';
+  margin-Bottom: '20px';
+  text-Align: 'center';
+}
+
+.buttonContainer{
+  display: 'flex';
+  gap:'10px';
+}
+
+.btnCancelar{
+  background-Color: 'grey';
+  color: 'white';
+  padding: '10px 20px';
+  border: 'none';
+  border-Radius: '5px';
+  font-Size: '16px';
+  cursor: 'pointer';
+}
+
+.btnEliminar{
+  background-Color: 'red';
+    color: 'white';
+    padding: '10px 20px';
+    border: 'none';
+    border-Radius: '5px';
+    font-Size: '16px';
+    cursor: 'pointer';
+}
+
+.input{
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
 }

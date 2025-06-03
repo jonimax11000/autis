@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
-
 async function handleUsers(e) {
     if (e) {
         e.preventDefault();
@@ -80,7 +79,6 @@ async function handleUsers(e) {
     searchInput.type = 'text';
     searchInput.placeholder = 'Buscar...';
 
-
     const selectFilter = document.createElement('select');
     selectFilter.classList = "selectFilter";
     selectFilter.id = "filtros"
@@ -91,7 +89,6 @@ async function handleUsers(e) {
         opt.textContent = option;
         selectFilter.appendChild(opt);
     });
-
 
     const createButton = document.createElement('button');
     createButton.className = "createButton";
@@ -140,7 +137,6 @@ async function handleUsers(e) {
         console.error("Error fetching user data:", error);
     }
 }
-
 
 async function handleSearch(event) {
     if (event.key === 'Enter') {
@@ -248,15 +244,8 @@ async function formularioUsuario(idSeleccionado) {
             input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
             input.title = "Introduce un correo válido, como usuario@dominio.com";
         }
-        input.style.padding = '10px';
-        input.style.border = '1px solid #ddd';
-        input.style.borderRadius = '8px';
-        input.style.fontSize = '16px';
-        input.style.width = '100%';
-        input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-        input.style.backgroundColor = '#fff';
+        input.className = "input";
         input.required = true;
-
         userDetailsDiv.appendChild(label);
         userDetailsDiv.appendChild(input);
     });
@@ -272,19 +261,7 @@ export async function botonCrear(id) {
     createButton.type="submit";
     createButton.value = 'Crear';
 
-    createButton.style.backgroundColor = '#028a34';
-
-    createButton.style.color = 'white';
-    createButton.style.border = 'none';
-    createButton.style.padding = '15px 30px';
-    createButton.style.borderRadius = '8px';
-    createButton.style.cursor = 'pointer';
-    createButton.style.fontSize = '18px';
-    createButton.style.marginTop = '20px';
-    createButton.style.alignSelf = 'center';
-    createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-
-    createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+    createButton.className="createButton";
     userDetailsDiv.appendChild(createButton);
     userDetailsDiv.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -322,18 +299,9 @@ export async function botonModificar(id) {
     const userDetailsDiv = await formularioUsuario(id);
 
     const saveButton = document.createElement('input');
+    saveButton.className="saveButton";
     saveButton.type = "submit";
     saveButton.value = 'Guardar';
-    saveButton.style.backgroundColor = '#028a34';
-    saveButton.style.color = 'white';
-    saveButton.style.border = 'none';
-    saveButton.style.padding = '15px 30px';
-    saveButton.style.borderRadius = '8px';
-    saveButton.style.cursor = 'pointer';
-    saveButton.style.fontSize = '18px';
-    saveButton.style.marginTop = '20px';
-    saveButton.style.alignSelf = 'center';
-    saveButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
     userDetailsDiv.appendChild(saveButton);
     userDetailsDiv.addEventListener('submit', async (event) => {
@@ -378,67 +346,32 @@ const mensajePopupEntidad = {
     tarea: '¿Seguro deseas eliminar esta tarea?',
 };
 
-
 export async function botonEliminar(id, entidad = "usuario") {
     // Crear el popup
     const popup = document.createElement('div');
-    popup.style.position = 'fixed';
-    popup.style.top = '0';
-    popup.style.left = '0';
-    popup.style.width = '100vw';
-    popup.style.height = '100vh';
-    popup.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    popup.style.display = 'flex';
-    popup.style.justifyContent = 'center';
-    popup.style.alignItems = 'center';
-    popup.style.zIndex = '1000';
+    popup.className ="popupeliminar";
 
     // Contenido del popup
     const popupContent = document.createElement('div');
-    popupContent.style.backgroundColor = 'white';
-    popupContent.style.padding = '40px';
-    popupContent.style.borderRadius = '16px';
-    popupContent.style.textAlign = 'center';
-    // Aquí está el tamaño del cuadrado del popup
-    popupContent.style.minWidth = '400px';
-    popupContent.style.minHeight = '200px';
-    popupContent.style.display = 'flex';
-    popupContent.style.flexDirection = 'column';
-    popupContent.style.justifyContent = 'center';
-    popupContent.style.alignItems = 'center';
+    popupContent.className = "popupContent";
 
     const message = document.createElement('p');
     message.textContent = mensajePopupEntidad[entidad] || '¿Seguro deseas elimiar esta entidad?';
-    message.style.fontSize = '20px';
-    message.style.color = 'black';
-    message.style.marginBottom = '20px'; // Separación con los botones
-    message.style.textAlign = 'center';
+    message.className = "message"
+    
 
     const buttonContainer = document.createElement('div');
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.gap = '10px';
+    buttonContainer.className = "buttonContainer"
 
     const btnCancelar = document.createElement('button');
     btnCancelar.id = 'btnCancelar';
     btnCancelar.textContent = 'Cancelar';
-    btnCancelar.style.backgroundColor = 'grey';
-    btnCancelar.style.color = 'white';
-    btnCancelar.style.padding = '10px 20px';
-    btnCancelar.style.border = 'none';
-    btnCancelar.style.borderRadius = '5px';
-    btnCancelar.style.fontSize = '16px';
-    btnCancelar.style.cursor = 'pointer';
+    btnCancelar.className = "btnCancelar"
 
     const btnEliminar = document.createElement('button');
     btnEliminar.id = 'btnEliminar';
     btnEliminar.textContent = 'Eliminar';
-    btnEliminar.style.backgroundColor = 'red';
-    btnEliminar.style.color = 'white';
-    btnEliminar.style.padding = '10px 20px';
-    btnEliminar.style.border = 'none';
-    btnEliminar.style.borderRadius = '5px';
-    btnEliminar.style.fontSize = '16px';
-    btnEliminar.style.cursor = 'pointer';
+    btnEliminar.className = "btnEliminar";
 
     buttonContainer.appendChild(btnCancelar);
     buttonContainer.appendChild(btnEliminar);
@@ -505,7 +438,6 @@ export async function botonEliminar(id, entidad = "usuario") {
     }
 });
 
-
 }
 
 const urlEndPoint = {
@@ -536,7 +468,6 @@ async function confirmar_eliminado(id, entidad = "usuario") {
         return false;
     }
 }
-
 
 async function handleDashboard() {
     const contentDiv = document.getElementById('content');
@@ -629,7 +560,6 @@ async function handleHistorial() {
 
     formDiv.appendChild(selectUsuarios);
     
-
     contentDiv.appendChild(formDiv);
 
     crearHistorialList();
