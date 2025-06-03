@@ -74,13 +74,13 @@ async function handleUsers(e) {
     formDiv.className = "formDiv";
 
     const searchInput = document.createElement('input');
-    searchInput.class = "searchInput";
-    searchInput.id = "bucador-usuario"
+    searchInput.className = "searchInput";
+    searchInput.id = "bucador-usuario";
     searchInput.type = 'text';
     searchInput.placeholder = 'Buscar...';
 
     const selectFilter = document.createElement('select');
-    selectFilter.classList = "selectFilter";
+    selectFilter.className = "selectFilter";
     selectFilter.id = "filtros"
     const options = ['proyecto', 'usuario', 'id'];
     options.forEach(option => {
