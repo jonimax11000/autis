@@ -37,12 +37,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 txtCentral.textContent = this.textContent;
             }
             if (this.textContent.trim() === 'Proyectos') {
-            const projectsList = document.createElement('projects-list');
-            contentDiv.appendChild(projectsList);
+                handlerProjects()
             } 
             else if (this.textContent.trim() === 'Departamentos') {
-            const tareasList = document.createElement('tareas-list');
-            contentDiv.appendChild(tareasList);
+                const tareasList = document.createElement('tareas-list');
+                contentDiv.appendChild(tareasList);
             } 
             else if (this.textContent.trim() === 'Estadísticas') {
             const tareasList = document.createElement('estadistica-list');
@@ -83,6 +82,47 @@ async function fetchProyectos() {
     return await res.json(); // [{id: 1, name: "Proyecto A"}, ...]
 }
 
+async function handlerProjects() {
+    const contentDiv = document.getElementById("content");
+    const projectsList = document.createElement('projects-list');
+    const createButton = document.createElement('button');
+    createButton.className = "createButton";
+    createButton.textContent = 'Crear';
+    
+
+    createButton.addEventListener('click', async () => {
+        const tipos = await fetchTipoTareas();
+        const proyectos = await fetchProyectos();
+
+        const fieldsCrear = [
+            { label: 'Nombre de la tarea:', id: 'subject' },
+            {
+                label: 'Tipo:',
+                id: 'type',
+                type: 'select',
+                options: tipos.map(t => ({ value: t.id, label: t.name })),
+                endpoint: '/tipoTareas'
+            },
+            {
+                label: 'Proyecto:',
+                id: 'project',
+                type: 'select',
+                options: proyectos.map(p => ({ value: p.id, label: p.name })),
+                endpoint: '/proyectos'
+            }
+        ];
+
+        botonCrear('tarea', fieldsCrear);
+    });
+
+
+    const plusIcon = document.createElement('span');
+    plusIcon.textContent = '+ ';
+    plusIcon.className = "plusIcon";
+    contentDiv.appendChild(createButton);
+    contentDiv.appendChild(projectsList);
+}
+
 async function handleUsers(e) {
     if (e) {
         e.preventDefault();
@@ -115,26 +155,10 @@ async function handleUsers(e) {
     createButton.className = "createButton";
     createButton.textContent = 'Crear';
     
-    /* createButton.addEventListener('click', () => {
-        // const fieldsCrear = [
-        //     ...usuarioFields, //(spread operator) pa no dubplicar el array
-        //     { label: 'Contraseña:', id: 'password', type: 'password' }
-        // ];
-        const fieldsCrear = [
-            // ...proyectoFields
-            ...tareaFields,
-            { label: 'Tipo:', id: 'type'},
-            { label: 'Projecto:', id: 'project'}
-        ];
-        botonCrear('proyecto', fieldsCrear);
-    }); */
 
     createButton.addEventListener('click', async () => {
         const tipos = await fetchTipoTareas();
         const proyectos = await fetchProyectos();
-
-        console.log(tipos);
-        console.log(proyectos);
 
         const fieldsCrear = [
             { label: 'Nombre de la tarea:', id: 'subject' },
