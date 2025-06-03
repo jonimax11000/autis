@@ -125,6 +125,35 @@ export class ConectionBBDD extends Conection {
         }
     }
 
+    async getProyectosByID(id) {
+        try {
+            await this.client.connect();
+            
+            const result = await this.client.query(`SELECT id, name FROM projects where id=${id};`);
+
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getProyectosByName(nombre) {
+        try {
+            await this.client.connect();
+
+            let query;
+            query = `SELECT id, name FROM projects WHERE name ILIKE '%${nombre}%' order by id;`;        
+
+            const result = await this.client.query(query);
+            await this.client.end();
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
     /* Agarar datos del usuario de la BD */
     async getUsuarioModificar(id) {
         try {

@@ -16,7 +16,7 @@ class ProjectCard extends CardComponent {
         // Aci agafem els atributs
 
         const id = this.getAttribute('project-id') || 'Projecte desconegut';
-        const name = this.getAttribute('project-nom') || 'Projecte desconegt';
+        const name = this.getAttribute('project-name') || 'Projecte desconegt';
         let HTML = `
             <style>
                 ${CardComponent.styles} /* Afegim estils del component base !! */

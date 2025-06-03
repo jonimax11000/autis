@@ -49,6 +49,14 @@ export class OpenProjectRepository {
         return await this.conexion.getUsuariosByProyecto(proyecto);
     }
 
+    async getProyectosByID(id) {
+        return await this.conexion.getProyectosByID(id);
+    }
+
+    async getProyectosByName(nombre) {
+        return await this.conexion.getProyectosByName(nombre);
+    }
+
     async deleteUsuario(id) {
         return await this.conexion.deleteUsuario(id);
     }

@@ -37,12 +37,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 txtCentral.textContent = this.textContent;
             }
             if (this.textContent.trim() === 'Proyectos') {
-                handlerProjects()
+                handlerProjects();                
             } 
             else if (this.textContent.trim() === 'Tareas') {
                 /* const tareasList = document.createElement('tareas-list');
                 contentDiv.appendChild(tareasList); */
-                handlerTareas()
+                handlerTareas();
             } 
             else if (this.textContent.trim() === 'Estadísticas') {
             const tareasList = document.createElement('estadistica-list');
@@ -85,9 +85,35 @@ async function fetchProyectos() {
 
 /* HANDLER PARA ENTIDADES */
 // PROYECTOS
-async function handlerProjects() {
+async function handlerProjects(e) {
+    if (e) {
+        e.preventDefault();
+    }
     const contentDiv = document.getElementById("content");
-    const projectsList = document.createElement('projects-list');
+    contentDiv.innerHTML = '';
+
+    // Filtro y buscador
+    const formDiv = document.createElement('div');
+    formDiv.className = "formDiv";
+
+    const searchInput = document.createElement('input');
+    searchInput.className = "searchInput";
+    searchInput.id = "buscador-proyecto";
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Buscar...';
+
+    const selectFilter = document.createElement('select');
+    selectFilter.className = "selectFilter";
+    selectFilter.id = "filtros-proyecto";
+    const options = ['nombre', 'id'];
+    
+    options.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.textContent = option;
+        selectFilter.appendChild(opt);
+    });
+
     const createButton = document.createElement('button');
     createButton.className = "createButton";
     createButton.textContent = 'Crear';
@@ -98,12 +124,30 @@ async function handlerProjects() {
         ];
         botonCrear('proyecto', fieldsCrear);
     });
-
+    
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
     plusIcon.className = "plusIcon";
-    contentDiv.appendChild(createButton);
-    contentDiv.appendChild(projectsList);
+    createButton.prepend(plusIcon);
+
+    formDiv.appendChild(searchInput);
+    formDiv.appendChild(selectFilter);
+    formDiv.appendChild(createButton);
+
+    contentDiv.appendChild(formDiv);
+
+    // Lista de proyectos
+    const proyectosDiv = document.createElement("div");
+    proyectosDiv.id = "proyectos";
+    contentDiv.appendChild(proyectosDiv);
+    
+    // Carga inicial de proyectos
+    const projectsList = document.createElement('projects-list');
+    proyectosDiv.appendChild(projectsList);
+
+    // Añadir el event listener después de crear el div
+    searchInput.addEventListener('keypress', handleProjectsSearch);   
+    
 }
 
 // TAREAS
@@ -160,7 +204,7 @@ async function handleUsers(e) {
 
     const searchInput = document.createElement('input');
     searchInput.className = "searchInput";
-    searchInput.id = "bucador-usuario";
+    searchInput.id = "buscador-usuario";
     searchInput.type = 'text';
     searchInput.placeholder = 'Buscar...';
 
@@ -246,12 +290,12 @@ async function handleSearch(event) {
 
             if (filterOption === 'proyecto') {
                 url += 'proyecto';
-                body = { proyecto: document.getElementById('bucador-usuario').value };
+                body = { proyecto: document.getElementById('buscador-usuario').value };
             } else if (filterOption === 'id') {
-                body = { id: document.getElementById('bucador-usuario').value };
+                body = { id: document.getElementById('buscador-usuario').value };
                 url += 'id';
             } else if (filterOption === 'usuario') {
-                body = { nombre: document.getElementById('bucador-usuario').value };
+                body = { nombre: document.getElementById('buscador-usuario').value };
                 url += 'nombre';
             }
             const response = await fetch(`${url}`, {
@@ -278,6 +322,53 @@ async function handleSearch(event) {
         }
     }
 }
+
+async function handleProjectsSearch(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const selectFilter = document.getElementById("filtros-proyecto");
+        const filterOption = selectFilter.value;
+
+        try {
+            let url = '/proyectos/filtrar/';
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            let body = {};
+
+            if (filterOption === 'nombre') {
+                url += 'nombre';
+                body = { nombre: document.getElementById('buscador-proyecto').value };
+            } else if (filterOption === 'id') {
+                url += 'id';
+                body = { id: document.getElementById('buscador-proyecto').value };
+            }
+            
+            const response = await fetch(`${url}`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            const proyectosDiv = document.getElementById("proyectos");
+            proyectosDiv.innerHTML = '';
+            data.forEach(item => {
+                const projectCard = document.createElement('project-card');
+                projectCard.setAttribute('project-id', item.id);
+                projectCard.setAttribute('project-name', item.name);
+                proyectosDiv.appendChild(projectCard);
+            });
+        } catch (error) {
+            console.error("Error fetching filtered project data:", error);
+        }
+    }
+}
+
 
 /* DATOS EN FUNCIÓN DE LA ENTIDAD */
 
