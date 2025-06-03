@@ -1,4 +1,4 @@
-import './tareasCard.js';
+import '../components/tareasCard.js';
 
 class TareasList extends HTMLElement {
     constructor() {

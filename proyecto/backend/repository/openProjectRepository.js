@@ -97,10 +97,6 @@ export class OpenProjectRepository {
         return await this.conexion.getUsuarios2();
     }
 
-    async getTareasHoyUsuario(id) {
-        return await this.conexion.getTareasHoyUsuario(id);
-    }
-
     async getTimeEntriesPorUsuario(id) {
         return await this.conexion.getTimeEntriesPorUsuario(id);
     }

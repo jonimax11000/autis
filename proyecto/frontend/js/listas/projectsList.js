@@ -1,4 +1,4 @@
-import './projectsCard.js';
+import '../components/projectsCard.js';
 
 class ProjectsList extends HTMLElement {
     constructor() {
