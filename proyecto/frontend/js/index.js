@@ -3,6 +3,7 @@ import './components/projectsList.js';
 import './components/tareasList.js';
 import './components/dashboardCards.js';
 import './components/historialList.js';
+import { type } from 'os';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
@@ -118,11 +119,17 @@ async function handleUsers(e) {
     createButton.textContent = 'Crear';
     
     createButton.addEventListener('click', () => {
-        const fieldsCrear = [
+        /* const fieldsCrear = [
             ...usuarioFields, //(spread operator) pa no dubplicar el array
             { label: 'Contraseña:', id: 'password', type: 'password' }
+        ]; */
+        const fieldsCrear = [
+            // ...proyectoFields
+            ...tareaFields,
+            { label: 'Tipo:', id: 'type'},
+            { label: 'Projecto:', id: 'project'}
         ];
-        botonCrear('usuario', fieldsCrear);
+        botonCrear('proyecto', fieldsCrear);
     });
 
     const plusIcon = document.createElement('span');
@@ -431,6 +438,8 @@ export async function botonCrear(entidad, fields) {
 
         };
 
+        console.log(userData);
+
         const inputs = userDetailsDiv.querySelectorAll('input, select');
         inputs.forEach(input => {
             if (entidad === 'tarea' && input.id === 'type') {
@@ -478,8 +487,8 @@ export async function botonCrear(entidad, fields) {
                 contentDiv.appendChild(tareasList);
             }
         } catch (error) {
-            console.error("Error creando usuario:", error);
-            alert('Error al crear el usuario.');
+            console.error(`Error creando ${entidad}:`, error);
+            alert(`Error al crear ${entidad}`);
         }
     });
 }
