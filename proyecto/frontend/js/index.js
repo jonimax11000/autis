@@ -190,7 +190,6 @@ async function handleSearch(event) {
                 body = { nombre: document.getElementById('bucador-usuario').value };
                 url += 'nombre';
             }
-            console.log(url);
             const response = await fetch(`${url}`, {
                 method: 'POST',
                 headers: headers,
@@ -304,7 +303,6 @@ async function formularioUsuario(idSeleccionado) {
 
 export async function botonCrear(id) {
     const userDetailsDiv =  await formularioUsuario(null);
-    console.log(userDetailsDiv);
 
     const createButton = document.createElement('input');
     createButton.type="submit";
@@ -626,7 +624,6 @@ async function handleDashboard() {
         }
 
         const data = await response.json();
-        console.log(data);
         /*data.forEach(item => {
             dashboardContainer.appendChild(dashboardCard);
         });
@@ -713,21 +710,23 @@ async function handleHistorial() {
 
     contentDiv.appendChild(formDiv);
 
+    crearHistorialList();
     
-    selectUsuarios.addEventListener('change', (event) => {
-        const contentDiv = document.getElementById("content");
+    selectUsuarios.addEventListener('change', crearHistorialList);
+}
 
+async function crearHistorialList() {
 
-        const selectedUserId = event.target.value;
-        console.log("id ",selectedUserId);
-        let historialList = document.getElementById("historialList");
-        console.log(historialList);
-        if(historialList !=null){
-            historialList.remove();
-        }
-        historialList = document.createElement('historial-list');
-        historialList.id = "historialList";
-        historialList.setAttribute('user-id', selectedUserId);
-        contentDiv.appendChild(historialList);
-    });
+    const contentDiv = document.getElementById("content");
+    const selectedUserId = document.getElementById("historial-search").value;
+    
+    let historialList = document.getElementById("historialList");
+    if(historialList !=null){
+        historialList.remove();
+    }
+    historialList = document.createElement('historial-list');
+    historialList.id = "historialList";
+    historialList.setAttribute('user-id', selectedUserId);
+    contentDiv.appendChild(historialList);
+    
 }
