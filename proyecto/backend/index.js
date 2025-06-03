@@ -117,6 +117,20 @@ app.post('/timeEntries/dia', async (req, res) => {
     }
 });
 
+app.post('/usuarios', async (req, res) => {
+    try {
+        repository.cambiar(new ConectionBBDD());
+        
+        const json = await repository.getUsuarios();
+
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/proyectos', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
