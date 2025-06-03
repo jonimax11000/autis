@@ -1,8 +1,8 @@
 import './components/empleatsCard.js';
-import './components/projectsList.js';
-import './components/tareasList.js';
-import './components/dashboardCards.js';
-import './components/historialList.js';
+import './listas/projectsList.js';
+import './listas/tareasList.js';
+import './listas/DashboardList.js';
+import './listas/historialList.js';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
@@ -483,28 +483,10 @@ async function handleDashboard() {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
 
-    const dashboardContainer = document.createElement('div');
-
     try {
-        const response = await fetch('/dashboard', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
+       const DashBoardList = document.createElement("dashboard-list");
 
-        if (!response.ok) {
-            throw new Error(response.statusText);
-        }
-
-        const data = await response.json();
-        /*data.forEach(item => {
-            dashboardContainer.appendChild(dashboardCard);
-        });
-        const dashboard = document.createElement('dashboard-card');
-        dashboardContainer.appendChild(dashboard);*/
-
-        contentDiv.appendChild(dashboardContainer);
+        contentDiv.appendChild(DashBoardList);
     } catch (error) {
         console.error("Error fetching dashboard data:", error);
         const errorMessage = document.createElement('p');

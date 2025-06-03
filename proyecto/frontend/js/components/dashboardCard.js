@@ -1,3 +1,5 @@
+import '../listas/TimeEntriesList.js';
+
 class DashboardCard extends HTMLElement {
     constructor() {
         super();
@@ -7,18 +9,19 @@ class DashboardCard extends HTMLElement {
     }
 
     connectedCallback() {
-        const id = this.getAttribute('empleats-id') || 'Empleat desconegut';
-        const nom = this.getAttribute('empleats-nom') || 'Empleat desconegut';
+        this.userId = this.getAttribute('usuario-id') || 'Empleat desconegut';
+        this.userNom = this.getAttribute('usuario-nom') || 'Empleat desconegut';
+        this.userEstat = this.getAttribute('usuario-estado') || 'Empleat desconegut';
 
-        this.render(id, nom);
+        this.render();
     }
 
-    toggleExpand() {
+    /*toggleExpand() {
         this.expanded = !this.expanded;
         this.render(this.getAttribute('empleats-id'), this.getAttribute('empleats-nom'));
-    }
+    }*/
 
-    render(id, nom) {
+    render() {
         const miniCardsHTML = this.miniCards
             .map(
                 (miniCard, index) => `
@@ -101,11 +104,11 @@ class DashboardCard extends HTMLElement {
                 }
             </style>
             <div class="card">
-                <div class="header">
+                <div class="header" id="dashboard${this.userId}">
                     <img src="/img/user.png" alt="Imatge de l'empleats" />
                     <div>
-                        <h3>${nom}</h3>
-                        <p>ID: ${id}</p>
+                        <h3>${this.userNom}</h3>
+                        <p>Estado: ${this.userEstat}</p>
                     </div>
                 </div>
                 <div class="mini-cards">
@@ -115,6 +118,11 @@ class DashboardCard extends HTMLElement {
                 ${expandedContent}
             </div>
         `;
+
+        const listaTimeentries = document.createElement("timeentries-list");
+        listaTimeentries.setAttribute("usuario-id",this.userId);
+        listaTimeentries.setAttribute("cantidad",0);
+        this.shadowRoot.getElementById(`dashboard${this.userId}`).appendChild(listaTimeentries);
 
         this.shadowRoot.querySelector('.expand-button').addEventListener('click', () => this.toggleExpand());
         this.shadowRoot.querySelectorAll('.toggle-color').forEach((button) =>
