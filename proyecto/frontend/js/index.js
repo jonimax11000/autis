@@ -39,9 +39,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (this.textContent.trim() === 'Proyectos') {
                 handlerProjects()
             } 
-            else if (this.textContent.trim() === 'Departamentos') {
-                const tareasList = document.createElement('tareas-list');
-                contentDiv.appendChild(tareasList);
+            else if (this.textContent.trim() === 'Tareas') {
+                /* const tareasList = document.createElement('tareas-list');
+                contentDiv.appendChild(tareasList); */
+                handlerTareas()
             } 
             else if (this.textContent.trim() === 'Estadísticas') {
             const tareasList = document.createElement('estadistica-list');
@@ -82,6 +83,8 @@ async function fetchProyectos() {
     return await res.json(); // [{id: 1, name: "Proyecto A"}, ...]
 }
 
+/* HANDLER PARA ENTIDADES */
+// PROYECTOS
 async function handlerProjects() {
     const contentDiv = document.getElementById("content");
     const projectsList = document.createElement('projects-list');
@@ -89,7 +92,28 @@ async function handlerProjects() {
     createButton.className = "createButton";
     createButton.textContent = 'Crear';
     
+    createButton.addEventListener('click', async () => {
+        const fieldsCrear = [
+            ...proyectoFields,
+        ];
+        botonCrear('proyecto', fieldsCrear);
+    });
 
+    const plusIcon = document.createElement('span');
+    plusIcon.textContent = '+ ';
+    plusIcon.className = "plusIcon";
+    contentDiv.appendChild(createButton);
+    contentDiv.appendChild(projectsList);
+}
+
+// TAREAS
+async function handlerTareas() {
+    const contentDiv = document.getElementById("content");
+    const projectsList = document.createElement('tareas-list');
+    const createButton = document.createElement('button');
+    createButton.className = "createButton";
+    createButton.textContent = 'Crear';
+    
     createButton.addEventListener('click', async () => {
         const tipos = await fetchTipoTareas();
         const proyectos = await fetchProyectos();
@@ -115,7 +139,6 @@ async function handlerProjects() {
         botonCrear('tarea', fieldsCrear);
     });
 
-
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
     plusIcon.className = "plusIcon";
@@ -123,6 +146,7 @@ async function handlerProjects() {
     contentDiv.appendChild(projectsList);
 }
 
+// USUARIOS
 async function handleUsers(e) {
     if (e) {
         e.preventDefault();
@@ -155,32 +179,14 @@ async function handleUsers(e) {
     createButton.className = "createButton";
     createButton.textContent = 'Crear';
     
-
     createButton.addEventListener('click', async () => {
-        const tipos = await fetchTipoTareas();
-        const proyectos = await fetchProyectos();
-
         const fieldsCrear = [
-            { label: 'Nombre de la tarea:', id: 'subject' },
-            {
-                label: 'Tipo:',
-                id: 'type',
-                type: 'select',
-                options: tipos.map(t => ({ value: t.id, label: t.name })),
-                endpoint: '/tipoTareas'
-            },
-            {
-                label: 'Proyecto:',
-                id: 'project',
-                type: 'select',
-                options: proyectos.map(p => ({ value: p.id, label: p.name })),
-                endpoint: '/proyectos'
-            }
+            ...usuarioFields, //(spread operator) pa no dubplicar el array
+            { label: 'Contraseña:', id: 'password', type: 'password' }
         ];
 
-        botonCrear('tarea', fieldsCrear);
+        botonCrear('usuario', fieldsCrear);
     });
-
 
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
@@ -280,8 +286,6 @@ export const usuarioFields = [
     { label: 'Nombre:', id: 'firstName' },
     { label: 'Apellido:', id: 'lastName' },
     { label: 'Correo electrónico:', id: 'email', type: 'email' }
-    // LO DE ABAJO DEBERÁ APARECER EN EL BOTON DE CREAR
-    // { label: 'Contraseña:', id: 'password', type: 'password' }
 ];
 
 export const proyectoFields = [
@@ -290,14 +294,7 @@ export const proyectoFields = [
 
 export const tareaFields = [
     { label: 'Nombre de la tarea:', id: 'subject' }
-    // LO DE ABAJO SOLO DEBERÁ APARECER A LA HORA DE CREAR
-    /* { label: 'Tipo:', id: 'type' },
-    { label: 'Projecto:', id: 'project'} */
 ];
-
-/* await formularioEntidad(usuarioFields, idSeleccionado, 'usuario', '/usuario/mod/datos');
-await formularioEntidad(proyectoFields, idSeleccionado, 'proyecto', '/proyecto/mod/datos');
-await formularioEntidad(tareaFields, idSeleccionado, 'tarea', '/tarea/mod/datos'); */
 
 const endpointDatos = {
     usuario: '/usuario/mod/datos',
@@ -402,25 +399,6 @@ async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos)
                     }
                 }
             }
-
-        /* const input = document.createElement('input');
-        input.id = field.id;
-        input.required = true;
-        
-        if (idSeleccionado != null) {
-            input.value = json[field.id] || '';
-        }
-
-        if(entidad === 'usuario'){
-            if(field.id == 'password') {
-                input.type = 'password';
-                input.minLength = 10;
-            } else if(field.id == 'email') {
-                input.type = 'email';
-                input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
-                input.title = "Introduce un correo válido, como usuario@dominio.com";
-            }
-        } */
        
         input.className = "input";
         input.required = true;
@@ -740,7 +718,6 @@ async function handleDashboard() {
         contentDiv.appendChild(errorMessage);
     }
 }
-
 
 //HISTORIAL
 async function handleHistorial() {
