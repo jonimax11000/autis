@@ -6,42 +6,20 @@ class DashboardCard extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.expanded = false;
         this.miniCards = [];
+        this.cantidad=0;
     }
 
     connectedCallback() {
         this.userId = this.getAttribute('usuario-id') || 'Empleat desconegut';
         this.userNom = this.getAttribute('usuario-nom') || 'Empleat desconegut';
-        this.userEstat = this.getAttribute('usuario-estado') || 'Empleat desconegut';
+        this.userEstat = this.hasAttribute('usuario-estado') 
+            ? (this.getAttribute('usuario-estado') == 'true' ? 'Activo' : 'Inactivo') 
+            : 'inexistente';
 
         this.render();
     }
 
-    /*toggleExpand() {
-        this.expanded = !this.expanded;
-        this.render(this.getAttribute('empleats-id'), this.getAttribute('empleats-nom'));
-    }*/
-
     render() {
-        const miniCardsHTML = this.miniCards
-            .map(
-                (miniCard, index) => `
-                <div class="mini-card">
-                    <input type="text" value="${miniCard.text}" placeholder="Escribe aquí" />
-                    <button class="toggle-color" data-index="${index}">+</button>
-                </div>
-            `
-            )
-            .join('');
-
-        const expandedContent = this.expanded
-            ? `
-            <div class="expanded-content">
-                <!-- aqui estructura de grafica -->
-                <!-- aqui poner lo de las tareas -->
-            </div>
-        `
-            : '';
-
         this.shadowRoot.innerHTML = `
             <style>
                 .card {
@@ -90,17 +68,22 @@ class DashboardCard extends HTMLElement {
                     border: 1px solid #ccc;
                     border-radius: 3px;
                 }
-                .expanded-content {
-                    margin-top: 20px;
+                .botones{
                     display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                    width: 100%;
+                    width:100%;
+                    justify-content: center;
+                    align-items: center;
                 }
-                .expand-button {
+                .button {
                     margin-top: 10px;
                     cursor: pointer;
                     align-self: center; /* Centrar el botón */
+                    margin-right:2px;
+                    margin-left:2px;
+                    background-color: white;
+                }
+                .timeentries {
+                    width:100%;
                 }
             </style>
             <div class="card">
@@ -108,29 +91,47 @@ class DashboardCard extends HTMLElement {
                     <img src="/img/user.png" alt="Imatge de l'empleats" />
                     <div>
                         <h3>${this.userNom}</h3>
-                        <p>Estado: ${this.userEstat}</p>
+                        <p> ${this.userEstat}</p>
                     </div>
                 </div>
-                <div class="mini-cards">
-                    ${miniCardsHTML}
+                <div class="botones">
+                    ${this.cantidad < 2 ? '<button class="button" id="expand-button"><img src="../img/expandir.png" alt="Expandir" style="width: 20px; height: 20px;"></button>' : ''}
+                    ${this.cantidad > 0 ? '<button class="button" id="shrink-button"><img src="../img/cerrar.png" alt="cerrar" style="width: 20px; height: 20px;"></button>' : ''}
                 </div>
-                <button class="expand-button">v</button>
-                ${expandedContent}
-            </div>
-        `;
+            </div>`;
 
         const listaTimeentries = document.createElement("timeentries-list");
+        listaTimeentries.id = `timeentries-list-${this.userId}`;
+        listaTimeentries.className = "timeentries";
         listaTimeentries.setAttribute("usuario-id",this.userId);
-        listaTimeentries.setAttribute("cantidad",0);
+        listaTimeentries.setAttribute("cantidad",this.cantidad);
         this.shadowRoot.getElementById(`dashboard${this.userId}`).appendChild(listaTimeentries);
 
-        this.shadowRoot.querySelector('.expand-button').addEventListener('click', () => this.toggleExpand());
-        this.shadowRoot.querySelectorAll('.toggle-color').forEach((button) =>
-            button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                this.changeMiniCardColor(index);
-            })
-        );
+        const expandBtn = this.shadowRoot.querySelector('#expand-button');
+        if (expandBtn) {
+            expandBtn.addEventListener('click', () => {
+            const dashboard = this.shadowRoot.getElementById(`dashboard${this.userId}`);
+            const listaTimeentries = this.shadowRoot.getElementById(`timeentries-list-${this.userId}`);
+            if (dashboard && listaTimeentries) {
+                dashboard.removeChild(listaTimeentries);
+            }
+            this.cantidad++;
+            this.render();
+            });
+        }
+
+        const shrinkBtn = this.shadowRoot.querySelector('#shrink-button');
+        if (shrinkBtn) {
+            shrinkBtn.addEventListener('click', () => {
+            const dashboard = this.shadowRoot.getElementById(`dashboard${this.userId}`);
+            const listaTimeentries = this.shadowRoot.getElementById(`timeentries-list-${this.userId}`);
+            if (dashboard && listaTimeentries) {
+                dashboard.removeChild(listaTimeentries);
+            }
+            this.cantidad--;
+            this.render();
+            });
+        }
     }
 }
 
