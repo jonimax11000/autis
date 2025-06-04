@@ -6,6 +6,7 @@ class DashboardCard extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.expanded = false;
         this.miniCards = [];
+        this.cantidad=0;
     }
 
     connectedCallback() {
@@ -16,32 +17,7 @@ class DashboardCard extends HTMLElement {
         this.render();
     }
 
-    /*toggleExpand() {
-        this.expanded = !this.expanded;
-        this.render(this.getAttribute('empleats-id'), this.getAttribute('empleats-nom'));
-    }*/
-
     render() {
-        const miniCardsHTML = this.miniCards
-            .map(
-                (miniCard, index) => `
-                <div class="mini-card">
-                    <input type="text" value="${miniCard.text}" placeholder="Escribe aquí" />
-                    <button class="toggle-color" data-index="${index}">+</button>
-                </div>
-            `
-            )
-            .join('');
-
-        const expandedContent = this.expanded
-            ? `
-            <div class="expanded-content">
-                <!-- aqui estructura de grafica -->
-                <!-- aqui poner lo de las tareas -->
-            </div>
-        `
-            : '';
-
         this.shadowRoot.innerHTML = `
             <style>
                 .card {
@@ -90,17 +66,18 @@ class DashboardCard extends HTMLElement {
                     border: 1px solid #ccc;
                     border-radius: 3px;
                 }
-                .expanded-content {
-                    margin-top: 20px;
+                .botones{
                     display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                    width: 100%;
+                    width:100%;
+                    justify-content: center;
+                    align-items: center;
                 }
-                .expand-button {
+                .button {
                     margin-top: 10px;
                     cursor: pointer;
                     align-self: center; /* Centrar el botón */
+                    margin-right:2px;
+                    margin-left:2px;
                 }
             </style>
             <div class="card">
@@ -111,26 +88,43 @@ class DashboardCard extends HTMLElement {
                         <p>Estado: ${this.userEstat}</p>
                     </div>
                 </div>
-                <div class="mini-cards">
-                    ${miniCardsHTML}
+                <div class="botones">
+                    ${this.cantidad < 2 ? '<button class="button" id="expand-button">v</button>' : ''}
+                    ${this.cantidad > 0 ? '<button class="button" id="shrink-button">ᴧ</button>' : ''}
                 </div>
-                <button class="expand-button">v</button>
-                ${expandedContent}
-            </div>
-        `;
+            </div>`;
 
         const listaTimeentries = document.createElement("timeentries-list");
+        listaTimeentries.id = `timeentries-list-${this.userId}`;
         listaTimeentries.setAttribute("usuario-id",this.userId);
-        listaTimeentries.setAttribute("cantidad",0);
+        listaTimeentries.setAttribute("cantidad",this.cantidad);
         this.shadowRoot.getElementById(`dashboard${this.userId}`).appendChild(listaTimeentries);
 
-        this.shadowRoot.querySelector('.expand-button').addEventListener('click', () => this.toggleExpand());
-        this.shadowRoot.querySelectorAll('.toggle-color').forEach((button) =>
-            button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                this.changeMiniCardColor(index);
-            })
-        );
+        const expandBtn = this.shadowRoot.querySelector('#expand-button');
+        if (expandBtn) {
+            expandBtn.addEventListener('click', () => {
+            const dashboard = this.shadowRoot.getElementById(`dashboard${this.userId}`);
+            const listaTimeentries = this.shadowRoot.getElementById(`timeentries-list-${this.userId}`);
+            if (dashboard && listaTimeentries) {
+                dashboard.removeChild(listaTimeentries);
+            }
+            this.cantidad++;
+            this.render();
+            });
+        }
+
+        const shrinkBtn = this.shadowRoot.querySelector('#shrink-button');
+        if (shrinkBtn) {
+            shrinkBtn.addEventListener('click', () => {
+            const dashboard = this.shadowRoot.getElementById(`dashboard${this.userId}`);
+            const listaTimeentries = this.shadowRoot.getElementById(`timeentries-list-${this.userId}`);
+            if (dashboard && listaTimeentries) {
+                dashboard.removeChild(listaTimeentries);
+            }
+            this.cantidad--;
+            this.render();
+            });
+        }
     }
 }
 
