@@ -22,6 +22,7 @@ class TimeEntriesList extends HTMLElement {
                     flex-direction: column;
                     gap: 10px;
                     margin-top: 20px;
+                    width: 100%;
                 }
             </style>            
             <div id="timeentries"></div>

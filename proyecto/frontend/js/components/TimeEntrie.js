@@ -20,43 +20,64 @@ class TimeEntrie extends CardComponent {
     }
 
     render(){
+
         this.shadowRoot.innerHTML =  `
-            <style>
-            ${CardComponent.styles}
-            .container {
+        <style>
+          ${CardComponent.styles}
+          .container {
             display: flex;
             flex-wrap: nowrap;
             justify-content: flex-start;
-            gap: 20px;
             overflow-x: auto;
-            }
-            .card {
+          }
+      
+          .card {
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 150px;
+            font-family: Arial, sans-serif;
+          }
+      
+          .top-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            width: 300px;
-            }
-            .content {
-            flex: 1;
-            margin-right: 20px; 
-            }
-            </style>
-
-            <div class="container">
-                <div class="card">
-                    <div class="content">
-                    <h3>Proyecto: ${this.proyecto}</h3>
-                    <p>Tarea: ${this.tarea}</p>
-                    <p>${this.estado === 'Inactivo' ? `Horas hechas: ${this.horas}` : `Estado: ${this.estado}`}</p>
-                    </div>
-                </div>
+            margin-bottom: 1px;
+          }
+      
+          .title {
+            font-weight: bold;
+            color: #7f5af0;
+            font-size: 14px;
+            margin-right: 5px;
+          }
+      
+          .time {
+            font-size: 13px;
+            color: #555;
+          }
+      
+          .project {
+            font-size: 13px;
+            color: #f27e00;
+          }
+        </style>
+      
+        <div class="container">
+          <div class="card">
+            <div class="top-row">
+              <div class="title">${this.tarea}</div>
+              <div class="time">${this.estado === 'Inactivo' ?  `${this.horas} horas` : `${this.estado}`}</div>
             </div>
-        `;
+            <div class="project">Proyecto: ${this.proyecto}</div>
+          </div>
+        </div>
+      `;
+       
     }
 }
 

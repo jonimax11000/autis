@@ -32,14 +32,9 @@ class TimeEntries extends HTMLElement {
     }
 
     renderTimeEntrie(data) {
-        const estatico = this.shadowRoot.getElementById("estatico");
-        const container = estatico.parentNode;
+        const container = this.shadowRoot.getElementById("contenedor");
         // Remove all child nodes except 'estatico'
-        Array.from(container.childNodes).forEach(node => {
-            if (node !== estatico) {
-                container.removeChild(node);
-            }
-        });
+        container.innerHTML ="";
         if (data.length === 0) {
             const noTimeEntries = `
                 <p style="
@@ -53,7 +48,7 @@ class TimeEntries extends HTMLElement {
             `;
             const noEntriesElement = document.createElement('div');
             noEntriesElement.innerHTML = noTimeEntries;
-            container.insertBefore(noEntriesElement, estatico);
+            container.appendChild(noEntriesElement);
             return;
         }
         data.forEach(item => {
@@ -63,7 +58,7 @@ class TimeEntries extends HTMLElement {
             card.setAttribute('horas', item.horas);
             card.setAttribute('estado', item.estado);
             this.horasTotal+=item.horas;
-            container.insertBefore(card, estatico);
+            container.appendChild(card);
         });
     }
 
@@ -73,16 +68,38 @@ class TimeEntries extends HTMLElement {
 
         this.shadowRoot.innerHTML = `
             <style>
-                .div {
-                    display: flex;
-                    gap: 10px;
-                    margin-top: 20px;
-                }
+            .div {
+                width: auto;  /* Cambiado de 100% a auto */
+                max-width: 100%;  /* Asegura que no desborde al padre */
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            #estatico {
+                width: 150px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+            #horasTotal {
+                border: 1px solid black;
+                padding: 0px 5px 1px 5px;
+                border-radius: 5px;
+            }
+            #contenedor {
+                flex-grow: 1;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                gap: 20px;
+            }
             </style>
             <div class="div">
-                <div id="estatico" class"estatico">
+                <div id="contenedor"></div>
+                <div id="estatico">
                     <span>${this.fecha}</span>
-                    <span>${this.horasTotal}</span>
+                    <span id="horasTotal">${this.horasTotal}h</span>
                 </div>
             </div>
         `;
