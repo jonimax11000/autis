@@ -28,46 +28,12 @@ app.use(bodyParser.json());
 // Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Route to serve the HTML page
-/* app.get('/', (_, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/html', 'jonathan.html'));
-}); */
-
 
 app.get('/', (_, res) => {
     res.sendFile(path.join(__dirname, '../frontend/html', 'tocken.html'));
 });
 
 
-app.post('/dashboard', async (req, res) => {
-    try {
-        repository.cambiar(new ConectionBBDD());
-        let json = {
-            usuarios: []
-        };
-        let usuarios = await repository.getUsuarios2();
-
-        for (const aux of usuarios) {
-            const usuario = {
-                id: aux.id,
-                nombre: aux.nombre,
-                activo: false,
-            };
-
-            repository.cambiar(new ConectionBBDD());
-            usuario.activo = await repository.usuarioActivo(aux.id);
-
-            json.usuarios.push(usuario);
-        }
-
-        console.log(json);
-        res.json(json);
-
-    } catch (error) {
-        console.error("Error entrant:", error);
-        res.status(500).send('Error entrant');
-    }
-});
 
 app.post('/dashboard', async (req, res) => {
     try {
@@ -90,7 +56,6 @@ app.post('/dashboard', async (req, res) => {
             json.usuarios.push(usuario);
         }
 
-        console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -107,7 +72,7 @@ app.post('/timeEntries/dia', async (req, res) => {
         var usuario = body.id;
         repository.cambiar(new ConectionBBDD());
         
-        const json = await repository.getTimeEntriesPorDia(fecha,id);
+        const json = await repository.getTimeEntriesPorDia(fecha,usuario);
 
         res.json(json);
 
@@ -137,7 +102,6 @@ app.post('/proyectos', async (req, res) => {
         
         const json = await repository.getProjects();
 
-        //console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -151,8 +115,6 @@ app.post('/tareas', async (req, res) => {
         repository.cambiar(new ConectionBBDD());
         
         const json = await repository.getTareas();
-
-        //console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -167,7 +129,6 @@ app.post('/usuarios/filtrar/proyecto', async (req, res) => {
         repository.cambiar(new ConectionBBDD());
         const json = await repository.getUsuariosByProyecto(body.proyecto);
 
-        console.log(json);
         res.json(json);
         
 
@@ -182,10 +143,8 @@ app.post('/usuarios/filtrar/id', async (req, res) => {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
         const id = parseInt(body.id, 10);
-        console.log(id + 3);
         const json = await repository.getUsuariosByID(id + 3);
 
-        console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -199,8 +158,6 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
         const json = await repository.getUsuariosByName(body.nombre);
-
-        console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -249,12 +206,10 @@ app.post('/usuario/crear', async (req, res) => {
 
 app.post('/usuario/borrar', async (req, res) => {
     try {
-        console.log('Borrar usuario');
         const body = req.body;
         repository.cambiar(new ConectionAPI(tocken));
         const id = parseInt(body.id, 10);
         const response = await repository.deleteUsuario(id);
-        console.log('Respuesta de borrar usuario:', response);
         res.json({ success: response.ok });
 
     } catch (error) {
@@ -265,12 +220,10 @@ app.post('/usuario/borrar', async (req, res) => {
 
 app.post('/proyecto/borrar', async (req, res) => {
     try {
-        console.log('Borrar proyecto');
         const body = req.body;
         repository.cambiar(new ConectionAPI(tocken));
         const id = parseInt(body.id, 10);
         const response = await repository.deleteProyecto(id);
-        console.log('Respuesta de borrar proyecto:', response);
         res.json({ success: response.ok });
 
     } catch (error) {
@@ -281,12 +234,10 @@ app.post('/proyecto/borrar', async (req, res) => {
 
 app.post('/tarea/borrar', async (req, res) => {
     try {
-        console.log('Borrar tarea');
         const body = req.body;
         repository.cambiar(new ConectionAPI(tocken));
         const id = parseInt(body.id, 10);
         const response = await repository.deleteTarea(id);
-        console.log('Respuesta de borrar tarea:', response);
         res.json({ success: response.ok });
 
     } catch (error) {
@@ -298,12 +249,10 @@ app.post('/tarea/borrar', async (req, res) => {
 
 app.post('/historial', async (req, res) => {
     try {
-        console.log("entro");
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const json = {timeEntries:[]};
         const entries = await repository.getTimeEntriesPorUsuario(body.id);
-        console.log(entries);
         json.timeEntries = entries;
 
         res.json(json);

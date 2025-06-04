@@ -188,8 +188,25 @@ export class ConectionBBDD extends Conection {
         try {
             await this.client.connect();
 
-            const result = await this.client.query(`select hours as horas,ongoing as estado from time_entries where spent_on='${fecha}' and user_id=${id};`);     
+            const result = await this.client.query(`
+    SELECT 
+        p.name AS proyecto, 
+        w.subject AS tarea,
+        t.hours AS horas,
+        t.ongoing AS estado 
+    FROM 
+        projects AS p, 
+        work_packages AS w, 
+        time_entries AS t 
+    WHERE 
+        t.work_package_id = w.id 
+        AND t.project_id = p.id 
+        AND t.user_id = ${id} 
+        AND t.spent_on = '${fecha}'
+`);
             await this.client.end();
+
+            console.log(result.rows);
 
             return result.rows;
         } catch (error) {
