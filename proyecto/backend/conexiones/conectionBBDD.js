@@ -154,6 +154,35 @@ export class ConectionBBDD extends Conection {
         }
     }
 
+    async getTareasByID(id) {
+        try {
+            await this.client.connect();
+            
+            const result = await this.client.query(`SELECT id, subject FROM work_packages where id=${id};`);
+
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getTareasByName(subject) {
+        try {
+            await this.client.connect();
+
+            let query;
+            query = `SELECT id, subject FROM work_packages WHERE subject ILIKE '%${subject}%' order by id;`;
+
+            const result = await this.client.query(query);
+            await this.client.end();
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
     /* Agarar datos del usuario de la BD */
     async getUsuarioModificar(id) {
         try {

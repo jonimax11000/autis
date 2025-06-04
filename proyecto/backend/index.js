@@ -256,6 +256,38 @@ app.post('/proyectos/filtrar/nombre', async (req, res) => {
     }
 });
 
+app.post('/tareas/filtrar/id', async (req, res) => {
+    try {
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        console.log(id);
+        const json = await repository.getTareasByID(id);
+
+        console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tareas/filtrar/nombre', async (req, res) => {
+    try {
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getTareasByName(body.nombre);
+
+        console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuario/mod', async (req, res) => {
     try {
         const body = req.body;

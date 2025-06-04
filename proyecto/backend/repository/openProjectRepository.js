@@ -57,6 +57,14 @@ export class OpenProjectRepository {
         return await this.conexion.getProyectosByName(nombre);
     }
 
+    async getTareasByID(id) {
+        return await this.conexion.getTareasByID(id);
+    }
+
+    async getTareasByName(nombre) {
+        return await this.conexion.getTareasByName(nombre);
+    }
+
     async deleteUsuario(id) {
         return await this.conexion.deleteUsuario(id);
     }

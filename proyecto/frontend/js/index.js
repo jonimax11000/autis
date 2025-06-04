@@ -151,9 +151,36 @@ async function handlerProjects(e) {
 }
 
 // TAREAS
-async function handlerTareas() {
+async function handlerTareas(e) {
+    if (e) {
+        e.preventDefault();
+    }
+
     const contentDiv = document.getElementById("content");
-    const projectsList = document.createElement('tareas-list');
+    contentDiv.innerHTML = '';
+
+    // Filtro y buscador
+    const formDiv = document.createElement('div');
+    formDiv.className = "formDiv";
+
+    const searchInput = document.createElement('input');
+    searchInput.className = "searchInput";
+    searchInput.id = "buscador-tarea";
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Buscar...';
+
+    const selectFilter = document.createElement('select');
+    selectFilter.className = "selectFilter";
+    selectFilter.id = "filtros-tarea";
+    const options = ['nombre', 'id'];
+
+    options.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.textContent = option;
+        selectFilter.appendChild(opt);
+    });
+
     const createButton = document.createElement('button');
     createButton.className = "createButton";
     createButton.textContent = 'Crear';
@@ -179,15 +206,31 @@ async function handlerTareas() {
                 endpoint: '/proyectos'
             }
         ];
-
         botonCrear('tarea', fieldsCrear);
     });
 
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
     plusIcon.className = "plusIcon";
-    contentDiv.appendChild(createButton);
-    contentDiv.appendChild(projectsList);
+    createButton.prepend(plusIcon);
+
+    formDiv.appendChild(searchInput);
+    formDiv.appendChild(selectFilter);
+    formDiv.appendChild(createButton);
+    
+    contentDiv.appendChild(formDiv);
+
+    // Lista de tareas
+    const tareasDiv = document.createElement("div");
+    tareasDiv.id = "tareas";
+    contentDiv.appendChild(tareasDiv);
+    
+    // Carga inicial de tareas
+    const tareasList = document.createElement('tareas-list');
+    tareasDiv.appendChild(tareasList);
+
+    // Añadir el event listener después de crear el div
+    searchInput.addEventListener('keypress', handleTareasSearch);  
 }
 
 // USUARIOS
@@ -362,6 +405,52 @@ async function handleProjectsSearch(event) {
                 projectCard.setAttribute('project-id', item.id);
                 projectCard.setAttribute('project-name', item.name);
                 proyectosDiv.appendChild(projectCard);
+            });
+        } catch (error) {
+            console.error("Error fetching filtered project data:", error);
+        }
+    }
+}
+
+async function handleTareasSearch(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const selectFilter = document.getElementById("filtros-tarea");
+        const filterOption = selectFilter.value;
+
+        try {
+            let url = '/tareas/filtrar/';
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            let body = {};
+
+            if (filterOption === 'nombre') {
+                url += 'nombre';
+                body = { nombre: document.getElementById('buscador-tarea').value };
+            } else if (filterOption === 'id') {
+                url += 'id';
+                body = { id: document.getElementById('buscador-tarea').value };
+            }
+            
+            const response = await fetch(`${url}`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            const tareasDiv = document.getElementById("tareas");
+            tareasDiv.innerHTML = '';
+            data.forEach(item => {
+                const tareaCard = document.createElement('tarea-card');
+                tareaCard.setAttribute('tarea-id', item.id);
+                tareaCard.setAttribute('tarea-subject', item.subject);
+                tareasDiv.appendChild(tareaCard);
             });
         } catch (error) {
             console.error("Error fetching filtered project data:", error);
