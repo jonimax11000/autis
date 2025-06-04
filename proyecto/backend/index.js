@@ -124,6 +124,21 @@ app.post('/tareas', async (req, res) => {
     }
 });
 
+app.post('/tipoTareas', async (req, res) => {
+    try {
+        repository.cambiar(new ConectionBBDD());
+        
+        const json = await repository.getTipoTareas();
+
+        //console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuarios/filtrar/proyecto', async (req, res) => {
     try {
         let body = req.body;
@@ -167,6 +182,70 @@ app.post('/usuarios/filtrar/nombre', async (req, res) => {
     }
 });
 
+app.post('/proyectos/filtrar/id', async (req, res) => {
+    try {
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        console.log(id);
+        const json = await repository.getProyectosByID(id);
+
+        console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/proyectos/filtrar/nombre', async (req, res) => {
+    try {
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getProyectosByName(body.nombre);
+
+        console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tareas/filtrar/id', async (req, res) => {
+    try {
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        console.log(id);
+        const json = await repository.getTareasByID(id);
+
+        console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tareas/filtrar/nombre', async (req, res) => {
+    try {
+        let body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getTareasByName(body.nombre);
+
+        console.log(json);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuario/mod', async (req, res) => {
     try {
         const body = req.body;
@@ -179,7 +258,7 @@ app.post('/usuario/mod', async (req, res) => {
         res.status(500).send('Error entrant');
     }
 });
-
+/* CONSULTAR DATOS */
 app.post('/usuario/mod/datos', async (req, res) => {
     try {
         const body = req.body;
@@ -193,11 +272,87 @@ app.post('/usuario/mod/datos', async (req, res) => {
     }
 });
 
+app.post('/proyecto/mod', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        const json = await repository.modificarProyecto(body);
+        res.json({ success: json.ok });
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/proyecto/mod/datos', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        const json = await repository.getProyectoModificar(id);
+        res.json(json);
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tarea/mod', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        const json = await repository.modificarTarea(body);
+        res.json({ success: json.ok });
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tarea/mod/datos', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const id = parseInt(body.id, 10);
+        const json = await repository.getTareaModificar(id);
+        res.json(json);
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 app.post('/usuario/crear', async (req, res) => {
     try {
         const body = req.body;
         repository.cambiar(new ConectionAPI(tocken));
         repository.crearUsuario(body);
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/proyecto/crear', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        repository.crearProyecto(body);
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tarea/crear', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionAPI(tocken));
+        repository.crearTarea(body);
         res.json({ success: true });
     } catch (error) {
         console.error("Error entrant:", error);

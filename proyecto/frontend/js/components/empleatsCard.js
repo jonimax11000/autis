@@ -1,6 +1,6 @@
 // Importem el component de base
 import { CardComponent } from './CardComponent.js';
-import { botonModificar, botonEliminar } from '../index.js';
+import { botonModificar, botonEliminar, usuarioFields } from '../index.js';
 
 
 class EmpleatCard extends CardComponent {
@@ -75,7 +75,7 @@ class EmpleatCard extends CardComponent {
 
 
         const mod = this.shadowRoot.getElementById(`modificar${id}`);
-        mod.addEventListener('click', () => botonModificar(id));
+        mod.addEventListener('click', () => botonModificar(id), "usuario", usuarioFields);
         if(id >4){
             const elim = this.shadowRoot.getElementById(`eliminar${id}`);
             elim.addEventListener('click', () => botonEliminar(id, "usuario"));

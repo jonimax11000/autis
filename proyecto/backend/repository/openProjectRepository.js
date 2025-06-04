@@ -29,6 +29,10 @@ export class OpenProjectRepository {
         return await this.conexion.getTareas();
     }
 
+    async getTipoTareas() {
+        return await this.conexion.getTipoTareas();
+    }
+
     async deleteTarea(id) {
         return await this.conexion.deleteTarea(id);
     }
@@ -45,6 +49,22 @@ export class OpenProjectRepository {
         return await this.conexion.getUsuariosByProyecto(proyecto);
     }
 
+    async getProyectosByID(id) {
+        return await this.conexion.getProyectosByID(id);
+    }
+
+    async getProyectosByName(nombre) {
+        return await this.conexion.getProyectosByName(nombre);
+    }
+
+    async getTareasByID(id) {
+        return await this.conexion.getTareasByID(id);
+    }
+
+    async getTareasByName(nombre) {
+        return await this.conexion.getTareasByName(nombre);
+    }
+
     async deleteUsuario(id) {
         return await this.conexion.deleteUsuario(id);
     }
@@ -53,12 +73,36 @@ export class OpenProjectRepository {
         return await this.conexion.getUsuarioModificar(id);
     }
 
+    async getProyectoModificar(id) {
+        return await this.conexion.getProyectoModificar(id);
+    }
+
+    async getTareaModificar(id) {
+        return await this.conexion.getTareaModificar(id);
+    }
+
     async crearUsuario(json) {
         return await this.conexion.crearUsuario(json);
     }
 
+    async crearProyecto(json) {
+        return await this.conexion.crearProyecto(json);
+    }
+
+    async crearTarea(json) {
+        return await this.conexion.crearTarea(json);
+    }
+
     async modificarUsuario(json) {
         return await this.conexion.modificarUsuario(json);
+    }
+
+    async modificarProyecto(json) {
+        return await this.conexion.modificarProyecto(json);
+    }
+
+    async modificarTarea(json) {
+        return await this.conexion.modificarTarea(json);
     }
 
     async usuarioActivo(id) {
