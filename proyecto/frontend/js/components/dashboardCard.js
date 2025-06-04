@@ -13,7 +13,7 @@ class DashboardCard extends HTMLElement {
         this.userId = this.getAttribute('usuario-id') || 'Empleat desconegut';
         this.userNom = this.getAttribute('usuario-nom') || 'Empleat desconegut';
         this.userEstat = this.hasAttribute('usuario-estado') 
-            ? (this.getAttribute('estado') === 'true' ? 'Activo' : 'Inactivo') 
+            ? (this.getAttribute('usuario-estado') == 'true' ? 'Activo' : 'Inactivo') 
             : 'inexistente';
 
         this.render();

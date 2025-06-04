@@ -22,7 +22,6 @@ export class ConectionBBDD extends Conection {
 
             // Exemple de consulta: obtenir els primers 5 usuaris
             const result = await this.client.query('SELECT id, name FROM projects ORDER BY id;');
-            console.log("proyectos en BBDD: "+result.rows);
 
             await this.client.end();
 
@@ -38,7 +37,6 @@ export class ConectionBBDD extends Conection {
 
             // Exemple de consulta: obtenir els primers 5 usuaris
             const result = await this.client.query('SELECT id, subject FROM work_packages ORDER BY id;');
-            console.log("tareas en BBDD: "+result.rows);
 
             await this.client.end();
 
@@ -206,7 +204,6 @@ export class ConectionBBDD extends Conection {
 `);
             await this.client.end();
 
-            console.log(result.rows);
 
             return result.rows;
         } catch (error) {

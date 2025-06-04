@@ -51,7 +51,8 @@ app.post('/dashboard', async (req, res) => {
             };
 
             repository.cambiar(new ConectionBBDD());
-            usuario.activo = await repository.usuarioActivo(aux.id);
+            const estado = await repository.usuarioActivo(aux.id);
+            usuario.activo = estado;
 
             json.usuarios.push(usuario);
         }
