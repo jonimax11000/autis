@@ -652,16 +652,10 @@ export async function botonCrear(entidad, fields) {
             // Recarga la lista según la entidad
             if (entidad === "usuario") handleUsers();
             else if (entidad === "proyecto") {
-                const contentDiv = document.getElementById("content");
-                contentDiv.innerHTML = '';
-                const projectsList = document.createElement('projects-list');
-                contentDiv.appendChild(projectsList);
+                handlerProjects();
             }
             else if (entidad === "tarea") {
-                const contentDiv = document.getElementById("content");
-                contentDiv.innerHTML = '';
-                const tareasList = document.createElement('tareas-list');
-                contentDiv.appendChild(tareasList);
+                handlerTareas();
             }
         } catch (error) {
             console.error(`Error creando ${entidad}:`, error);
