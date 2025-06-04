@@ -1,7 +1,10 @@
+import './TimeEntrie.js';
+
 class TimeEntries extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this.horasTotal = 0;
     }
 
     connectedCallback() {
@@ -9,22 +12,95 @@ class TimeEntries extends HTMLElement {
         this.fecha = this.getAttribute('fecha') || 'Fecha desconeguda';
 
         this.render();
+        this.fetchTimeEntrie();
     }
 
+    async fetchTimeEntrie() {
+        try {
+            const apiToken = localStorage.getItem('apiToken');
+            const response = await fetch('/timeEntries/dia', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: this.userId, fecha: this.fecha }),
+            });
+            if (!response.ok) throw new Error(response.statusText);
+            const data = await response.json();
+            this.renderTimeEntrie(data);
+        } catch (error) {
+            console.error("Error fetching dashboard:", error);
+        }
+    }
+
+    renderTimeEntrie(data) {
+        const container = this.shadowRoot.getElementById("contenedor");
+        // Remove all child nodes except 'estatico'
+        container.innerHTML ="";
+        if (data.length === 0) {
+            const noTimeEntries = `
+                <p style="
+                    font-size: 1em; 
+                    text-align: center; 
+                    margin-top: 20px;
+                    width: 100%;
+                ">
+                    No se han realizado tareas este día.
+                </p>
+            `;
+            const noEntriesElement = document.createElement('div');
+            noEntriesElement.innerHTML = noTimeEntries;
+            container.appendChild(noEntriesElement);
+            return;
+        }
+        data.forEach(item => {
+            const card = document.createElement('timeentrie-card');
+            card.setAttribute('proyecto', item.proyecto);
+            card.setAttribute('tarea', item.tarea);
+            card.setAttribute('horas', item.horas);
+            card.setAttribute('estado', item.estado);
+            this.horasTotal+=item.horas;
+            container.appendChild(card);
+        });
+    }
 
     render() {
+        
+
 
         this.shadowRoot.innerHTML = `
             <style>
-                #timeentries {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                    margin-top: 20px;
-                }
+            .div {
+                width: auto;  /* Cambiado de 100% a auto */
+                max-width: 100%;  /* Asegura que no desborde al padre */
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            #estatico {
+                width: 150px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+            #horasTotal {
+                border: 1px solid black;
+                padding: 0px 5px 1px 5px;
+                border-radius: 5px;
+            }
+            #contenedor {
+                flex-grow: 1;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                gap: 20px;
+            }
             </style>
-            <div>
-                ${this.fecha}
+            <div class="div">
+                <div id="contenedor"></div>
+                <div id="estatico">
+                    <span>${this.fecha}</span>
+                    <span id="horasTotal">${this.horasTotal}h</span>
+                </div>
             </div>
         `;
     }

@@ -12,7 +12,9 @@ class DashboardCard extends HTMLElement {
     connectedCallback() {
         this.userId = this.getAttribute('usuario-id') || 'Empleat desconegut';
         this.userNom = this.getAttribute('usuario-nom') || 'Empleat desconegut';
-        this.userEstat = this.getAttribute('usuario-estado') || 'Empleat desconegut';
+        this.userEstat = this.hasAttribute('usuario-estado') 
+            ? (this.getAttribute('estado') === 'true' ? 'Activo' : 'Inactivo') 
+            : 'inexistente';
 
         this.render();
     }
@@ -78,7 +80,10 @@ class DashboardCard extends HTMLElement {
                     align-self: center; /* Centrar el botón */
                     margin-right:2px;
                     margin-left:2px;
-                    background-color:white;
+                    background-color: white;
+                }
+                .timeentries {
+                    width:100%;
                 }
             </style>
             <div class="card">
@@ -86,7 +91,7 @@ class DashboardCard extends HTMLElement {
                     <img src="/img/user.png" alt="Imatge de l'empleats" />
                     <div>
                         <h3>${this.userNom}</h3>
-                        <p>Estado: ${this.userEstat}</p>
+                        <p> ${this.userEstat}</p>
                     </div>
                 </div>
                 <div class="botones">
@@ -97,6 +102,7 @@ class DashboardCard extends HTMLElement {
 
         const listaTimeentries = document.createElement("timeentries-list");
         listaTimeentries.id = `timeentries-list-${this.userId}`;
+        listaTimeentries.className = "timeentries";
         listaTimeentries.setAttribute("usuario-id",this.userId);
         listaTimeentries.setAttribute("cantidad",this.cantidad);
         this.shadowRoot.getElementById(`dashboard${this.userId}`).appendChild(listaTimeentries);
