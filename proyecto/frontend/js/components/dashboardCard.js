@@ -78,6 +78,7 @@ class DashboardCard extends HTMLElement {
                     align-self: center; /* Centrar el botón */
                     margin-right:2px;
                     margin-left:2px;
+                    background-color:white;
                 }
             </style>
             <div class="card">
@@ -89,8 +90,8 @@ class DashboardCard extends HTMLElement {
                     </div>
                 </div>
                 <div class="botones">
-                    ${this.cantidad < 2 ? '<button class="button" id="expand-button">v</button>' : ''}
-                    ${this.cantidad > 0 ? '<button class="button" id="shrink-button">ᴧ</button>' : ''}
+                    ${this.cantidad < 2 ? '<button class="button" id="expand-button"><img src="../img/expandir.png" alt="Expandir" style="width: 20px; height: 20px;"></button>' : ''}
+                    ${this.cantidad > 0 ? '<button class="button" id="shrink-button"><img src="../img/cerrar.png" alt="cerrar" style="width: 20px; height: 20px;"></button>' : ''}
                 </div>
             </div>`;
 
