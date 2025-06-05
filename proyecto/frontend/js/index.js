@@ -3,6 +3,7 @@ import './listas/projectsList.js';
 import './listas/tareasList.js';
 import './listas/DashboardList.js';
 import './listas/historialList.js';
+import './components/estadisticasCard.js';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
@@ -45,8 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 handlerTareas();
             } 
             else if (this.textContent.trim() === 'Estadísticas') {
-            const tareasList = document.createElement('estadistica-list');
-            contentDiv.appendChild(tareasList);
+            handleEstadisticas();
             // Lógica para cargar contenido específico según el enlace pulsado
             } 
             else if (this.id === 'menu-empleados') {
@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             else if (this.id === 'menu-historial') {
                 handleHistorial();
             }
+
             else {
                 // Si es otro enlace, puedes mostrar contenido vacío o cargar algo diferente
                 const placeholder = document.createElement('p');
@@ -943,5 +944,15 @@ async function crearHistorialList() {
     historialList.id = "historialList";
     historialList.setAttribute('user-id', selectedUserId);
     contentDiv.appendChild(historialList);
-    
+}
+
+
+function handleEstadisticas(){
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    const estadisticas = document.createElement('estadisticas-card');
+    estadisticas.id = "estadisticas";
+    console.log(estadisticas);
+    contentDiv.appendChild(estadisticas);
 }

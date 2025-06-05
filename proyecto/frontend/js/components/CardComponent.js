@@ -21,6 +21,7 @@ export class CardComponent extends BaseComponent {
             border-radius: 10px;
             padding: 20px;
             margin: 2px auto 5px auto; /* Centrem la targeta */
+            margin-bottom: 8px;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
             background-color: #fff;
             gap: 20px;
