@@ -37,12 +37,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 txtCentral.textContent = this.textContent;
             }
             if (this.textContent.trim() === 'Proyectos') {
-            const projectsList = document.createElement('projects-list');
-            contentDiv.appendChild(projectsList);
+                handlerProjects();                
             } 
-            else if (this.textContent.trim() === 'Departamentos') {
-            const tareasList = document.createElement('tareas-list');
-            contentDiv.appendChild(tareasList);
+            else if (this.textContent.trim() === 'Tareas') {
+                /* const tareasList = document.createElement('tareas-list');
+                contentDiv.appendChild(tareasList); */
+                handlerTareas();
             } 
             else if (this.textContent.trim() === 'Estadísticas') {
             const tareasList = document.createElement('estadistica-list');
@@ -72,6 +72,168 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+
+async function fetchTipoTareas() {
+    const res = await fetch('/tipoTareas', { method: 'POST' });
+    return await res.json(); // [{id: 1, name: "Bug"}, ...]
+}
+
+async function fetchProyectos() {
+    const res = await fetch('/proyectos', { method: 'POST' });
+    return await res.json(); // [{id: 1, name: "Proyecto A"}, ...]
+}
+
+/* HANDLER PARA ENTIDADES */
+// PROYECTOS
+async function handlerProjects(e) {
+    if (e) {
+        e.preventDefault();
+    }
+    const contentDiv = document.getElementById("content");
+    contentDiv.innerHTML = '';
+
+    // Filtro y buscador
+    const formDiv = document.createElement('div');
+    formDiv.className = "formDiv";
+
+    const searchInput = document.createElement('input');
+    searchInput.className = "searchInput";
+    searchInput.id = "buscador-proyecto";
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Buscar...';
+
+    const selectFilter = document.createElement('select');
+    selectFilter.className = "selectFilter";
+    selectFilter.id = "filtros-proyecto";
+    const options = ['nombre', 'id'];
+    
+    options.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.textContent = option;
+        selectFilter.appendChild(opt);
+    });
+
+    const createButton = document.createElement('button');
+    createButton.className = "createButton";
+    createButton.textContent = 'Crear';
+    
+    createButton.addEventListener('click', async () => {
+        const fieldsCrear = [
+            ...proyectoFields,
+        ];
+        botonCrear('proyecto', fieldsCrear);
+    });
+    
+    const plusIcon = document.createElement('span');
+    plusIcon.textContent = '+ ';
+    plusIcon.className = "plusIcon";
+    createButton.prepend(plusIcon);
+
+    formDiv.appendChild(searchInput);
+    formDiv.appendChild(selectFilter);
+    formDiv.appendChild(createButton);
+
+    contentDiv.appendChild(formDiv);
+
+    // Lista de proyectos
+    const proyectosDiv = document.createElement("div");
+    proyectosDiv.id = "proyectos";
+    contentDiv.appendChild(proyectosDiv);
+    
+    // Carga inicial de proyectos
+    const projectsList = document.createElement('projects-list');
+    proyectosDiv.appendChild(projectsList);
+
+    // Añadir el event listener después de crear el div
+    searchInput.addEventListener('keypress', handleProjectsSearch);   
+    
+}
+
+// TAREAS
+async function handlerTareas(e) {
+    if (e) {
+        e.preventDefault();
+    }
+
+    const contentDiv = document.getElementById("content");
+    contentDiv.innerHTML = '';
+
+    // Filtro y buscador
+    const formDiv = document.createElement('div');
+    formDiv.className = "formDiv";
+
+    const searchInput = document.createElement('input');
+    searchInput.className = "searchInput";
+    searchInput.id = "buscador-tarea";
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Buscar...';
+
+    const selectFilter = document.createElement('select');
+    selectFilter.className = "selectFilter";
+    selectFilter.id = "filtros-tarea";
+    const options = ['nombre', 'id'];
+
+    options.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.textContent = option;
+        selectFilter.appendChild(opt);
+    });
+
+    const createButton = document.createElement('button');
+    createButton.className = "createButton";
+    createButton.textContent = 'Crear';
+    
+    createButton.addEventListener('click', async () => {
+        const tipos = await fetchTipoTareas();
+        const proyectos = await fetchProyectos();
+
+        const fieldsCrear = [
+            { label: 'Nombre de la tarea:', id: 'subject' },
+            {
+                label: 'Tipo:',
+                id: 'type',
+                type: 'select',
+                options: tipos.map(t => ({ value: t.id, label: t.name })),
+                endpoint: '/tipoTareas'
+            },
+            {
+                label: 'Proyecto:',
+                id: 'project',
+                type: 'select',
+                options: proyectos.map(p => ({ value: p.id, label: p.name })),
+                endpoint: '/proyectos'
+            }
+        ];
+        botonCrear('tarea', fieldsCrear);
+    });
+
+    const plusIcon = document.createElement('span');
+    plusIcon.textContent = '+ ';
+    plusIcon.className = "plusIcon";
+    createButton.prepend(plusIcon);
+
+    formDiv.appendChild(searchInput);
+    formDiv.appendChild(selectFilter);
+    formDiv.appendChild(createButton);
+    
+    contentDiv.appendChild(formDiv);
+
+    // Lista de tareas
+    const tareasDiv = document.createElement("div");
+    tareasDiv.id = "tareas";
+    contentDiv.appendChild(tareasDiv);
+    
+    // Carga inicial de tareas
+    const tareasList = document.createElement('tareas-list');
+    tareasDiv.appendChild(tareasList);
+
+    // Añadir el event listener después de crear el div
+    searchInput.addEventListener('keypress', handleTareasSearch);  
+}
+
+// USUARIOS
 async function handleUsers(e) {
     if (e) {
         e.preventDefault();
@@ -85,7 +247,7 @@ async function handleUsers(e) {
 
     const searchInput = document.createElement('input');
     searchInput.className = "searchInput";
-    searchInput.id = "bucador-usuario";
+    searchInput.id = "buscador-usuario";
     searchInput.type = 'text';
     searchInput.placeholder = 'Buscar...';
 
@@ -103,9 +265,16 @@ async function handleUsers(e) {
     const createButton = document.createElement('button');
     createButton.className = "createButton";
     createButton.textContent = 'Crear';
-    createButton.addEventListener('click', () => {
-        botonCrear(null); // Llama a la función para crear, pasando null como id
+    
+    createButton.addEventListener('click', async () => {
+        const fieldsCrear = [
+            ...usuarioFields, //(spread operator) pa no dubplicar el array
+            { label: 'Contraseña:', id: 'password', type: 'password' }
+        ];
+
+        botonCrear('usuario', fieldsCrear);
     });
+
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
     plusIcon.className = "plusIcon";
@@ -164,12 +333,12 @@ async function handleSearch(event) {
 
             if (filterOption === 'proyecto') {
                 url += 'proyecto';
-                body = { proyecto: document.getElementById('bucador-usuario').value };
+                body = { proyecto: document.getElementById('buscador-usuario').value };
             } else if (filterOption === 'id') {
-                body = { id: document.getElementById('bucador-usuario').value };
+                body = { id: document.getElementById('buscador-usuario').value };
                 url += 'id';
             } else if (filterOption === 'usuario') {
-                body = { nombre: document.getElementById('bucador-usuario').value };
+                body = { nombre: document.getElementById('buscador-usuario').value };
                 url += 'nombre';
             }
             const response = await fetch(`${url}`, {
@@ -196,76 +365,242 @@ async function handleSearch(event) {
         }
     }
 }
-async function formularioUsuario(idSeleccionado) {
-    const contentDiv = document.getElementById('content');
-    contentDiv.innerHTML = '';
 
-    const userDetailsDiv = document.createElement('form');
-    userDetailsDiv.className = "userDetailsDiv";
+async function handleProjectsSearch(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const selectFilter = document.getElementById("filtros-proyecto");
+        const filterOption = selectFilter.value;
 
-    const fields = [
-        { label: 'Nombre de usuario:', id: 'login' },
-        { label: 'Nombre:', id: 'firstName' },
-        { label: 'Apellido:', id: 'lastName' },
-        { label: 'Correo electrónico:', id: 'email' }
-    ];
-    let json = null;
-
-    if (idSeleccionado == null) {
-        fields.push({ label: 'Contraseña:', id: 'password' });
-    }
-    else{
         try {
-            const response = await fetch('/usuario/mod/datos', {
+            let url = '/proyectos/filtrar/';
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            let body = {};
+
+            if (filterOption === 'nombre') {
+                url += 'nombre';
+                body = { nombre: document.getElementById('buscador-proyecto').value };
+            } else if (filterOption === 'id') {
+                url += 'id';
+                body = { id: document.getElementById('buscador-proyecto').value };
+            }
+            
+            const response = await fetch(`${url}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: idSeleccionado })
+                headers: headers,
+                body: JSON.stringify(body)
             });
 
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
 
-            json = await response.json();
+            const data = await response.json();
+            const proyectosDiv = document.getElementById("proyectos");
+            proyectosDiv.innerHTML = '';
+            data.forEach(item => {
+                const projectCard = document.createElement('project-card');
+                projectCard.setAttribute('project-id', item.id);
+                projectCard.setAttribute('project-name', item.name);
+                proyectosDiv.appendChild(projectCard);
+            });
         } catch (error) {
-            console.error("Error obteniendo datos del usuario:", error);
+            console.error("Error fetching filtered project data:", error);
         }
     }
+}
 
-    fields.forEach(field => {
+async function handleTareasSearch(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const selectFilter = document.getElementById("filtros-tarea");
+        const filterOption = selectFilter.value;
+
+        try {
+            let url = '/tareas/filtrar/';
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            let body = {};
+
+            if (filterOption === 'nombre') {
+                url += 'nombre';
+                body = { nombre: document.getElementById('buscador-tarea').value };
+            } else if (filterOption === 'id') {
+                url += 'id';
+                body = { id: document.getElementById('buscador-tarea').value };
+            }
+            
+            const response = await fetch(`${url}`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            const tareasDiv = document.getElementById("tareas");
+            tareasDiv.innerHTML = '';
+            data.forEach(item => {
+                const tareaCard = document.createElement('tarea-card');
+                tareaCard.setAttribute('tarea-id', item.id);
+                tareaCard.setAttribute('tarea-subject', item.subject);
+                tareasDiv.appendChild(tareaCard);
+            });
+        } catch (error) {
+            console.error("Error fetching filtered project data:", error);
+        }
+    }
+}
+
+
+/* DATOS EN FUNCIÓN DE LA ENTIDAD */
+
+export const usuarioFields = [
+    { label: 'Nombre de usuario:', id: 'login' },
+    { label: 'Nombre:', id: 'firstName' },
+    { label: 'Apellido:', id: 'lastName' },
+    { label: 'Correo electrónico:', id: 'email', type: 'email' }
+];
+
+export const proyectoFields = [
+    { label: 'Nombre del proyecto:', id: 'name' }
+];
+
+export const tareaFields = [
+    { label: 'Nombre de la tarea:', id: 'subject' }
+];
+
+const endpointDatos = {
+    usuario: '/usuario/mod/datos',
+    proyecto: '/proyecto/mod/datos',
+    tarea: '/tarea/mod/datos'
+};
+
+/* FORMULARIO BASE */
+
+async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos) {
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    const userDetailsDiv = document.createElement('form');
+    userDetailsDiv.className = "userDetailsDiv";
+
+    let json = null;
+
+    let lockVersion = null;
+    
+    if (idSeleccionado != null) {
+        try {
+            const response = await fetch(endpointDatos, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: idSeleccionado })
+            });
+    
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            json = await response.json();
+            // Guarda lockVersion si es una tarea
+            if (entidad === 'tarea' && json.lockVersion !== undefined) {
+                lockVersion = json.lockVersion;
+            }
+        } catch (error) {
+            console.error(`Error obteniendo datos de ${entidad}:`, error);
+        }
+    }    
+
+    if (entidad === 'tarea' && lockVersion !== null) {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.id = 'lockVersion';
+        hidden.value = lockVersion;
+        userDetailsDiv.appendChild(hidden);
+    }
+
+    for (const field of fields) {
         const label = document.createElement('label');
         label.textContent = field.label;
         label.className = "label";
 
-        const input = document.createElement('input');
-        input.id = field.id;
-        input.required = true;
-        if (idSeleccionado != null) {
-            input.value = json[field.id];
-        }
-        if(field.id == 'password'){
-            input.type = 'password';
-            input.minLength = 10;
-        }
-        else if(field.id == 'email'){
-            input.type = 'email';
-            input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
-            input.title = "Introduce un correo válido, como usuario@dominio.com";
-        }
+        let input;
+
+        if (field.type === 'select') {
+            input = document.createElement('select');
+            input.id = field.id;
+
+            // Usa las opciones del campo
+            if (field.options) {
+                field.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.label;
+                    input.appendChild(option);
+                });
+            }
+            } else if (field.endpoint){
+                // Carga las opciones dinámicamente
+                try {
+                    const response = await fetch(field.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+                    const data = await response.json();
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.textContent = item.name;
+                        input.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error(`Error cargando opciones para ${field.id}:`, error);
+                }
+            
+            } else {
+                input = document.createElement('input');
+                input.id = field.id;
+                if (field.type) input.type = field.type;
+                if (idSeleccionado != null && json && json[field.id] !== undefined) {
+                    input.value = json[field.id];
+                }
+                if (entidad === 'usuario') {
+                    if (field.id === 'password') {
+                        input.type = 'password';
+                        input.minLength = 10;
+                    } else if (field.id === 'email') {
+                        input.type = 'email';
+                        input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
+                        input.title = "Introduce un correo válido, como usuario@dominio.com";
+                    }
+                }
+            }
+       
         input.className = "input";
         input.required = true;
         userDetailsDiv.appendChild(label);
         userDetailsDiv.appendChild(input);
-    });
+    };
 
     contentDiv.appendChild(userDetailsDiv);
     return userDetailsDiv;
 }
 
-export async function botonCrear(id) {
-    const userDetailsDiv =  await formularioUsuario(null);
+/* CREAR ENTIDAD */
+
+const endpointCrear = {
+    usuario: '/usuario/crear',
+    proyecto: '/proyecto/crear',
+    tarea: '/tarea/crear',
+};
+
+export async function botonCrear(entidad, fields) {
+    const userDetailsDiv =  await formularioEntidad(fields, null, entidad, endpointDatos[entidad]);
+    console.log(userDetailsDiv);
 
     const createButton = document.createElement('input');
     createButton.type="submit";
@@ -273,18 +608,34 @@ export async function botonCrear(id) {
 
     createButton.className="createButton";
     userDetailsDiv.appendChild(createButton);
+
     userDetailsDiv.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const userData = {
+        let userData = {
 
         };
-        const inputs = userDetailsDiv.querySelectorAll('input');
+
+        console.log(userData);
+
+        const inputs = userDetailsDiv.querySelectorAll('input, select');
         inputs.forEach(input => {
-            userData[input.id] = input.value;
+            if (entidad === 'tarea' && input.id === 'type') {
+                userData['type'] = { href: `/api/v3/types/${input.value}` };
+            } else if (entidad === 'tarea' && input.id === 'project') {
+                userData['_links'] = userData['_links'] || {};
+                userData['_links']['project'] = { href: `/api/v3/projects/${input.value}` };
+            } else {
+                userData[input.id] = input.value;
+            }
         });
+        
+        // Limpieza para tarea
+        if (entidad === 'tarea') {
+            delete userData.project;
+        }
 
         try {
-            const response = await fetch('/usuario/crear', {
+            const response = await fetch(endpointCrear[entidad], {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -296,17 +647,34 @@ export async function botonCrear(id) {
                 throw new Error(response.statusText);
             }
 
-            alert('Usuario creado exitosamente.');
-            handleUsers(); // Recarga la lista de usuarios
+            alert(`${entidad} creado exitosamente`);
+            // handleUsers(); // Recarga la lista de usuarios
+            // Recarga la lista según la entidad
+            if (entidad === "usuario") handleUsers();
+            else if (entidad === "proyecto") {
+                handlerProjects();
+            }
+            else if (entidad === "tarea") {
+                handlerTareas();
+            }
         } catch (error) {
-            console.error("Error creando usuario:", error);
-            alert('Error al crear el usuario.');
+            console.error(`Error creando ${entidad}:`, error);
+            alert(`Error al crear ${entidad}`);
         }
     });
 }
 
-export async function botonModificar(id) {
-    const userDetailsDiv = await formularioUsuario(id);
+/* MODIFICAR */
+
+const endpointGuardar = {
+    usuario: '/usuario/mod',
+    proyecto: '/proyecto/mod',
+    tarea: '/tarea/mod',
+};
+
+export async function botonModificar(id, entidad = "usuario", fields = usuarioFields) {
+    
+    const userDetailsDiv = await formularioEntidad(fields, id, entidad, endpointDatos[entidad]);
 
     const saveButton = document.createElement('input');
     saveButton.className="saveButton";
@@ -314,16 +682,30 @@ export async function botonModificar(id) {
     saveButton.value = 'Guardar';
 
     userDetailsDiv.appendChild(saveButton);
+
     userDetailsDiv.addEventListener('submit', async (event) => {
         event.preventDefault();
         const userData = { id }; // Incluye el ID
-        const inputs = userDetailsDiv.querySelectorAll('input');
+        
+        /* const inputs = userDetailsDiv.querySelectorAll('input');
         inputs.forEach(input => {
             userData[input.id] = input.value;
-        });
+        }); */
+
+        if (entidad === 'tarea') {
+            userData.subject = userDetailsDiv.querySelector('#subject').value;
+            userData.lockVersion = Number(userDetailsDiv.querySelector('#lockVersion').value);
+        } else {
+            const inputs = userDetailsDiv.querySelectorAll('input');
+            inputs.forEach(input => {
+                userData[input.id] = input.value;
+            });
+        }
+
+        console.log("Enviando a backend:", userData);
 
         try {
-            const response = await fetch('/usuario/mod', {
+            const response = await fetch(endpointGuardar[entidad], {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -335,8 +717,21 @@ export async function botonModificar(id) {
                 throw new Error(response.statusText);
             }
 
-            alert('Usuario modificado exitosamente.');
-            handleUsers(); // Recarga la lista de usuarios
+            alert(`${entidad} modificado exitosamente`);
+            
+            if (entidad === "usuario") handleUsers();
+            else if (entidad === "proyecto") {
+                const contentDiv = document.getElementById("content");
+                contentDiv.innerHTML = '';
+                const projectsList = document.createElement('projects-list');
+                contentDiv.appendChild(projectsList);
+            }
+            else if (entidad === "tarea") {
+                const contentDiv = document.getElementById("content");
+                contentDiv.innerHTML = '';
+                const tareasList = document.createElement('tareas-list');
+                contentDiv.appendChild(tareasList);
+            }
         } catch (error) {
             console.error("Error modificando usuario:", error);
             alert('Error al modificar el usuario.');
@@ -355,6 +750,8 @@ const mensajePopupEntidad = {
     proyecto: '¿Seguro deseas eliminar este proyecto?',
     tarea: '¿Seguro deseas eliminar esta tarea?',
 };
+
+/* ELIMINAR */
 
 export async function botonEliminar(id, entidad = "usuario") {
     // Crear el popup
@@ -450,7 +847,7 @@ export async function botonEliminar(id, entidad = "usuario") {
 
 }
 
-const urlEndPoint = {
+const endPointEliminar = {
     usuario: '/usuario/borrar',
     proyecto: '/proyecto/borrar',
     tarea: '/tarea/borrar',
@@ -458,7 +855,7 @@ const urlEndPoint = {
 
 // Función que JONATHAN completará
 async function confirmar_eliminado(id, entidad = "usuario") {
-    let url = urlEndPoint[entidad];
+    let url = endPointEliminar[entidad];
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -495,7 +892,6 @@ async function handleDashboard() {
         contentDiv.appendChild(errorMessage);
     }
 }
-
 
 //HISTORIAL
 async function handleHistorial() {

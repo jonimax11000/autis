@@ -16,7 +16,10 @@ class historialCard extends CardComponent {
 
         const proyecto = this.getAttribute('proyecto') || 'proyecto desconocido';
         const tarea = this.getAttribute('tarea') || 'tarea desconocida';
-        const horas = this.getAttribute('horas') || '0';
+        let horas = this.getAttribute('horas') || '0';
+        if (horas == 'null'){
+            horas = '0';
+        }
         const fechaAttr = this.getAttribute('fecha') || 'fecha desconocida';
         const fecha = fechaAttr !== 'fecha desconocida' 
             ? new Date(fechaAttr).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) 

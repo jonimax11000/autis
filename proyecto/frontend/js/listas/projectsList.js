@@ -31,7 +31,7 @@ class ProjectsList extends HTMLElement {
         data.forEach(item => {
             const card = document.createElement('project-card');
             card.setAttribute('project-id', item.id);
-            card.setAttribute('project-nom', item.name);
+            card.setAttribute('project-name', item.name);
             container.appendChild(card);
         });
     }
