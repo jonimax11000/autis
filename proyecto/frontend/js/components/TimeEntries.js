@@ -53,6 +53,7 @@ class TimeEntries extends HTMLElement {
                     No se han realizado tareas este día.
                 </p>
             `;
+            
             const noEntriesElement = document.createElement('div');
             noEntriesElement.innerHTML = noTimeEntries;
             container.appendChild(noEntriesElement);
@@ -81,6 +82,7 @@ class TimeEntries extends HTMLElement {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+                border-bottom: 2px solid lightgray;
             }
             #estatico {
                 width: 150px;

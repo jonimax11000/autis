@@ -65,6 +65,7 @@ class TimeEntrie extends CardComponent {
             font-size: 13px;
             color: #f27e00;
           }
+
         </style>
       
         <div class="container">

@@ -47,7 +47,7 @@ class DashboardList extends HTMLElement {
                     gap: 10px;
                     margin-top: 20px;
                 }
-            </style>            
+            </style>
             <div id="dashboards"></div>
         `;
     }
