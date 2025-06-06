@@ -4,7 +4,7 @@ class TimeEntries extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this.horasTotal = 0;
+        this.horasTotal = 0.0;
     }
 
     connectedCallback() {
@@ -17,9 +17,9 @@ class TimeEntries extends HTMLElement {
         } else {
             this.fecha = fecha;
         }
-
-        this.render();
         this.fetchTimeEntrie(fecha);
+        this.render();
+        
     }
 
     async fetchTimeEntrie(fecha) {
@@ -64,15 +64,16 @@ class TimeEntries extends HTMLElement {
             card.setAttribute('tarea', item.tarea);
             card.setAttribute('horas', item.horas);
             card.setAttribute('estado', item.estado);
-            this.horasTotal+=item.horas;
+            (item.horas == null) ? item.horas = 0 : item.horas = item.horas;
+            this.horasTotal += parseFloat(item.horas);
+
             container.appendChild(card);
         });
+        this.shadowRoot.getElementById("horasTotal").textContent = `${this.horasTotal}h`;
     }
 
     render() {
         
-
-
         this.shadowRoot.innerHTML = `
             <style>
             .div {

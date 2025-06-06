@@ -1,5 +1,6 @@
 // Importem el component de base
 import { CardComponent } from './CardComponent.js';
+import './derechaCard.js';
 import './horasProjectosMiembroCard.js';
 
 class EstadisticasCard extends CardComponent {
@@ -67,7 +68,7 @@ class EstadisticasCard extends CardComponent {
 
         const izquierda = document.createElement("horprojmiem-card");
         izquierdaDiv.appendChild(izquierda);
-        const derecha = document.createElement("horprojmiem-card");
+        const derecha = document.createElement("derecha-card");
         derechaDiv.appendChild(derecha);
     }
 }
