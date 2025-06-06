@@ -447,6 +447,17 @@ app.post('/tocken', async (req, res) => {
     }
 });
 
+app.post('/groups', async (req, res) => {
+    try {
+        repository.cambiar(new ConectionAPI(tocken));
+        const json = await repository.getGroups();
+        res.json(json);
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 // Escoltem el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escoltant a http://localhost:${PORT}`);

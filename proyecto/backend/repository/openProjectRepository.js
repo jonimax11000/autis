@@ -120,4 +120,12 @@ export class OpenProjectRepository {
     async getTimeEntriesPorDia(fecha,id) { 
         return await this.conexion.getTimeEntriesPorDia(fecha,id);
     }
+
+    async getGroups(){
+        return await this.conexion.getGroups();
+    }
+
+    async getUsuariosPorGrupo(id) {
+        return await this.conexion.getUsuariosPorGrupo(id);
+    }
 }

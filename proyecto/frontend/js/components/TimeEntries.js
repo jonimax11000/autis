@@ -69,7 +69,7 @@ class TimeEntries extends HTMLElement {
 
             container.appendChild(card);
         });
-        this.shadowRoot.getElementById("horasTotal").textContent = `${this.horasTotal}h`;
+        this.shadowRoot.getElementById("horasTotal").textContent = `${this.horasTotal.toFixed(2)}h`;
     }
 
     render() {

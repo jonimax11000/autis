@@ -324,4 +324,33 @@ export class ConectionBBDD extends Conection {
             return JSON.stringify({ error: error.message });
         }
     }
+
+    async getGroups(){
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`SELECT id, lastname FROM users where type='Group';`);
+
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getUsuariosPorGrupo(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`SELECT id, (u.firstname || ' ' || u.lastname) as nombre 
+                FROM users WHERE type='User' AND id IN (SELECT user_id FROM group_users WHERE group_id=${id}) ORDER BY id;`);
+
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
 }
