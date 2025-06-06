@@ -33,12 +33,12 @@ class EstadisticasCard extends CardComponent {
                     background-color: #006400;
                     color: white;
                     border: 2px solid black;
-                    padding: 30px 60px;
+                    padding: 10px 40px;
                     margin: 0;
                     cursor: pointer;
                     border-radius: 5px;
                     font-weight: bold;
-                    font-size: 46px;
+                    font-size: 20px;
                 }
 
                 #botones {
@@ -46,14 +46,14 @@ class EstadisticasCard extends CardComponent {
                     justify-content: center;
                     align-items: center;
                     gap: 10px;
-                    margin: 10px 0;
+                    margin: 0;
                     padding: 0;
                 }
 
                 
 
                 #menu{
-                    border: 2px solid #000;
+                    border: 1px solid #000;
                     padding:30px;
                     display: flex;
                     align-items: center;
@@ -61,6 +61,7 @@ class EstadisticasCard extends CardComponent {
                     color: #000;
                     margin-right: 20px;
                     margin-left: 5px;
+                    border-radius: 5px;
                 }
 
                 #container{
@@ -107,7 +108,7 @@ class EstadisticasCard extends CardComponent {
             </style>
             <div id="botones">
                 <button>Grupos</button>
-                <button>Trabajadores</button>
+                <button>Usuarios</button>
             </div>
 
             <div id="menu">Menú de navegación</div>
