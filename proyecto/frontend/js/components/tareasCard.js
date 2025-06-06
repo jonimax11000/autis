@@ -55,7 +55,6 @@ class TareaCard extends CardComponent {
                     <button id="modificar${id}">Modificar</button>
                     <button id="eliminar${id}">Eliminar</button>
                 </div>
-                <counter-component></counter-component>
             </div>
         `;
         this.shadowRoot.innerHTML = HTML;

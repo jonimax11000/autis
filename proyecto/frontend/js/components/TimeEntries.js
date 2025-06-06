@@ -9,19 +9,26 @@ class TimeEntries extends HTMLElement {
 
     connectedCallback() {
         this.userId = this.getAttribute('usuario-id') || 'Empleat desconegut';
-        this.fecha = this.getAttribute('fecha') || 'Fecha desconeguda';
+        const fecha = this.getAttribute('fecha') || 'Fecha desconeguda';
+        // Formatea la fecha de aaaa-mm-dd a dd-mm-aaaa
+        if (fecha && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+            const [anio, mes, dia] = fecha.split('-');
+            this.fecha = `${dia}-${mes}-${anio}`;
+        } else {
+            this.fecha = fecha;
+        }
 
         this.render();
-        this.fetchTimeEntrie();
+        this.fetchTimeEntrie(fecha);
     }
 
-    async fetchTimeEntrie() {
+    async fetchTimeEntrie(fecha) {
         try {
             const apiToken = localStorage.getItem('apiToken');
             const response = await fetch('/timeEntries/dia', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: this.userId, fecha: this.fecha }),
+                body: JSON.stringify({ id: this.userId, fecha: fecha}),
             });
             if (!response.ok) throw new Error(response.statusText);
             const data = await response.json();

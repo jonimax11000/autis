@@ -20,15 +20,14 @@ class EmpleatCard extends CardComponent {
         const nom = this.getAttribute('empleats-nom') || 'Empleat desconegt';
         let HTML = `
             <style>
-                ${CardComponent.styles} /* Afegim estils del component base !! */
+                ${CardComponent.styles}
                 .card {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 10px;
                     border: 1px solid #ccc;
-                    border-radius: 5px;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    padding: 16px;
+                    margin-bottom: 8px;
+                    background: #fff;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
                 }
                 .content {
                     flex: 1;
