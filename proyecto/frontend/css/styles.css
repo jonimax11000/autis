@@ -272,16 +272,7 @@ body.light .topbar {
 body.light .txtcentral {
   color: var(--text-light-light);
 }
-#content{
-  #content {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch; /* para que los hijos ocupen todo el ancho disponible */
-    justify-content: center;
-    width: 100%;
-    height: calc(100vh - 60px);
-  }
-}
+
 
 .confirmationPopup{
   position: fixed;
@@ -522,4 +513,12 @@ body.light .txtcentral {
   flex-direction: column;
   gap: 10px;
   height: calc(100vh - 96px);
+}
+
+.imagen{
+  width: 100%;
+  height: calc(100vh - 96px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
