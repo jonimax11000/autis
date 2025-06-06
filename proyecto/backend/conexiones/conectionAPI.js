@@ -6,7 +6,6 @@ export class ConectionAPI extends Conection {
         super();
         // Tu código adicional aquí
         this.tocken = tocken;
-        console.log('Tocken en ConectionAPI:', this.tocken);
     }
 
     async getProjects() {
