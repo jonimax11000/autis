@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 handlerTareas();
             } 
             else if (this.textContent.trim() === 'Estadísticas') {
-            handleEstadisticas();
+                handleEstadisticas();
             // Lógica para cargar contenido específico según el enlace pulsado
             } 
             else if (this.id === 'menu-empleados') {
