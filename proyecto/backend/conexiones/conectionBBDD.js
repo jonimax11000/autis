@@ -395,4 +395,32 @@ export class ConectionBBDD extends Conection {
             return JSON.stringify({ error: error.message });
         }
     }
+
+    async getHorasPorUsuarioProyectoYFecha(idUser,idGrupo,idProyecto,fecha1,fecha2) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`
+                SELECT SUM(hours) AS horas
+                FROM time_entries
+                WHERE project_id IN (
+                    SELECT project_id FROM members WHERE user_id = ${idGrupo}
+                )
+                AND user_id = ${idUser}
+                AND project_id = ${idProyecto}
+                AND spent_on BETWEEN '${fecha1}' AND '${fecha2}'
+                GROUP BY user_id;
+            `);
+
+            await this.client.end();
+
+            if (result.rows.length > 0 && result.rows[0].horas !== null) {
+                return { horas: result.rows[0].horas };
+            } else {
+                return { horas: 0 };
+            }
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
 }

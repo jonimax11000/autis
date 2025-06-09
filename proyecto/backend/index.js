@@ -531,6 +531,20 @@ app.post('/horas/miembros', async (req, res) => {
     }
 });
 
+app.post('/horas/miembros/proyecto', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getHorasPorUsuarioProyectoYFecha(body.idUser,body.idGrupo,body.idProyecto,body.fecha1,body.fecha2);
+        
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 // Escoltem el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escoltant a http://localhost:${PORT}`);
