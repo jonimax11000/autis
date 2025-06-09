@@ -449,8 +449,47 @@ app.post('/tocken', async (req, res) => {
 
 app.post('/groups', async (req, res) => {
     try {
-        repository.cambiar(new ConectionAPI(tocken));
+        repository.cambiar(new ConectionBBDD());
         const json = await repository.getGroups();
+        res.json(json);
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+
+app.post('/group/users', async (req, res) => {
+    try {
+        const body = req.body;
+        const usuarios = await repository.getUsuariosPorGrupo(body.id);
+        const json = {cantidad: usuarios.length,
+            empleados: usuarios.map(usuario => ({
+                id: usuario.id,
+                nombre: usuario.nombre,
+            }))
+        };
+        json.empleados = usuarios;
+        json = await repository.getGroupUsers(body.id);
+        res.json(json);
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+pp.post('/group/projects', async (req, res) => {
+    try {
+        const body = req.body;
+        const proyectos = await repository.getProyectosPorUsuario(body.id);
+        const json = {cantidad: proyectos.length,
+            proyactos: proyectos.map(proyecto => ({
+                id: proyecto.id,
+                nombre: proyecto.nombre,
+            }))
+        };
+        json.empleados = usuarios;
+        json = await repository.getGroupUsers(body.id);
         res.json(json);
     } catch (error) {
         console.error("Error entrant:", error);
