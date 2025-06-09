@@ -304,7 +304,7 @@ export class ConectionBBDD extends Conection {
     SELECT 
         p.name AS proyecto, 
         w.subject AS tarea,
-        t.hours AS horas,
+        sum(t.hours) AS horas,
         t.ongoing AS estado 
     FROM 
         projects AS p, 
@@ -313,8 +313,9 @@ export class ConectionBBDD extends Conection {
     WHERE 
         t.work_package_id = w.id 
         AND t.project_id = p.id 
-        AND t.user_id = ${id} 
-        AND t.spent_on = '${fecha}'
+        AND t.user_id = ${id}
+        AND t.spent_on = '${fecha}' group by 1,2,4;
+
 `);
             await this.client.end();
 
