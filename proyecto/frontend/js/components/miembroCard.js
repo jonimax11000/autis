@@ -1,4 +1,4 @@
-import '../listas/TimeEntriesList.js';  // Tu importación existente
+import '../listas/TimeEntriesList.js';
 
 class MiembroCard extends HTMLElement {
     constructor() {
