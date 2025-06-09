@@ -497,6 +497,40 @@ app.post('/group/projects', async (req, res) => {
     }
 });
 
+app.post('/horas/miembro', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getHorasPorUsuarioYFecha(body.idUser,body.idGrupo,body.fecha1,body.fecha2);
+        
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/horas/miembros', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const data = await repository.getUsuariosPorGrupo(body.idGrupo);
+        const json = { horas: 0};
+        data.forEach(async(usuario) => {
+            repository.cambiar(new ConectionBBDD());
+            const usuarioData = await repository.getHorasPorUsuarioYFecha(usuario.id,body.idGrupo,body.fecha1,body.fecha2);
+            json.horas += usuarioData.horas;
+        });
+        
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 // Escoltem el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escoltant a http://localhost:${PORT}`);
