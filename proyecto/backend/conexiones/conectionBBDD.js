@@ -353,4 +353,19 @@ export class ConectionBBDD extends Conection {
             return JSON.stringify({ error: error.message });
         }
     }
+
+    async getProyectosPorUsuario(id) {
+        try {
+            await this.client.connect();
+
+            const result = await this.client.query(`select id, name from projects where id IN (select project_id from members where user_id=${id}) order by 1;
+`);
+
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
 }

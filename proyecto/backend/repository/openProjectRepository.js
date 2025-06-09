@@ -128,4 +128,8 @@ export class OpenProjectRepository {
     async getUsuariosPorGrupo(id) {
         return await this.conexion.getUsuariosPorGrupo(id);
     }
+
+    async getProyectosPorUsuario(id) {
+        return await this.conexion.getProyectosPorUsuario(id);
+    }
 }

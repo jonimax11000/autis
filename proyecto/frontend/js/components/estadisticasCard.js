@@ -50,8 +50,6 @@ class EstadisticasCard extends CardComponent {
                     padding: 0;
                 }
 
-                
-
                 #menu{
                     border: 1px solid #ccc;
                     border-radius: 5px;
