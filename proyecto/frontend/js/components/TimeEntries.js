@@ -96,6 +96,7 @@ class TimeEntries extends HTMLElement {
                 border: 1px solid black;
                 padding: 0px 5px 1px 5px;
                 border-radius: 5px;
+                background-color: #bdb2c4;
             }
             #contenedor {
                 flex-grow: 1;
