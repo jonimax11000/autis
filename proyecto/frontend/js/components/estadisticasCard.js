@@ -46,7 +46,7 @@ class EstadisticasCard extends CardComponent {
                     justify-content: center;
                     align-items: center;
                     gap: 10px;
-                    margin: 0;
+                    margin-top: -10px;
                     padding: 0;
                 }
 
