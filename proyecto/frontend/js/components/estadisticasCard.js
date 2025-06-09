@@ -53,7 +53,9 @@ class EstadisticasCard extends CardComponent {
                 
 
                 #menu{
-                    border: 1px solid #000;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
                     padding:30px;
                     display: flex;
                     align-items: center;
@@ -61,7 +63,6 @@ class EstadisticasCard extends CardComponent {
                     color: #000;
                     margin-right: 20px;
                     margin-left: 5px;
-                    border-radius: 5px;
                 }
 
                 #container{
@@ -73,35 +74,40 @@ class EstadisticasCard extends CardComponent {
                 
                 #horasMiembro {
                     display: flex;
-                    border: 1px solid #000;
-                    border-radius: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
                     padding: 20px;
                     margin-left: 10px;
                     margin-right: auto;
                     box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
                     background-color: #fff;
                     gap: 20px;
-                    width: 45%;
+                    width: 48%;
                     max-width: 1000px;
-                    min-width: 0;
+                    min-width: 420px;
                     margin-bottom: 20px;
                 }
 
                 #derecha {
                     display: flex;
-                    border: 1px solid #000;
-                    border-radius: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
                     padding: 20px;
                     margin-right: 30px;
                     margin-left: auto;
                     box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
                     background-color: #fff;
                     gap: 20px;
-                    width: 45%;
+                    width: 48%;
                     max-width: 1000px;
-                    min-width: 0;
+                    min-width: 420px;
                     margin-bottom: 20px;
-
+                }
+                #izquierdaCard, #derechaCard {
+                    width: 100%;
+                    height: 100%;
                 }
             </style>
             <div id="botones">
@@ -129,11 +135,13 @@ class EstadisticasCard extends CardComponent {
         const izquierda = document.createElement(
             tipo === "trabajadores" ? "horprojmiem-card-individual" : "horprojmiem-card"
         );
+        izquierda.id = "izquierdaCard";
         izquierdaDiv.appendChild(izquierda);
     
         const derecha = document.createElement(
             tipo === "trabajadores" ? "derecha-card-individual" : "derecha-card"
         );
+        derecha.id = "derechaCard";
         derechaDiv.appendChild(derecha);
     }
     
