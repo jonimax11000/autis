@@ -73,7 +73,6 @@ class EstadisticasCard extends CardComponent {
                 
                 #horasMiembro {
                     display: flex;
-                    align-items: center;
                     border: 1px solid #000;
                     border-radius: 10px;
                     padding: 20px;
@@ -90,7 +89,6 @@ class EstadisticasCard extends CardComponent {
 
                 #derecha {
                     display: flex;
-                    align-items: center;
                     border: 1px solid #000;
                     border-radius: 10px;
                     padding: 20px;

@@ -17,31 +17,23 @@ class Derecha extends CardComponent {
     render() {
         let HTML = `
             <style>
-                :host {
-                    display: block;
-                    width: 100%;
-                    height: 100%;
-                }
-                * {
-                    border: 1px solid #ccc;
-                }
                 #superior{
+                border: 1px solid #000;
                     width: 100%;
-                    padding: 10px;     
+                    padding: 20px; 
+                    height: 100px;
+                    display: flex;
                 }
                 .sup {
+                    border: 1px solid #000;
                     width: 30%;
-                    height: 100%;
+                    height: 30px;
                     float: left;
-                    box-sizing: border-box; /* Incluye padding y border en el ancho */
-                    padding: 10px; /* Espacio interno */
                 }
             </style>
 
             <div id="superior">
-                <div class="sup">dato 1</div>
-                <div class="sup">dato 2</div>
-                <div class="sup">dato 3</div>
+                hola soy un card de la derecha
             </div>
         `;
         this.shadowRoot.innerHTML = HTML;
