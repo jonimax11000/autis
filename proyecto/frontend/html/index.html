@@ -62,8 +62,42 @@
     </div>
     <div id="content">
       <div class="imagen">
-        <img src="../img/autis_logo.png" alt="Dashboard Image" class="dashboard-image" />
-      </div>
+        <img src="/img/favicon-100x100.png" alt="Logo U Invertida" class="logo2">
+  <img src="../img/autis_logo.png" alt="Nombre Empresa" class="nombre">
+</div>
+
+<style>
+
+  @keyframes moveAndShrink {
+    0% {
+      left: 0;
+      transform: translateY(-200%) rotate(90deg) scale(1);
+      opacity: 1;
+    }
+    40% {
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(90deg) scale(1);
+    }
+    50% {
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    100% {
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
+      opacity: 0;
+    }
+  }
+
+  @keyframes showName {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
     </div>
   </div>
 </body>

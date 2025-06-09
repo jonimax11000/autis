@@ -516,9 +516,33 @@ body.light .txtcentral {
 }
 
 .imagen{
-  width: 100%;
-  height: calc(100vh - 80px);
+  position: relative;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+}
+
+.logo2 {
+  position: absolute;
+  width: 1000px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%) rotate(90deg);
+  animation: moveAndShrink 4s ease-in-out forwards;
+  z-index: 2;
+}
+
+.nombre {
+  position: absolute;
+  width: 1000px;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  animation: showName 0.5s ease-in forwards;
+  animation-delay: 3s;
+  z-index: 1;
 }
