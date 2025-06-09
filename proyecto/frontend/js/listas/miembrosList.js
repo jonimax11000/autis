@@ -45,7 +45,7 @@ class MiembrosList extends HTMLElement {
                     display: flex;
                     flex-wrap: wrap;
                     align-items: flex-start;
-                    justify-content: flex-start;
+                    justify-content: space-evenly;
                     width: 100%;
                     height: 100%;
                     padding: 20px;
