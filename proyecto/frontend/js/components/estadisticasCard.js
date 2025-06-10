@@ -158,7 +158,6 @@ class EstadisticasCard extends CardComponent {
                     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
                     padding: 20px;
                     margin-right: 30px;
-                    margin-left: auto;
                     box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
                     background-color: #fff;
                     gap: 20px;

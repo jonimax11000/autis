@@ -239,7 +239,6 @@ class HorasProjMiembro extends HTMLElement {
           ${this.proyectos.map((proyecto, i) => `
             <div class="project">
             <div class="bar-container">
-              <div class="estimated-line" style="bottom: ${(proyecto.horasEstimadas / maxHoras) * 300}px"></div>
               ${proyecto.personas.map((persona, j) => {
                 const colorIndex = this.personas.findIndex(p => p.nombre === persona.nombre);
                 const color = this.colors[colorIndex % this.colors.length];
