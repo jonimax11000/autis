@@ -10,7 +10,6 @@ class MiembrosList extends HTMLElement {
         this.idGrupo = this.getAttribute('idGrupo') || null;
         this.usuarios = JSON.parse(this.getAttribute('usuarios') || '[]');
         this.horasCumplir = parseInt(this.getAttribute('horasCumplir')) || 8; // Horas a cumplir por día
-        console.log(this.usuarios);
 
         this.render();
         this.renderEntries();
@@ -22,6 +21,7 @@ class MiembrosList extends HTMLElement {
         this.usuarios.forEach(usuario => {
             const card = document.createElement('miembro-card');
             card.setAttribute('idUsuario', usuario.id);
+            card.setAttribute('idGrupo', this.idGrupo);
             card.setAttribute('nombre', usuario.nombre);
             card.setAttribute('horas', this.horasCumplir || 0);
             contenedor.appendChild(card);

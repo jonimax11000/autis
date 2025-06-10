@@ -398,7 +398,7 @@ export class ConectionBBDD extends Conection {
         try {
             await this.client.connect();
 
-            const result = await this.client.query(`
+            const query = `
                 SELECT SUM(hours) AS horas
                 FROM time_entries
                 WHERE project_id IN (
@@ -408,7 +408,9 @@ export class ConectionBBDD extends Conection {
                 AND project_id = ${idProyecto}
                 AND spent_on BETWEEN '${fecha1}' AND '${fecha2}'
                 GROUP BY user_id;
-            `);
+            `;
+
+            const result = await this.client.query(query);
 
             await this.client.end();
 

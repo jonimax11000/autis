@@ -476,7 +476,7 @@ app.post('/group/projects', async (req, res) => {
         repository.cambiar(new ConectionBBDD());
         const proyectos = await repository.getProyectosPorUsuario(body.id);
         const json = {cantidad: proyectos.length,
-            proyactos: proyectos.map(proyecto => ({
+            proyectos: proyectos.map(proyecto => ({
                 id: proyecto.id,
                 nombre: proyecto.nombre,
             }))
@@ -492,7 +492,7 @@ app.post('/horas/miembro', async (req, res) => {
     try {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
-        const json = await repository.getHorasPorUsuarioYFecha(body.idUser,body.idGrupo,body.fecha1,body.fecha2);
+        const json = await repository.getHorasPorUsuarioYFecha(body.idUser,body.idGroup,body.fecha1,body.fecha2);
         
         res.json(json);
 
