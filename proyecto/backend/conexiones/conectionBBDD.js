@@ -38,7 +38,6 @@ export class ConectionBBDD extends Conection {
 
             // Exemple de consulta: obtenir els primers 5 usuaris
             const result = await this.client.query(`SELECT id, name FROM types ORDER BY id;`);
-            console.log("proyectos en BBDD: "+result.rows);
 
             await this.client.end();
 
@@ -286,7 +285,7 @@ export class ConectionBBDD extends Conection {
 
             const result = await this.client.query(`select p.name as proyecto,w.subject as tarea,t.hours as horas,t.spent_on as fecha,
                 t.ongoing as estado from projects as p, work_packages as w, time_entries as t where t.work_package_id=w.id 
-                and t.project_id=p.id and t.user_id=${id};`);
+                and t.project_id=p.id and t.user_id=${id} order by 4 desc;`);
     
             await this.client.end();
 
@@ -330,7 +329,7 @@ export class ConectionBBDD extends Conection {
         try {
             await this.client.connect();
 
-            const result = await this.client.query(`SELECT id, lastname FROM users where type='Group';`);
+            const result = await this.client.query(`SELECT id, lastname as nombre FROM users where type='Group';`);
 
             await this.client.end();
 
@@ -343,10 +342,9 @@ export class ConectionBBDD extends Conection {
     async getUsuariosPorGrupo(id) {
         try {
             await this.client.connect();
-
-            const result = await this.client.query(`SELECT id, (u.firstname || ' ' || u.lastname) as nombre 
-                FROM users WHERE type='User' AND id IN (SELECT user_id FROM group_users WHERE group_id=${id}) ORDER BY id;`);
-
+            const query = `SELECT id, (firstname || ' ' || lastname) as nombre 
+                FROM users WHERE type='User' AND id IN (SELECT user_id FROM group_users WHERE group_id=${id}) ORDER BY id;`;
+            const result = await this.client.query(query);
             await this.client.end();
 
             return result.rows;
@@ -358,8 +356,8 @@ export class ConectionBBDD extends Conection {
     async getProyectosPorUsuario(id) {
         try {
             await this.client.connect();
-
-            const result = await this.client.query(`select id, name from projects where id IN (select project_id from members where user_id=${id}) order by 1;`);
+            const query = `select id, name as nombre from projects where id IN (select project_id from members where user_id=${id}) order by 1;`;
+            const result = await this.client.query(query);
 
             await this.client.end();
 
@@ -372,8 +370,7 @@ export class ConectionBBDD extends Conection {
     async getHorasPorUsuarioYFecha(idUser,idGrupo,fecha1,fecha2) {
         try {
             await this.client.connect();
-
-            const result = await this.client.query(`
+            const query = `
                 SELECT SUM(hours) AS horas
                 FROM time_entries
                 WHERE project_id IN (
@@ -382,7 +379,8 @@ export class ConectionBBDD extends Conection {
                 AND user_id = ${idUser}
                 AND spent_on BETWEEN '${fecha1}' AND '${fecha2}'
                 GROUP BY user_id;
-            `);
+            `;
+            const result = await this.client.query(query);
 
             await this.client.end();
 

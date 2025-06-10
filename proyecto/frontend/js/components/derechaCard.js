@@ -5,14 +5,94 @@ import '../listas/miembrosList.js';
 class Derecha extends CardComponent {
     constructor() {
         super();
+        this.horasCumplir = 8; // Horas a cumplir por día
+        this.usuarios = [];
         if (!this.shadowRoot) {
             this.attachShadow({ mode: 'open' });
         }
     }
 
     connectedCallback() {
-        
+        this.idGrupo = this.getAttribute('idGrupo') || null;
+        this.dias = parseInt(this.getAttribute('dias')) || 1; // Días a mostrar
+
+        this.horasCumplir*= this.dias; // Calcular horas a cumplir según los días
         this.render();
+        this.fetchusuarios();
+        this.fetchHorasImputadas();
+        this.fetchProyectosActivos();
+    }
+
+    async fetchusuarios(){
+        try {
+            const response = await fetch('/group/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({id:this.idGrupo})
+            });
+            if (!response.ok) throw new Error(response.statusText);
+            this.renderUsuarios(await response.json());
+        }
+        catch (error) {
+            console.error("Error fetching groups:", error);
+            this.usuarios = [];
+        }
+    }
+
+    renderUsuarios(data){
+        const spanUsuarios = this.shadowRoot.getElementById("miembrosActivos");
+        spanUsuarios.innerHTML = `${data.cantidad}`;
+        this.usuarios = data.empleados;
+
+        const inferior = this.shadowRoot.getElementById('lista-miembros');
+        const listaMiembros = document.createElement('miembros-list');
+        listaMiembros.setAttribute('idGrupo', this.idGrupo);
+        listaMiembros.setAttribute('usuarios', JSON.stringify(this.usuarios));
+        listaMiembros.setAttribute('horasCumplir', this.horasCumplir);
+        inferior.appendChild(listaMiembros);
+    }
+
+    async fetchProyectosActivos(){
+        try {
+            const response = await fetch('/group/projects', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({id:this.idGrupo})
+            });
+            if (!response.ok) throw new Error(response.statusText);
+            this.renderProyectos(await response.json());
+        }
+        catch (error) {
+            console.error("Error fetching groups:", error);
+        }
+    }
+
+    renderProyectos(data){
+        const spanProyectos = this.shadowRoot.getElementById("proyectosActivos");
+        spanProyectos.innerHTML = `${data.cantidad}`;
+    }
+
+    async fetchHorasImputadas(){
+        try {
+            const response = await fetch('/horas/miembros', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({idGrupo:this.idGrupo,
+                    fecha1:'2021-01-01',
+                    fecha2:'2026-01-01',
+                })
+            });
+            if (!response.ok) throw new Error(response.statusText);
+            this.renderHorasImputadas(await response.json());
+        }
+        catch (error) {
+            console.error("Error fetching groups:", error);
+        }
+    }
+
+    renderHorasImputadas(data){
+        const spanProyectos = this.shadowRoot.getElementById("horasImputadas");
+        spanProyectos.innerHTML = `${data.horas}`;
     }
 
     render() {
@@ -46,13 +126,11 @@ class Derecha extends CardComponent {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    border: 1px solid #ccc;
-                    padding: 10px 0 10px 0;
+                    padding: 20px 0 0 0;
                     flex-shrink: 0; /* Evita compresión */
                 }
                 
                 #lista-miembros {
-                    border: 1px solid #ccc;
                     margin-top: 10px;
                     width: 100%;
                     flex-grow: 1; /* Ocupa espacio restante */
@@ -82,13 +160,6 @@ class Derecha extends CardComponent {
                     color: #d25600;
                 }
                 
-                .tituloMiembros-container {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    border: 1px solid #ccc;
-                }
-
                 .carga {
                     font-size: 17px;
                     color: #7f5af0;
@@ -108,30 +179,26 @@ class Derecha extends CardComponent {
             <div id="superior">
                 <div class="sup">
                     <h3>  Horas Imputadas</h3>
-                    <p> 100 horas</p>
+                    <p> <span id="horasImputadas">0</span> horas</p>
                 </div>
                 <div class="sup">
                     <h3>  Miembros Activos</h3>
-                    <p> 100 miembros</p>
+                    <p> <span id="miembrosActivos">0</span> miembros</p>
                 </div>
                 <div class="sup">
                     <h3>  Proyectos Activos</h3>
-                    <p> 100 proyectos</p>
+                    <p> <span id="proyectosActivos">0</span> proyectos</p>
                 </div>
             </div>
             <div id="inferior">
                 <div class="tituloMiembros-container">
                     <span class="carga">Carga de trabajo</span>
-                    <span class="textoHoras">Horas a cumplir  &emsp; <span class="horas">48h</span></span>
+                    <span class="textoHoras">Horas a cumplir  &emsp; <span class="horas">${this.horasCumplir}h</span></span>
                 </div>
                 <div id="lista-miembros"></div>
             </div>
         `;
         this.shadowRoot.innerHTML = HTML;
-
-        const inferior = this.shadowRoot.getElementById('lista-miembros');
-        const listaMiembros = document.createElement('miembros-list');
-        inferior.appendChild(listaMiembros);
     }
 }
 

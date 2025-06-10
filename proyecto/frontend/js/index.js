@@ -601,7 +601,6 @@ const endpointCrear = {
 
 export async function botonCrear(entidad, fields) {
     const userDetailsDiv =  await formularioEntidad(fields, null, entidad, endpointDatos[entidad]);
-    console.log(userDetailsDiv);
 
     const createButton = document.createElement('input');
     createButton.type="submit";
@@ -615,8 +614,6 @@ export async function botonCrear(entidad, fields) {
         let userData = {
 
         };
-
-        console.log(userData);
 
         const inputs = userDetailsDiv.querySelectorAll('input, select');
         inputs.forEach(input => {
@@ -703,7 +700,6 @@ export async function botonModificar(id, entidad = "usuario", fields = usuarioFi
             });
         }
 
-        console.log("Enviando a backend:", userData);
 
         try {
             const response = await fetch(endpointGuardar[entidad], {
@@ -953,6 +949,5 @@ function handleEstadisticas(){
 
     const estadisticas = document.createElement('estadisticas-card');
     estadisticas.id = "estadisticas";
-    console.log(estadisticas);
     contentDiv.appendChild(estadisticas);
 }

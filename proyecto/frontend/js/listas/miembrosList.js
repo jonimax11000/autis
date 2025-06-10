@@ -7,35 +7,26 @@ class MiembrosList extends HTMLElement {
     }
 
     connectedCallback() {
+        this.idGrupo = this.getAttribute('idGrupo') || null;
+        this.usuarios = JSON.parse(this.getAttribute('usuarios') || '[]');
+        this.horasCumplir = parseInt(this.getAttribute('horasCumplir')) || 8; // Horas a cumplir por día
+        console.log(this.usuarios);
+
         this.render();
-        this.fetchMiembros();
+        this.renderEntries();
     }
 
-    async fetchMiembros() {
-        /*try {
-            const response = await fetch('/historial', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: idUsuario })
-            });
-            if (!response.ok) throw new Error(response.statusText);
-            const data = await response.json();
-            this.renderEntries(data);
-        } catch (error) {
-            console.error("Error fetching time Entries:", error);
-        }*/
-       this.renderEntries(); // Simulación de datos
-    }
-
-    renderEntries(data) {
+    renderEntries() {
         const contenedor = this.shadowRoot.getElementById('contenedor');
         contenedor.innerHTML = '';
-        for (let i = 0; i < 8; i++) {
-
+        this.usuarios.forEach(usuario => {
             const card = document.createElement('miembro-card');
+            card.setAttribute('idUsuario', usuario.id);
+            card.setAttribute('nombre', usuario.nombre);
+            card.setAttribute('horas', this.horasCumplir || 0);
             contenedor.appendChild(card);
         
-        }
+        });
     }
 
     render() {
@@ -48,9 +39,8 @@ class MiembrosList extends HTMLElement {
                     justify-content: space-evenly;
                     width: 100%;
                     height: 100%;
-                    padding: 20px;
+                    padding: 0 20px 20px 20px;
                     box-sizing: border-box;
-                    border: 1px solid #ccc;
                     scrollbar-width: thin;
                     overflow-y: auto;
                     gap: 16px;
