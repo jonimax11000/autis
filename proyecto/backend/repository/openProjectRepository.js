@@ -132,4 +132,12 @@ export class OpenProjectRepository {
     async getProyectosPorUsuario(id) {
         return await this.conexion.getProyectosPorUsuario(id);
     }
+
+    async getHorasPorUsuarioYFecha(idUser,idGrupo,fecha1,fecha2){
+        return await this.conexion.getHorasPorUsuarioYFecha(idUser,idGrupo,fecha1,fecha2);
+    }
+
+    async getHorasPorUsuarioProyectoYFecha(idUser,idGrupo,idProyecto,fecha1,fecha2) {
+        return await this.conexion.getHorasPorUsuarioProyectoYFecha(idUser,idGrupo,idProyecto,fecha1,fecha2);
+    }
 }
