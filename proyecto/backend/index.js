@@ -130,7 +130,6 @@ app.post('/tipoTareas', async (req, res) => {
         
         const json = await repository.getTipoTareas();
 
-        //console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -187,10 +186,8 @@ app.post('/proyectos/filtrar/id', async (req, res) => {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
         const id = parseInt(body.id, 10);
-        console.log(id);
         const json = await repository.getProyectosByID(id);
 
-        console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -205,7 +202,6 @@ app.post('/proyectos/filtrar/nombre', async (req, res) => {
         repository.cambiar(new ConectionBBDD());
         const json = await repository.getProyectosByName(body.nombre);
 
-        console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -219,10 +215,8 @@ app.post('/tareas/filtrar/id', async (req, res) => {
         let body = req.body;
         repository.cambiar(new ConectionBBDD());
         const id = parseInt(body.id, 10);
-        console.log(id);
         const json = await repository.getTareasByID(id);
 
-        console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -237,7 +231,6 @@ app.post('/tareas/filtrar/nombre', async (req, res) => {
         repository.cambiar(new ConectionBBDD());
         const json = await repository.getTareasByName(body.nombre);
 
-        console.log(json);
         res.json(json);
 
     } catch (error) {
@@ -462,6 +455,7 @@ app.post('/groups', async (req, res) => {
 app.post('/group/users', async (req, res) => {
     try {
         const body = req.body;
+        repository.cambiar(new ConectionBBDD());
         const usuarios = await repository.getUsuariosPorGrupo(body.id);
         const json = {cantidad: usuarios.length,
             empleados: usuarios.map(usuario => ({
@@ -469,8 +463,6 @@ app.post('/group/users', async (req, res) => {
                 nombre: usuario.nombre,
             }))
         };
-        json.empleados = usuarios;
-        json = await repository.getGroupUsers(body.id);
         res.json(json);
     } catch (error) {
         console.error("Error entrant:", error);
@@ -481,6 +473,7 @@ app.post('/group/users', async (req, res) => {
 app.post('/group/projects', async (req, res) => {
     try {
         const body = req.body;
+        repository.cambiar(new ConectionBBDD());
         const proyectos = await repository.getProyectosPorUsuario(body.id);
         const json = {cantidad: proyectos.length,
             proyactos: proyectos.map(proyecto => ({
@@ -488,8 +481,6 @@ app.post('/group/projects', async (req, res) => {
                 nombre: proyecto.nombre,
             }))
         };
-        json.empleados = usuarios;
-        json = await repository.getGroupUsers(body.id);
         res.json(json);
     } catch (error) {
         console.error("Error entrant:", error);
@@ -516,18 +507,20 @@ app.post('/horas/miembros', async (req, res) => {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const data = await repository.getUsuariosPorGrupo(body.idGrupo);
-        const json = { horas: 0};
-        data.forEach(async(usuario) => {
-            repository.cambiar(new ConectionBBDD());
-            const usuarioData = await repository.getHorasPorUsuarioYFecha(usuario.id,body.idGrupo,body.fecha1,body.fecha2);
-            json.horas += usuarioData.horas;
-        });
         
+        const json = { horas: 0 };
+        
+        for(let i = 0; i< data.length;i++){
+            repository.cambiar(new ConectionBBDD());
+            const data2 = await repository.getHorasPorUsuarioYFecha(data[i].id,body.idGrupo,body.fecha1,body.fecha2);
+            json.horas+=data2.horas;
+        }
+
         res.json(json);
 
     } catch (error) {
-        console.error("Error entrant:", error);
-        res.status(500).send('Error entrant');
+        console.error("Error en el endpoint:", error);
+        res.status(500).json({ error: 'Error al procesar la solicitud' });
     }
 });
 

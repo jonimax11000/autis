@@ -11,12 +11,76 @@ class EstadisticasCard extends CardComponent {
         if (!this.shadowRoot) {
             this.attachShadow({ mode: 'open' });
         }
+        this.grupos = []; // Almacenar grupos aquí
     }
 
     connectedCallback() {
         this.render();
-        this.renderDiv();
-    
+        this.fetchGrupos().then(() => {
+            this.setupSelectListener();
+            this.setupButtons();
+        });
+    }
+
+    async fetchGrupos() {
+        try {
+            const response = await fetch('/groups', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (!response.ok) throw new Error(response.statusText);
+            this.grupos = await response.json();
+            this.renderSelect(); // Mover renderSelect aquí después de tener los datos
+            return this.grupos;
+        }
+        catch (error) {
+            console.error("Error fetching groups:", error);
+            this.grupos = [];
+            this.renderSelect(); // Renderizar incluso si hay error
+            return [];
+        }
+    }
+
+    renderSelect() {
+        const select = this.shadowRoot.getElementById("select");
+        select.innerHTML = ''; // Limpiar el select
+        
+        if (this.grupos.length === 0) {
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "No hay grupos disponibles";
+            select.appendChild(option);
+            return;
+        }
+        
+        // Agregar opción por defecto
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Seleccione un grupo";
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        select.appendChild(defaultOption);
+        
+        // Agregar grupos
+        this.grupos.forEach(grupo => {
+            const option = document.createElement("option");
+            option.value = grupo.id;
+            option.textContent = grupo.nombre;
+            select.appendChild(option);
+        });
+    }
+
+    setupSelectListener() {
+        const select = this.shadowRoot.getElementById("select");
+        select.addEventListener("change", (event) => {
+            const selectedValue = event.target.value;
+            if (selectedValue) {
+                this.renderDiv("grupos");
+            }
+        });
+    }
+
+    setupButtons() {
         this.shadowRoot.querySelector("button:nth-of-type(1)").addEventListener("click", () => {
             this.renderDiv("grupos");
         });
@@ -113,7 +177,9 @@ class EstadisticasCard extends CardComponent {
                 <button>Usuarios</button>
             </div>
 
-            <div id="menu">Menú de navegación</div>
+            <div id="menu">
+                <select id="select"></select>
+            </div>
             <div id="container">
                 <div id="horasMiembro"></div>
                 <div id="derecha"></div>
@@ -134,12 +200,18 @@ class EstadisticasCard extends CardComponent {
             tipo === "trabajadores" ? "horprojmiem-card-individual" : "horprojmiem-card"
         );
         izquierda.id = "izquierdaCard";
+        const select = this.shadowRoot.getElementById("select");
+        const selectedOption = select.options[select.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            izquierda.setAttribute("idGrupo", selectedOption.value);
+        }
         izquierdaDiv.appendChild(izquierda);
     
         const derecha = document.createElement(
             tipo === "trabajadores" ? "derecha-card-individual" : "derecha-card"
         );
         derecha.id = "derechaCard";
+        derecha.setAttribute("idGrupo", selectedOption.value);
         derechaDiv.appendChild(derecha);
     }
     

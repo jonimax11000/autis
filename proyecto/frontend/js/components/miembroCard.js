@@ -3,11 +3,34 @@ import '../listas/TimeEntriesList.js';
 class MiembroCard extends HTMLElement {
     constructor() {
         super();
+        this.horas = 0; // Horas imputadas
         this.attachShadow({ mode: 'open' });
     }
 
     connectedCallback() {
+        this.idUsuario = this.getAttribute('idUsuario') || null;
+        this.nombre = this.getAttribute('nombre') || 'Usuario Desconocido';
+        this.horasACumplir = parseInt(this.getAttribute('horas')) || 8; // Horas a cumplir por día
+        this.fetchHoras();
         this.render();
+    }
+
+    async fetchHoras() {
+        try {
+            const response = await fetch('/horas/miembro', {
+            method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({idGrupo:this.idGrupo,
+                        fecha1:'2021-01-01',
+                        fecha2:'2026-01-01'})
+            });
+            if (!response.ok) throw new Error(response.statusText);
+            const data = await response.json();
+            this.horas = data.horas || 0; // Horas imputadas
+        }
+        catch (error) {
+            console.error("Error fetching hours:", error);
+        }
     }
 
     render() {
@@ -48,9 +71,9 @@ class MiembroCard extends HTMLElement {
             <div class="card">
                 <div class="chart-container">
                     <canvas id="hoursChart"></canvas>
-                    <div class="chart-text">10h</div> <!-- Texto en el centro -->
+                    <div class="chart-text">${this.horas-this.horasACumplir}h</div> <!-- Texto en el centro -->
                 </div>
-                <div class="user-text">USUARIOS</div>
+                <div class="user-text">${this.nombre}</div>
             </div>`;
 
         // Verifica si Chart.js está disponible (cargado desde CDN)
@@ -61,7 +84,7 @@ class MiembroCard extends HTMLElement {
                 data: {
                     labels: ['Horas hechas', 'Horas por hacer'],
                     datasets: [{
-                        data: [10, 38],  // Valores de ejemplo
+                        data: [this.horas, this.horasACumplir-this.horas],  // Valores de ejemplo
                         backgroundColor: ['#4CAF50', '#F44336'],  // Verde y rojo
                         borderColor: ['#000', '#000'],  // Borde negro
                         borderWidth: 2
