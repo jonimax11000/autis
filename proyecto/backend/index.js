@@ -478,7 +478,7 @@ app.post('/group/users', async (req, res) => {
     }
 });
 
-pp.post('/group/projects', async (req, res) => {
+app.post('/group/projects', async (req, res) => {
     try {
         const body = req.body;
         const proyectos = await repository.getProyectosPorUsuario(body.id);
