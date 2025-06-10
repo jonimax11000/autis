@@ -66,7 +66,7 @@ class Derecha extends CardComponent {
                     border-radius: 5px;
                     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
                     width: 30%;
-                    height: 80px;
+                    height: 90px;
                     min-width: 124px;
                 }
 
