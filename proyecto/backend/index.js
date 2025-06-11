@@ -401,7 +401,7 @@ app.post('/historial', async (req, res) => {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const json = {timeEntries:[]};
-        const entries = await repository.getTimeEntriesPorUsuario(body.id);
+        const entries = await repository.getTimeEntriesPorUsuario(body.id,body.fecha1,body.fecha2);
         json.timeEntries = entries;
 
         res.json(json);

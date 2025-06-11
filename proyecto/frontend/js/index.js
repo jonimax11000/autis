@@ -894,6 +894,55 @@ async function handleHistorial() {
 
     const selectUsuarios = document.createElement('select');
     selectUsuarios.id = "historial-search";
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+
+    const labelStart = document.createElement('label');
+    labelStart.setAttribute('for', 'startDate');
+    labelStart.textContent = 'Fecha de inicio:';
+    const inputStart = document.createElement('input');
+    inputStart.type = 'date';
+    inputStart.id = 'startDate';
+    inputStart.name = 'startDate';
+    inputStart.required = true;
+    inputStart.value = todayStr;
+    inputStart.max = todayStr;
+
+    const labelEnd = document.createElement('label');
+    labelEnd.setAttribute('for', 'endDate');
+    labelEnd.textContent = 'Fecha de fin:';
+    const inputEnd = document.createElement('input');
+    inputEnd.type = 'date';
+    inputEnd.id = 'endDate';
+    inputEnd.name = 'endDate';
+    inputEnd.max = todayStr;
+    inputEnd.required = true;
+    inputEnd.value = todayStr;
+
+    formDiv.appendChild(labelStart);
+    formDiv.appendChild(inputStart);
+    formDiv.appendChild(labelEnd);
+    formDiv.appendChild(inputEnd);
+
+    inputStart.addEventListener('change', () => {
+        inputEnd.min =inputStart.value;
+        const startDate = new Date(inputStart.value);
+        const endDate = new Date(inputEnd.value);
+        if (startDate > endDate) {
+            inputEnd.value = inputStart.value;
+        }
+        crearHistorialList();
+    });
+
+    inputEnd.addEventListener('change', () => {
+        inputStart.max = inputEnd.value;
+        const startDate = new Date(inputStart.value);
+        const endDate = new Date(inputEnd.value);
+        if (endDate < startDate) {
+            inputStart.value = inputEnd.value;
+        }
+        crearHistorialList();
+    });
 
     try {
         const response = await fetch('/usuarios', {
@@ -928,6 +977,8 @@ async function handleHistorial() {
 }
 
 async function crearHistorialList() {
+    const fecha1 = document.getElementById("startDate").value;
+    const fecha2 = document.getElementById("endDate").value;
 
     const contentDiv = document.getElementById("content");
     const selectedUserId = document.getElementById("historial-search").value;
@@ -939,6 +990,8 @@ async function crearHistorialList() {
     historialList = document.createElement('historial-list');
     historialList.id = "historialList";
     historialList.setAttribute('user-id', selectedUserId);
+    historialList.setAttribute('fecha1', fecha1);
+    historialList.setAttribute('fecha2', fecha2);
     contentDiv.appendChild(historialList);
 }
 

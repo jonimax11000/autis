@@ -203,7 +203,7 @@ class EstadisticasCard extends CardComponent {
             <input type="date" id="startDate" name="startDate" required value="${todayStr}" max="${todayStr}">
             
             <label for="endDate">Fecha de fin:</label>
-            <input type="date" id="endDate" name="endDate" required value="${todayStr}">
+            <input type="date" id="endDate" name="endDate" required value="${todayStr}" max="${todayStr}">
             </div>
             <div id="container">
             <div id="horasMiembro"></div>

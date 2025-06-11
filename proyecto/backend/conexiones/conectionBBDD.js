@@ -279,13 +279,14 @@ export class ConectionBBDD extends Conection {
     }
 
 
-    async getTimeEntriesPorUsuario(id) {
+    async getTimeEntriesPorUsuario(id,fecha1,fecha2) {
         try {
             await this.client.connect();
 
-            const result = await this.client.query(`select p.name as proyecto,w.subject as tarea,t.hours as horas,t.spent_on as fecha,
+            const query = `select p.name as proyecto,w.subject as tarea,t.hours as horas,t.spent_on as fecha,
                 t.ongoing as estado from projects as p, work_packages as w, time_entries as t where t.work_package_id=w.id 
-                and t.project_id=p.id and t.user_id=${id} order by 4 desc;`);
+                and t.project_id=p.id and t.user_id=${id} AND t.spent_on BETWEEN '${fecha1}' AND '${fecha2}' order by 4 desc;`;
+            const result = await this.client.query(query);
     
             await this.client.end();
 
