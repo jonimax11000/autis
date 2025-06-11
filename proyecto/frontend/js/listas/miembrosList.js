@@ -10,6 +10,8 @@ class MiembrosList extends HTMLElement {
         this.idGrupo = this.getAttribute('idGrupo') || null;
         this.usuarios = JSON.parse(this.getAttribute('usuarios') || '[]');
         this.horasCumplir = parseInt(this.getAttribute('horasCumplir')) || 8; // Horas a cumplir por día
+        this.fecha1 = this.getAttribute('fecha1') || new Date().toISOString().slice(0, 10); // Fecha de inicio
+        this.fecha2 = this.getAttribute('fecha2') || new Date().toISOString().slice(0, 10); // Fecha de fin
 
         this.render();
         this.renderEntries();
@@ -24,6 +26,8 @@ class MiembrosList extends HTMLElement {
             card.setAttribute('idGrupo', this.idGrupo);
             card.setAttribute('nombre', usuario.nombre);
             card.setAttribute('horas', this.horasCumplir || 0);
+            card.setAttribute('fecha1', this.fecha1);
+            card.setAttribute('fecha2', this.fecha2);
             contenedor.appendChild(card);
         
         });

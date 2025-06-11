@@ -12,6 +12,11 @@ class MiembroCard extends HTMLElement {
         this.idGrupo = this.getAttribute('idGrupo') || null;
         this.nombre = this.getAttribute('nombre') || 'Usuario Desconocido';
         this.horasACumplir = parseInt(this.getAttribute('horas')) || 8; // Horas a cumplir por día
+        this.fecha1 = this.getAttribute('fecha1') || new Date().toISOString().slice(0, 10); // Fecha de inicio
+        this.fecha2 = this.getAttribute('fecha2') || new Date().toISOString().slice(0, 10); // Fecha de fin
+        if (!this.shadowRoot) {
+            this.attachShadow({ mode: 'open' });
+        }
         await this.fetchHoras();
         this.render();
     }
@@ -23,13 +28,12 @@ class MiembroCard extends HTMLElement {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({idUser:this.idUsuario,
                         idGroup:this.idGrupo,
-                        fecha1:'2021-01-01',
-                        fecha2:'2026-01-01'})
+                        fecha1: this.fecha1,
+                        fecha2: this.fecha2 })
             });
             if (!response.ok) throw new Error(response.statusText);
             const data = await response.json();
             this.horas = data.horas || 0; // Horas imputadas
-            console.log("Horas imputadas:", this.horas);
         }
         catch (error) {
             console.error("Error fetching hours:", error);
@@ -83,12 +87,13 @@ class MiembroCard extends HTMLElement {
         // Verifica si Chart.js está disponible (cargado desde CDN)
         if (window.Chart) {
             const ctx = this.shadowRoot.getElementById('hoursChart').getContext('2d');
+
             new window.Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['Horas hechas', 'Horas por hacer'],
                     datasets: [{
-                        data: [this.horas, this.horasACumplir-this.horas],  // Valores de ejemplo
+                        data: [this.horas, Math.max(0, this.horasACumplir - this.horas) ],  // Valores de ejemplo
                         backgroundColor: ['#4CAF50', '#F44336'],  // Verde y rojo
                         borderColor: ['#000', '#000'],  // Borde negro
                         borderWidth: 2

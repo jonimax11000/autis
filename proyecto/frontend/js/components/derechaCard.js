@@ -14,7 +14,22 @@ class Derecha extends CardComponent {
 
     connectedCallback() {
         this.idGrupo = this.getAttribute('idGrupo') || null;
-        this.dias = parseInt(this.getAttribute('dias')) || 1; // Días a mostrar
+        this.fecha1 = this.getAttribute('fecha1') || new Date().toISOString().slice(0, 10); // Fecha de inicio
+        this.fecha2 = this.getAttribute('fecha2') || new Date().toISOString().slice(0, 10); // Fecha de inicio
+        // Días a mostrar
+        // Calcular días hábiles (sin fines de semana)
+        const start = new Date(this.fecha1);
+        const end = new Date(this.fecha2);
+        let diasHabiles = 0;
+        let current = new Date(start);
+        while (current <= end) {
+            const day = current.getDay();
+            if (day !== 0 && day !== 6) {
+            diasHabiles++;
+            }
+            current.setDate(current.getDate() + 1);
+        }
+        this.dias = Math.max(1, diasHabiles);
 
         this.horasCumplir*= this.dias; // Calcular horas a cumplir según los días
         this.render();
@@ -49,6 +64,8 @@ class Derecha extends CardComponent {
         listaMiembros.setAttribute('idGrupo', this.idGrupo);
         listaMiembros.setAttribute('usuarios', JSON.stringify(this.usuarios));
         listaMiembros.setAttribute('horasCumplir', this.horasCumplir);
+        listaMiembros.setAttribute('fecha1', this.fecha1);
+        listaMiembros.setAttribute('fecha2', this.fecha2);
         inferior.appendChild(listaMiembros);
     }
 
@@ -78,8 +95,8 @@ class Derecha extends CardComponent {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({idGrupo:this.idGrupo,
-                    fecha1:'2021-01-01',
-                    fecha2:'2026-01-01',
+                    fecha1:this.fecha1,
+                    fecha2:this.fecha2,
                 })
             });
             if (!response.ok) throw new Error(response.statusText);

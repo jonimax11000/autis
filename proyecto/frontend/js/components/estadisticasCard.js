@@ -91,101 +91,119 @@ class EstadisticasCard extends CardComponent {
     }
 
     render() {
+        // Obtener la fecha de hoy en formato YYYY-MM-DD
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+
         let HTML = `
             <style>
-                button {
-                    background-color: #006400;
-                    color: white;
-                    border: 2px solid black;
-                    padding: 10px 40px;
-                    margin: 0;
-                    cursor: pointer;
-                    border-radius: 5px;
-                    font-weight: bold;
-                    font-size: 20px;
-                }
+            button {
+                background-color: #006400;
+                color: white;
+                border: 2px solid black;
+                padding: 10px 40px;
+                margin: 0;
+                cursor: pointer;
+                border-radius: 5px;
+                font-weight: bold;
+                font-size: 20px;
+            }
 
-                #botones {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 10px;
-                    margin-top: -10px;
-                    padding: 0;
-                }
+            #botones {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                margin-top: -10px;
+                padding: 0;
+            }
 
-                #menu{
-                    border: 1px solid #ccc;
-                    border-radius: 5px;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                    padding:30px;
-                    display: flex;
-                    align-items: center;
-                    background-Color: #FFF;
-                    color: #000;
-                    margin-right: 20px;
-                    margin-left: 5px;
-                }
+            #menu{
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                padding:30px;
+                display: flex;
+                align-items: center;
+                background-Color: #FFF;
+                color: #000;
+                margin-right: 20px;
+                margin-left: 5px;
+            }
 
-                #container{
-                    height: 100%;
-                    width: 100%;
-                    display: flex;
-                    color: #000;
-                }
-                
-                #horasMiembro {
-                    display: flex;
-                    border: 1px solid #ccc;
-                    border-radius: 5px;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                    padding: 20px;
-                    margin-left: 10px;
-                    margin-right: auto;
-                    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-                    background-color: #fff;
-                    gap: 20px;
-                    width: 48%;
-                    max-width: 1000px;
-                    min-width: 420px;
-                    margin-bottom: 20px;
-                }
+            #container{
+                height: 100%;
+                width: 100%;
+                display: flex;
+                color: #000;
+            }
+            
+            #horasMiembro {
+                display: flex;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                margin-left: 10px;
+                margin-right: auto;
+                box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+                background-color: #fff;
+                gap: 20px;
+                width: 48%;
+                max-width: 1000px;
+                min-width: 420px;
+                margin-bottom: 20px;
+            }
 
-                #derecha {
-                    display: flex;
-                    border: 1px solid #ccc;
-                    border-radius: 5px;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-                    padding: 20px;
-                    margin-right: 30px;
-                    margin-left: auto;
-                    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-                    background-color: #fff;
-                    gap: 20px;
-                    width: 48%;
-                    max-width: 1000px;
-                    min-width: 420px;
-                    margin-bottom: 20px;
-                }
-                #izquierdaCard, #derechaCard {
-                    width: 100%;
-                    height: 100%;
-                }
+            #derecha {
+                display: flex;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                margin-right: 30px;
+                margin-left: auto;
+                box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+                background-color: #fff;
+                gap: 20px;
+                width: 48%;
+                max-width: 1000px;
+                min-width: 420px;
+                margin-bottom: 20px;
+            }
+            #izquierdaCard, #derechaCard {
+                width: 100%;
+                height: 100%;
+            }
             </style>
             <div id="botones">
-                <button>Grupos</button>
-                <button>Usuarios</button>
+            <button>Grupos</button>
+            <button>Usuarios</button>
             </div>
 
             <div id="menu">
-                <select id="select"></select>
+            <select id="select"></select>
+            <label for="startDate">Fecha de inicio:</label>
+            <input type="date" id="startDate" name="startDate" required value="${todayStr}" max="${todayStr}">
+            
+            <label for="endDate">Fecha de fin:</label>
+            <input type="date" id="endDate" name="endDate" required value="${todayStr}">
             </div>
             <div id="container">
-                <div id="horasMiembro"></div>
-                <div id="derecha"></div>
+            <div id="horasMiembro"></div>
+            <div id="derecha"></div>
             </div>
         `;
         this.shadowRoot.innerHTML = HTML;
+
+        // Obtener referencias a los elementos del shadow DOM
+        const startDateInput = this.shadowRoot.getElementById('startDate');
+        const endDateInput = this.shadowRoot.getElementById('endDate');
+
+        this.funcionalidadFecha();
     }
 
 
@@ -205,6 +223,10 @@ class EstadisticasCard extends CardComponent {
         if (selectedOption && selectedOption.value) {
             izquierda.setAttribute("idGrupo", selectedOption.value);
         }
+        
+        izquierda.setAttribute('fecha1',this.shadowRoot.getElementById("startDate").value);
+        izquierda.setAttribute('fecha2',this.shadowRoot.getElementById("endDate").value);
+        
         izquierdaDiv.appendChild(izquierda);
     
         const derecha = document.createElement(
@@ -212,7 +234,42 @@ class EstadisticasCard extends CardComponent {
         );
         derecha.id = "derechaCard";
         derecha.setAttribute("idGrupo", selectedOption.value);
+        derecha.setAttribute('fecha1',this.shadowRoot.getElementById("startDate").value);
+        derecha.setAttribute('fecha2',this.shadowRoot.getElementById("endDate").value);
         derechaDiv.appendChild(derecha);
+    }
+
+    funcionalidadFecha() {
+        const startDateInput = this.shadowRoot.getElementById('startDate');
+        const endDateInput = this.shadowRoot.getElementById('endDate');
+
+        startDateInput.addEventListener('change', () => {
+            endDateInput.min =startDateInput.value;
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            if (startDate > endDate) {
+                endDateInput.value = startDateInput.value;
+            }
+            const select = this.shadowRoot.getElementById("select");
+            const selectedOption = select.options[select.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                this.renderDiv("grupos");
+            }
+        });
+
+        endDateInput.addEventListener('change', () => {
+            startDateInput.max = endDateInput.value;
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            if (endDate < startDate) {
+                startDateInput.value = endDateInput.value;
+            }
+            const select = this.shadowRoot.getElementById("select");
+            const selectedOption = select.options[select.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                this.renderDiv("grupos");
+            }
+        });
     }
     
 }
