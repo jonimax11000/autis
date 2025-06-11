@@ -150,6 +150,19 @@ class EstadisticasCard extends CardComponent {
                     min-width: 420px;
                     margin-bottom: 20px;
                 }
+                #select {
+                    background-color: #c7c8c7;
+                    border: 2px solid #000;
+                    border-radius: 10px;
+                    padding: 10px 16px;
+                    font-size: 16px;
+                    color: black;
+                    cursor: pointer;
+                    background-position: right 12px center;
+                    background-size: 16px;
+                    padding-right: 40px;
+                    
+                }
 
                 #derecha {
                     display: flex;
