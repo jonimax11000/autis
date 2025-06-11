@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Menú Lateral</title>
+  <link rel="icon" href="/img/favicon-100x100.png" type="image/png" />
   <link rel="stylesheet" href="/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <script src="/js/index.js"  type="module" ></script>
@@ -27,11 +29,12 @@
     <div class="logo">AUTIS</div>
     <nav class="nav-menu">
       <ul>
-        <li><a href="#" class="active">Dashboard</a></li>
+        <li><a href="#" id="menu-dashboard">Dashboard</a></li>
         <li><a href="#">Proyectos</a></li>
-        <li><a href="#">Departamentos</a></li>
+        <li><a href="#">Tareas</a></li>
+        <li><a href="#" id="menu-historial">Historial</a></li>
         <li><a id="menu-empleados" href="#">Empleados</a></li>
-        <li><a href="#">Estadísticas</a></li>
+        <li><a id="menu-estadisticas" href="#">Estadísticas</a></li>
       </ul>
     </nav>
     <!-- Botón toggle del menú -->
@@ -60,6 +63,45 @@
       </div>
     </div>
     <div id="content">
+      <div class="imagen">
+        <img src="/img/favicon-100x100.png" alt="Logo U Invertida" class="logo2">
+        <img src="../img/autis_logo.png" alt="Nombre Empresa" class="nombre">
+
+      </div>
+    </div>
+
+<style>
+
+  @keyframes moveAndShrink {
+    0% {
+      left: 0;
+      transform: translateY(-200%) rotate(90deg) scale(1);
+      opacity: 1;
+    }
+    40% {
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(90deg) scale(1);
+    }
+    50% {
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    100% {
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
+      opacity: 0;
+    }
+  }
+
+  @keyframes showName {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+</style>
     </div>
   </div>
 </body>

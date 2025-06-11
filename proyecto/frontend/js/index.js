@@ -1,6 +1,9 @@
 import './components/empleatsCard.js';
-import './components/projectsList.js';
-import './components/tareasList.js';
+import './listas/projectsList.js';
+import './listas/tareasList.js';
+import './listas/DashboardList.js';
+import './listas/historialList.js';
+import './components/estadisticasCard.js';
 
 // Remplazar la url
 window.history.replaceState({}, '', '/');
@@ -35,15 +38,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                 txtCentral.textContent = this.textContent;
             }
             if (this.textContent.trim() === 'Proyectos') {
-            const projectsList = document.createElement('projects-list');
-            contentDiv.appendChild(projectsList);
-            } else if (this.textContent.trim() === 'Departamentos') {
-            const tareasList = document.createElement('tareas-list');
-            contentDiv.appendChild(tareasList);
+                handlerProjects();                
+            } 
+            else if (this.textContent.trim() === 'Tareas') {
+                /* const tareasList = document.createElement('tareas-list');
+                contentDiv.appendChild(tareasList); */
+                handlerTareas();
+            } 
+            else if (this.textContent.trim() === 'Estadísticas') {
+                handleEstadisticas();
             // Lógica para cargar contenido específico según el enlace pulsado
-            } else if (this.id === 'menu-empleados') {
+            } 
+            else if (this.id === 'menu-empleados') {
                 handleUsers(e); // Llama a la función para cargar empleados
-            } else {
+            } 
+            else if (this.id === 'menu-dashboard') {
+                handleDashboard();
+            }
+            else if (this.id === 'menu-historial') {
+                handleHistorial();
+            }
+
+            else {
                 // Si es otro enlace, puedes mostrar contenido vacío o cargar algo diferente
                 const placeholder = document.createElement('p');
                 placeholder.textContent = `Sección: ${this.textContent}`;
@@ -58,6 +74,167 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
+async function fetchTipoTareas() {
+    const res = await fetch('/tipoTareas', { method: 'POST' });
+    return await res.json(); // [{id: 1, name: "Bug"}, ...]
+}
+
+async function fetchProyectos() {
+    const res = await fetch('/proyectos', { method: 'POST' });
+    return await res.json(); // [{id: 1, name: "Proyecto A"}, ...]
+}
+
+/* HANDLER PARA ENTIDADES */
+// PROYECTOS
+async function handlerProjects(e) {
+    if (e) {
+        e.preventDefault();
+    }
+    const contentDiv = document.getElementById("content");
+    contentDiv.innerHTML = '';
+
+    // Filtro y buscador
+    const formDiv = document.createElement('div');
+    formDiv.className = "formDiv";
+
+    const searchInput = document.createElement('input');
+    searchInput.className = "searchInput";
+    searchInput.id = "buscador-proyecto";
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Buscar...';
+
+    const selectFilter = document.createElement('select');
+    selectFilter.className = "selectFilter";
+    selectFilter.id = "filtros-proyecto";
+    const options = ['nombre', 'id'];
+    
+    options.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.textContent = option;
+        selectFilter.appendChild(opt);
+    });
+
+    const createButton = document.createElement('button');
+    createButton.className = "createButton";
+    createButton.textContent = 'Crear';
+    
+    createButton.addEventListener('click', async () => {
+        const fieldsCrear = [
+            ...proyectoFields,
+        ];
+        botonCrear('proyecto', fieldsCrear);
+    });
+    
+    const plusIcon = document.createElement('span');
+    plusIcon.textContent = '+ ';
+    plusIcon.className = "plusIcon";
+    createButton.prepend(plusIcon);
+
+    formDiv.appendChild(searchInput);
+    formDiv.appendChild(selectFilter);
+    formDiv.appendChild(createButton);
+
+    contentDiv.appendChild(formDiv);
+
+    // Lista de proyectos
+    const proyectosDiv = document.createElement("div");
+    proyectosDiv.id = "proyectos";
+    contentDiv.appendChild(proyectosDiv);
+    
+    // Carga inicial de proyectos
+    const projectsList = document.createElement('projects-list');
+    proyectosDiv.appendChild(projectsList);
+
+    // Añadir el event listener después de crear el div
+    searchInput.addEventListener('keypress', handleProjectsSearch);   
+    
+}
+
+// TAREAS
+async function handlerTareas(e) {
+    if (e) {
+        e.preventDefault();
+    }
+
+    const contentDiv = document.getElementById("content");
+    contentDiv.innerHTML = '';
+
+    // Filtro y buscador
+    const formDiv = document.createElement('div');
+    formDiv.className = "formDiv";
+
+    const searchInput = document.createElement('input');
+    searchInput.className = "searchInput";
+    searchInput.id = "buscador-tarea";
+    searchInput.type = 'text';
+    searchInput.placeholder = 'Buscar...';
+
+    const selectFilter = document.createElement('select');
+    selectFilter.className = "selectFilter";
+    selectFilter.id = "filtros-tarea";
+    const options = ['nombre', 'id'];
+
+    options.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = option;
+        opt.textContent = option;
+        selectFilter.appendChild(opt);
+    });
+
+    const createButton = document.createElement('button');
+    createButton.className = "createButton";
+    createButton.textContent = 'Crear';
+    
+    createButton.addEventListener('click', async () => {
+        const tipos = await fetchTipoTareas();
+        const proyectos = await fetchProyectos();
+
+        const fieldsCrear = [
+            { label: 'Nombre de la tarea:', id: 'subject' },
+            {
+                label: 'Tipo:',
+                id: 'type',
+                type: 'select',
+                options: tipos.map(t => ({ value: t.id, label: t.name })),
+                endpoint: '/tipoTareas'
+            },
+            {
+                label: 'Proyecto:',
+                id: 'project',
+                type: 'select',
+                options: proyectos.map(p => ({ value: p.id, label: p.name })),
+                endpoint: '/proyectos'
+            }
+        ];
+        botonCrear('tarea', fieldsCrear);
+    });
+
+    const plusIcon = document.createElement('span');
+    plusIcon.textContent = '+ ';
+    plusIcon.className = "plusIcon";
+    createButton.prepend(plusIcon);
+
+    formDiv.appendChild(searchInput);
+    formDiv.appendChild(selectFilter);
+    formDiv.appendChild(createButton);
+    
+    contentDiv.appendChild(formDiv);
+
+    // Lista de tareas
+    const tareasDiv = document.createElement("div");
+    tareasDiv.id = "tareas";
+    contentDiv.appendChild(tareasDiv);
+    
+    // Carga inicial de tareas
+    const tareasList = document.createElement('tareas-list');
+    tareasDiv.appendChild(tareasList);
+
+    // Añadir el event listener después de crear el div
+    searchInput.addEventListener('keypress', handleTareasSearch);  
+}
+
+// USUARIOS
 async function handleUsers(e) {
     if (e) {
         e.preventDefault();
@@ -67,22 +244,16 @@ async function handleUsers(e) {
     contentDiv.innerHTML = '';
 
     const formDiv = document.createElement('div');
-    formDiv.style.display = 'flex';
-    formDiv.style.gap = '10px';
+    formDiv.className = "formDiv";
 
     const searchInput = document.createElement('input');
-    searchInput.id = "bucador-usuario"
+    searchInput.className = "searchInput";
+    searchInput.id = "buscador-usuario";
     searchInput.type = 'text';
-    searchInput.style.marginLeft = '40px';
     searchInput.placeholder = 'Buscar...';
-    searchInput.style.width = '50%';
-    searchInput.style.padding = '10px';
-    searchInput.style.border = '1px solid #ccc';
-    searchInput.style.borderRadius = '5px';
-    searchInput.style.fontSize = '16px';
-    searchInput.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
 
     const selectFilter = document.createElement('select');
+    selectFilter.className = "selectFilter";
     selectFilter.id = "filtros"
     const options = ['proyecto', 'usuario', 'id'];
     options.forEach(option => {
@@ -91,38 +262,25 @@ async function handleUsers(e) {
         opt.textContent = option;
         selectFilter.appendChild(opt);
     });
-    selectFilter.style.marginLeft = '10px';
-    selectFilter.style.padding = '8px';
-    selectFilter.style.border = '1px solid #ccc';
-    selectFilter.style.borderRadius = '5px';
-    selectFilter.style.fontSize = '16px';
-    selectFilter.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-    selectFilter.style.width = '200px';
 
     const createButton = document.createElement('button');
+    createButton.className = "createButton";
     createButton.textContent = 'Crear';
-    createButton.addEventListener('click', () => {
-        botonCrear(null); // Llama a la función para crear, pasando null como id
+    
+    createButton.addEventListener('click', async () => {
+        const fieldsCrear = [
+            ...usuarioFields, //(spread operator) pa no dubplicar el array
+            { label: 'Contraseña:', id: 'password', type: 'password' }
+        ];
+
+        botonCrear('usuario', fieldsCrear);
     });
+
     const plusIcon = document.createElement('span');
     plusIcon.textContent = '+ ';
-    plusIcon.style.fontSize = '32px';
-    plusIcon.style.color = 'black';
-    plusIcon.style.marginRight = '5px';
+    plusIcon.className = "plusIcon";
+
     createButton.prepend(plusIcon);
-    createButton.style.backgroundColor = '#006400';
-    createButton.style.border = 'none';
-    createButton.style.padding = '10px 20px';
-    createButton.style.borderRadius = '5px';
-    createButton.style.cursor = 'pointer';
-    createButton.style.fontSize = '20px';
-    createButton.style.color = 'white';
-    createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-    createButton.style.marginLeft = 'auto';
-    createButton.style.marginRight = '30px';
-    createButton.style.display = 'flex';
-    createButton.style.alignItems = 'center';
-    createButton.style.justifyContent = 'center';
 
     formDiv.appendChild(searchInput);
     formDiv.appendChild(selectFilter);
@@ -160,7 +318,6 @@ async function handleUsers(e) {
     }
 }
 
-
 async function handleSearch(event) {
     if (event.key === 'Enter') {
 
@@ -177,15 +334,14 @@ async function handleSearch(event) {
 
             if (filterOption === 'proyecto') {
                 url += 'proyecto';
-                body = { proyecto: document.getElementById('bucador-usuario').value };
+                body = { proyecto: document.getElementById('buscador-usuario').value };
             } else if (filterOption === 'id') {
-                body = { id: document.getElementById('bucador-usuario').value };
+                body = { id: document.getElementById('buscador-usuario').value };
                 url += 'id';
             } else if (filterOption === 'usuario') {
-                body = { nombre: document.getElementById('bucador-usuario').value };
+                body = { nombre: document.getElementById('buscador-usuario').value };
                 url += 'nombre';
             }
-            console.log(url);
             const response = await fetch(`${url}`, {
                 method: 'POST',
                 headers: headers,
@@ -210,112 +366,274 @@ async function handleSearch(event) {
         }
     }
 }
-async function formularioUsuario(idSeleccionado) {
+
+async function handleProjectsSearch(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const selectFilter = document.getElementById("filtros-proyecto");
+        const filterOption = selectFilter.value;
+
+        try {
+            let url = '/proyectos/filtrar/';
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            let body = {};
+
+            if (filterOption === 'nombre') {
+                url += 'nombre';
+                body = { nombre: document.getElementById('buscador-proyecto').value };
+            } else if (filterOption === 'id') {
+                url += 'id';
+                body = { id: document.getElementById('buscador-proyecto').value };
+            }
+            
+            const response = await fetch(`${url}`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            const proyectosDiv = document.getElementById("proyectos");
+            proyectosDiv.innerHTML = '';
+            data.forEach(item => {
+                const projectCard = document.createElement('project-card');
+                projectCard.setAttribute('project-id', item.id);
+                projectCard.setAttribute('project-name', item.name);
+                proyectosDiv.appendChild(projectCard);
+            });
+        } catch (error) {
+            console.error("Error fetching filtered project data:", error);
+        }
+    }
+}
+
+async function handleTareasSearch(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const selectFilter = document.getElementById("filtros-tarea");
+        const filterOption = selectFilter.value;
+
+        try {
+            let url = '/tareas/filtrar/';
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            let body = {};
+
+            if (filterOption === 'nombre') {
+                url += 'nombre';
+                body = { nombre: document.getElementById('buscador-tarea').value };
+            } else if (filterOption === 'id') {
+                url += 'id';
+                body = { id: document.getElementById('buscador-tarea').value };
+            }
+            
+            const response = await fetch(`${url}`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            const tareasDiv = document.getElementById("tareas");
+            tareasDiv.innerHTML = '';
+            data.forEach(item => {
+                const tareaCard = document.createElement('tarea-card');
+                tareaCard.setAttribute('tarea-id', item.id);
+                tareaCard.setAttribute('tarea-subject', item.subject);
+                tareasDiv.appendChild(tareaCard);
+            });
+        } catch (error) {
+            console.error("Error fetching filtered project data:", error);
+        }
+    }
+}
+
+
+/* DATOS EN FUNCIÓN DE LA ENTIDAD */
+
+export const usuarioFields = [
+    { label: 'Nombre de usuario:', id: 'login' },
+    { label: 'Nombre:', id: 'firstName' },
+    { label: 'Apellido:', id: 'lastName' },
+    { label: 'Correo electrónico:', id: 'email', type: 'email' }
+];
+
+export const proyectoFields = [
+    { label: 'Nombre del proyecto:', id: 'name' }
+];
+
+export const tareaFields = [
+    { label: 'Nombre de la tarea:', id: 'subject' }
+];
+
+const endpointDatos = {
+    usuario: '/usuario/mod/datos',
+    proyecto: '/proyecto/mod/datos',
+    tarea: '/tarea/mod/datos'
+};
+
+/* FORMULARIO BASE */
+
+async function formularioEntidad(fields, idSeleccionado, entidad, endpointDatos) {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML = '';
 
-    const userDetailsDiv = document.createElement('div');
-    userDetailsDiv.style.display = 'grid';
-    userDetailsDiv.style.gridTemplateColumns = '1fr 2fr';
-    userDetailsDiv.style.gap = '20px';
-    userDetailsDiv.style.padding = '40px';
-    userDetailsDiv.style.border = '1px solid #ddd';
-    userDetailsDiv.style.borderRadius = '12px';
-    userDetailsDiv.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-    userDetailsDiv.style.maxWidth = '800px';
-    userDetailsDiv.style.margin = '40px auto';
-    userDetailsDiv.style.backgroundColor = '#f9f9f9';
+    const userDetailsDiv = document.createElement('form');
+    userDetailsDiv.className = "userDetailsDiv";
 
-    const fields = [
-        { label: 'Nombre de usuario:', id: 'login' },
-        { label: 'Nombre:', id: 'firstName' },
-        { label: 'Apellido:', id: 'lastName' },
-        { label: 'Correo electrónico:', id: 'email' }
-    ];
     let json = null;
 
-    if (idSeleccionado == null) {
-        fields.push({ label: 'Contraseña:', id: 'password' });
-    }
-    else{
+    let lockVersion = null;
+    
+    if (idSeleccionado != null) {
         try {
-            const response = await fetch('/usuario/mod/datos', {
+            const response = await fetch(endpointDatos, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ id: idSeleccionado })
             });
-
+    
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
-
             json = await response.json();
+            // Guarda lockVersion si es una tarea
+            if (entidad === 'tarea' && json.lockVersion !== undefined) {
+                lockVersion = json.lockVersion;
+            }
         } catch (error) {
-            console.error("Error obteniendo datos del usuario:", error);
+            console.error(`Error obteniendo datos de ${entidad}:`, error);
         }
+    }    
+
+    if (entidad === 'tarea' && lockVersion !== null) {
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.id = 'lockVersion';
+        hidden.value = lockVersion;
+        userDetailsDiv.appendChild(hidden);
     }
 
-    fields.forEach(field => {
+    for (const field of fields) {
         const label = document.createElement('label');
         label.textContent = field.label;
-        label.style.fontWeight = 'bold';
-        label.style.fontSize = '18px';
-        label.style.color = 'black';
-        label.style.alignSelf = 'center';
+        label.className = "label";
 
-        const input = document.createElement('input');
-        input.id = field.id;
+        let input;
+
+        if (field.type === 'select') {
+            input = document.createElement('select');
+            input.id = field.id;
+
+            // Usa las opciones del campo
+            if (field.options) {
+                field.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.label;
+                    input.appendChild(option);
+                });
+            }
+            } else if (field.endpoint){
+                // Carga las opciones dinámicamente
+                try {
+                    const response = await fetch(field.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+                    const data = await response.json();
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.textContent = item.name;
+                        input.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error(`Error cargando opciones para ${field.id}:`, error);
+                }
+            
+            } else {
+                input = document.createElement('input');
+                input.id = field.id;
+                if (field.type) input.type = field.type;
+                if (idSeleccionado != null && json && json[field.id] !== undefined) {
+                    input.value = json[field.id];
+                }
+                if (entidad === 'usuario') {
+                    if (field.id === 'password') {
+                        input.type = 'password';
+                        input.minLength = 10;
+                    } else if (field.id === 'email') {
+                        input.type = 'email';
+                        input.pattern = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]{1,}$";
+                        input.title = "Introduce un correo válido, como usuario@dominio.com";
+                    }
+                }
+            }
+       
+        input.className = "input";
         input.required = true;
-        if (idSeleccionado != null) {
-            input.value = json[field.id];
-        }
-        input.style.padding = '10px';
-        input.style.border = '1px solid #ddd';
-        input.style.borderRadius = '8px';
-        input.style.fontSize = '16px';
-        input.style.width = '100%';
-        input.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-        input.style.backgroundColor = '#fff';
-
         userDetailsDiv.appendChild(label);
         userDetailsDiv.appendChild(input);
-    });
+    };
 
     contentDiv.appendChild(userDetailsDiv);
     return userDetailsDiv;
 }
 
-export async function botonCrear(id) {
-    const userDetailsDiv =  await formularioUsuario(null);
-    console.log(userDetailsDiv);
+/* CREAR ENTIDAD */
 
-    const createButton = document.createElement('button');
-    createButton.textContent = 'Crear';
-    createButton.style.backgroundColor = '#028a34';
-    createButton.style.color = 'white';
-    createButton.style.border = 'none';
-    createButton.style.padding = '15px 30px';
-    createButton.style.borderRadius = '8px';
-    createButton.style.cursor = 'pointer';
-    createButton.style.fontSize = '18px';
-    createButton.style.marginTop = '20px';
-    createButton.style.alignSelf = 'center';
-    createButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+const endpointCrear = {
+    usuario: '/usuario/crear',
+    proyecto: '/proyecto/crear',
+    tarea: '/tarea/crear',
+};
 
+export async function botonCrear(entidad, fields) {
+    const userDetailsDiv =  await formularioEntidad(fields, null, entidad, endpointDatos[entidad]);
+
+    const createButton = document.createElement('input');
+    createButton.type="submit";
+    createButton.value = 'Crear';
+
+    createButton.className="createButton";
     userDetailsDiv.appendChild(createButton);
-    createButton.addEventListener('click', async () => {
-        const userData = {
+
+    userDetailsDiv.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        let userData = {
 
         };
-        const inputs = userDetailsDiv.querySelectorAll('input');
+
+        const inputs = userDetailsDiv.querySelectorAll('input, select');
         inputs.forEach(input => {
-            userData[input.id] = input.value;
+            if (entidad === 'tarea' && input.id === 'type') {
+                userData['type'] = { href: `/api/v3/types/${input.value}` };
+            } else if (entidad === 'tarea' && input.id === 'project') {
+                userData['_links'] = userData['_links'] || {};
+                userData['_links']['project'] = { href: `/api/v3/projects/${input.value}` };
+            } else {
+                userData[input.id] = input.value;
+            }
         });
+        
+        // Limpieza para tarea
+        if (entidad === 'tarea') {
+            delete userData.project;
+        }
 
         try {
-            const response = await fetch('/usuario/crear', {
+            const response = await fetch(endpointCrear[entidad], {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -327,41 +645,64 @@ export async function botonCrear(id) {
                 throw new Error(response.statusText);
             }
 
-            alert('Usuario creado exitosamente.');
-            handleUsers(); // Recarga la lista de usuarios
+            alert(`${entidad} creado exitosamente`);
+            // handleUsers(); // Recarga la lista de usuarios
+            // Recarga la lista según la entidad
+            if (entidad === "usuario") handleUsers();
+            else if (entidad === "proyecto") {
+                handlerProjects();
+            }
+            else if (entidad === "tarea") {
+                handlerTareas();
+            }
         } catch (error) {
-            console.error("Error creando usuario:", error);
-            alert('Error al crear el usuario.');
+            console.error(`Error creando ${entidad}:`, error);
+            alert(`Error al crear ${entidad}`);
         }
     });
 }
 
-export async function botonModificar(id) {
-    const userDetailsDiv = await formularioUsuario(id);
+/* MODIFICAR */
 
-    const saveButton = document.createElement('button');
-    saveButton.textContent = 'Salvar';
-    saveButton.style.backgroundColor = '#028a34';
-    saveButton.style.color = 'white';
-    saveButton.style.border = 'none';
-    saveButton.style.padding = '15px 30px';
-    saveButton.style.borderRadius = '8px';
-    saveButton.style.cursor = 'pointer';
-    saveButton.style.fontSize = '18px';
-    saveButton.style.marginTop = '20px';
-    saveButton.style.alignSelf = 'center';
-    saveButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+const endpointGuardar = {
+    usuario: '/usuario/mod',
+    proyecto: '/proyecto/mod',
+    tarea: '/tarea/mod',
+};
+
+export async function botonModificar(id, entidad = "usuario", fields = usuarioFields) {
+    
+    const userDetailsDiv = await formularioEntidad(fields, id, entidad, endpointDatos[entidad]);
+
+    const saveButton = document.createElement('input');
+    saveButton.className="saveButton";
+    saveButton.type = "submit";
+    saveButton.value = 'Guardar';
 
     userDetailsDiv.appendChild(saveButton);
-    saveButton.addEventListener('click', async () => {
+
+    userDetailsDiv.addEventListener('submit', async (event) => {
+        event.preventDefault();
         const userData = { id }; // Incluye el ID
-        const inputs = userDetailsDiv.querySelectorAll('input');
+        
+        /* const inputs = userDetailsDiv.querySelectorAll('input');
         inputs.forEach(input => {
             userData[input.id] = input.value;
-        });
+        }); */
+
+        if (entidad === 'tarea') {
+            userData.subject = userDetailsDiv.querySelector('#subject').value;
+            userData.lockVersion = Number(userDetailsDiv.querySelector('#lockVersion').value);
+        } else {
+            const inputs = userDetailsDiv.querySelectorAll('input');
+            inputs.forEach(input => {
+                userData[input.id] = input.value;
+            });
+        }
+
 
         try {
-            const response = await fetch('/usuario/mod', {
+            const response = await fetch(endpointGuardar[entidad], {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -373,8 +714,15 @@ export async function botonModificar(id) {
                 throw new Error(response.statusText);
             }
 
-            alert('Usuario modificado exitosamente.');
-            handleUsers(); // Recarga la lista de usuarios
+            alert(`${entidad} modificado exitosamente`);
+            
+            if (entidad === "usuario") handleUsers();
+            else if (entidad === "proyecto") {
+                handlerProjects();
+            }
+            else if (entidad === "tarea") {
+                handlerTareas();
+            }
         } catch (error) {
             console.error("Error modificando usuario:", error);
             alert('Error al modificar el usuario.');
@@ -382,67 +730,46 @@ export async function botonModificar(id) {
     });
 }
 
+const mensajePopupEliminadoEntidad = {
+    usuario: 'Usuario eliminado',
+    proyecto: 'Proyecto eliminado',
+    tarea: 'Tarea eliminada',
+};
 
-export async function botonEliminar(id) {
+const mensajePopupEntidad = {
+    usuario: '¿Seguro deseas eliminar este usuario?',
+    proyecto: '¿Seguro deseas eliminar este proyecto?',
+    tarea: '¿Seguro deseas eliminar esta tarea?',
+};
+
+/* ELIMINAR */
+
+export async function botonEliminar(id, entidad = "usuario") {
     // Crear el popup
     const popup = document.createElement('div');
-    popup.style.position = 'fixed';
-    popup.style.top = '0';
-    popup.style.left = '0';
-    popup.style.width = '100vw';
-    popup.style.height = '100vh';
-    popup.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    popup.style.display = 'flex';
-    popup.style.justifyContent = 'center';
-    popup.style.alignItems = 'center';
-    popup.style.zIndex = '1000';
+    popup.className ="popupeliminar";
 
     // Contenido del popup
     const popupContent = document.createElement('div');
-    popupContent.style.backgroundColor = 'white';
-    popupContent.style.padding = '40px';
-    popupContent.style.borderRadius = '16px';
-    popupContent.style.textAlign = 'center';
-    // Aquí está el tamaño del cuadrado del popup
-    popupContent.style.minWidth = '400px';
-    popupContent.style.minHeight = '200px';
-    popupContent.style.display = 'flex';
-    popupContent.style.flexDirection = 'column';
-    popupContent.style.justifyContent = 'center';
-    popupContent.style.alignItems = 'center';
+    popupContent.className = "popupContent";
 
     const message = document.createElement('p');
-    message.textContent = '¿Seguro deseas eliminar este usuario?';
-    message.style.fontSize = '20px';
-    message.style.color = 'black';
-    message.style.marginBottom = '20px'; // Separación con los botones
-    message.style.textAlign = 'center';
+    message.textContent = mensajePopupEntidad[entidad] || '¿Seguro deseas elimiar esta entidad?';
+    message.className = "message"
+    
 
     const buttonContainer = document.createElement('div');
-    buttonContainer.style.display = 'flex';
-    buttonContainer.style.gap = '10px';
+    buttonContainer.className = "buttonContainer"
 
     const btnCancelar = document.createElement('button');
     btnCancelar.id = 'btnCancelar';
     btnCancelar.textContent = 'Cancelar';
-    btnCancelar.style.backgroundColor = 'grey';
-    btnCancelar.style.color = 'white';
-    btnCancelar.style.padding = '10px 20px';
-    btnCancelar.style.border = 'none';
-    btnCancelar.style.borderRadius = '5px';
-    btnCancelar.style.fontSize = '16px';
-    btnCancelar.style.cursor = 'pointer';
+    btnCancelar.className = "btnCancelar"
 
     const btnEliminar = document.createElement('button');
     btnEliminar.id = 'btnEliminar';
     btnEliminar.textContent = 'Eliminar';
-    btnEliminar.style.backgroundColor = 'red';
-    btnEliminar.style.color = 'white';
-    btnEliminar.style.padding = '10px 20px';
-    btnEliminar.style.border = 'none';
-    btnEliminar.style.borderRadius = '5px';
-    btnEliminar.style.fontSize = '16px';
-    btnEliminar.style.cursor = 'pointer';
+    btnEliminar.className = "btnEliminar";
 
     buttonContainer.appendChild(btnCancelar);
     buttonContainer.appendChild(btnEliminar);
@@ -459,89 +786,74 @@ export async function botonEliminar(id) {
 
     // Evento eliminar
     btnEliminar.addEventListener('click', async (e) => {
-        try {
-            const eliminado = await confirmar_eliminado(id);
-            if (eliminado) {
-                document.body.removeChild(popup);
-                setTimeout(() => handleUsers(), 100); // da tiempo a que se refleje el borrado
-
-            } else {
-                alert("No se pudo eliminar el usuario.");
-            }
-        } catch (error) {
-            console.error("Error eliminando usuario:", error);
-        }
-    });
-
-    btnEliminar.addEventListener('click', () => {
-        confirmar_eliminado(id);
+    try {
+        const eliminado = await confirmar_eliminado(id, entidad);
         document.body.removeChild(popup);
-        // Crear el popup de confirmación
-        const confirmationPopup = document.createElement('div');
-        confirmationPopup.style.position = 'fixed';
-        confirmationPopup.style.top = '0';
-        confirmationPopup.style.left = '0';
-        confirmationPopup.style.width = '100vw';
-        confirmationPopup.style.height = '100vh';
-        confirmationPopup.style.backgroundColor = 'rgba(0,0,0,0.5)';
-        confirmationPopup.style.display = 'flex';
-        confirmationPopup.style.justifyContent = 'center';
-        confirmationPopup.style.alignItems = 'center';
-        confirmationPopup.style.zIndex = '1000';
+        if (eliminado) {
+            // Mostrar popup de confirmación
+            const confirmationPopup = document.createElement('div');
+            confirmationPopup.className = "confirmationPopup";
 
-        // Contenido del popup
-        const confirmationContent = document.createElement('div');
-        confirmationContent.style.backgroundColor = 'white';
-        confirmationContent.style.padding = '40px';
-        confirmationContent.style.borderRadius = '16px';
-        confirmationContent.style.textAlign = 'center';
-        confirmationContent.style.minWidth = '400px';
-        confirmationContent.style.minHeight = '200px';
-        confirmationContent.style.display = 'flex';
-        confirmationContent.style.flexDirection = 'column';
-        confirmationContent.style.justifyContent = 'center';
-        confirmationContent.style.alignItems = 'center';
+            const confirmationContent = document.createElement('div');
+            confirmationContent.className = "confirmationContent";
 
-        const confirmationMessage = document.createElement('p');
-        confirmationMessage.textContent = 'Usuario eliminado';
-        confirmationMessage.style.fontSize = '20px';
-        confirmationMessage.style.color = 'black';
-        confirmationMessage.style.marginBottom = '20px';
-        confirmationMessage.style.textAlign = 'center';
+            const confirmationMessage = document.createElement('p');
+            confirmationMessage.textContent = mensajePopupEliminadoEntidad[entidad] || 'Elemento eliminado';
+            confirmationMessage.className = "confirmationMessage";
 
-        const btnAceptar = document.createElement('button');
-        btnAceptar.textContent = 'Aceptar';
-        btnAceptar.style.backgroundColor = '#003366';
-        btnAceptar.style.color = 'white';
-        btnAceptar.style.padding = '10px 20px';
-        btnAceptar.style.border = 'none';
-        btnAceptar.style.borderRadius = '5px';
-        btnAceptar.style.fontSize = '16px';
-        btnAceptar.style.cursor = 'pointer';
+            const btnAceptar = document.createElement('button');
+            btnAceptar.className = "btnAceptar";
+            btnAceptar.textContent = 'Aceptar';
 
-        confirmationContent.appendChild(confirmationMessage);
-        confirmationContent.appendChild(btnAceptar);
-        confirmationPopup.appendChild(confirmationContent);
-        document.body.appendChild(confirmationPopup);
+            confirmationContent.appendChild(confirmationMessage);
+            confirmationContent.appendChild(btnAceptar);
+            confirmationPopup.appendChild(confirmationContent);
+            document.body.appendChild(confirmationPopup);
 
-        // Evento aceptar
-        btnAceptar.addEventListener('click', () => {
-            document.body.removeChild(confirmationPopup);
-        });
-    });
-
+            btnAceptar.addEventListener('click', () => {
+                document.body.removeChild(confirmationPopup);
+                const contentDiv = document.getElementById("content");
+                setTimeout(() => {
+                    if (entidad === "usuario") handleUsers();
+                    else if (entidad === "proyecto") {
+                        contentDiv.innerHTML = '';
+                        const projectsList = document.createElement('projects-list');
+                        contentDiv.appendChild(projectsList);
+                    }
+                    else if (entidad === "tarea") {
+                        const contentDiv = document.getElementById("content");
+                        contentDiv.innerHTML = '';
+                        const tareasList = document.createElement('tareas-list');
+                        contentDiv.appendChild(tareasList);
+                    }
+                }, 100);
+            });
+        } else {
+            alert(`No se pudo eliminar el ${entidad}.`);
+        }
+    } catch (error) {
+        console.error(`Error eliminando ${entidad}:`, error);
+    }
+});
 
 }
 
+const endPointEliminar = {
+    usuario: '/usuario/borrar',
+    proyecto: '/proyecto/borrar',
+    tarea: '/tarea/borrar',
+};
+
 // Función que JONATHAN completará
-async function confirmar_eliminado(id) {
+async function confirmar_eliminado(id, entidad = "usuario") {
+    let url = endPointEliminar[entidad];
     try {
-        const response = await fetch('/usuario/borrar', {
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: id })
+            body: JSON.stringify({"id": id})
         });
 
         if (!response.ok) {
@@ -550,8 +862,92 @@ async function confirmar_eliminado(id) {
 
         return true;
     } catch (error) {
-        console.error("Error deleting user:", error);
+        console.error(`Error deleting ${entidad}:`, error);
         return false;
     }
 }
 
+async function handleDashboard() {
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    try {
+       const DashBoardList = document.createElement("dashboard-list");
+
+        contentDiv.appendChild(DashBoardList);
+    } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        const errorMessage = document.createElement('p');
+        errorMessage.className = "errorMessage";
+        errorMessage.textContent = 'Error loading data.';
+        contentDiv.appendChild(errorMessage);
+    }
+}
+
+//HISTORIAL
+async function handleHistorial() {
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    const formDiv = document.createElement('div');
+    formDiv.className="formDiv";
+
+    const selectUsuarios = document.createElement('select');
+    selectUsuarios.id = "historial-search";
+
+    try {
+        const response = await fetch('/usuarios', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+        data.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.firstname} ${user.lastname}`;
+            selectUsuarios.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+
+    formDiv.appendChild(selectUsuarios);
+    
+    contentDiv.appendChild(formDiv);
+
+    crearHistorialList();
+    
+    selectUsuarios.addEventListener('change', crearHistorialList);
+}
+
+async function crearHistorialList() {
+
+    const contentDiv = document.getElementById("content");
+    const selectedUserId = document.getElementById("historial-search").value;
+    
+    let historialList = document.getElementById("historialList");
+    if(historialList !=null){
+        historialList.remove();
+    }
+    historialList = document.createElement('historial-list');
+    historialList.id = "historialList";
+    historialList.setAttribute('user-id', selectedUserId);
+    contentDiv.appendChild(historialList);
+}
+
+
+function handleEstadisticas(){
+    const contentDiv = document.getElementById('content');
+    contentDiv.innerHTML = '';
+
+    const estadisticas = document.createElement('estadisticas-card');
+    estadisticas.id = "estadisticas";
+    contentDiv.appendChild(estadisticas);
+}

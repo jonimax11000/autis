@@ -1,5 +1,6 @@
 // Importem el component de base
 import { CardComponent } from './CardComponent.js';
+import { botonModificar, botonEliminar, proyectoFields } from '../index.js';
 
 class ProjectCard extends CardComponent {
     constructor() {
@@ -15,7 +16,7 @@ class ProjectCard extends CardComponent {
         // Aci agafem els atributs
 
         const id = this.getAttribute('project-id') || 'Projecte desconegut';
-        const name = this.getAttribute('project-nom') || 'Projecte desconegt';
+        const name = this.getAttribute('project-name') || 'Projecte desconegt';
         let HTML = `
             <style>
                 ${CardComponent.styles} /* Afegim estils del component base !! */
@@ -59,10 +60,10 @@ class ProjectCard extends CardComponent {
         this.shadowRoot.innerHTML = HTML;
         
         const mod = this.shadowRoot.getElementById(`modificar${id}`);
-        mod.addEventListener('click', () => botonModificar(id));
+        mod.addEventListener('click', () => botonModificar(id, "proyecto", proyectoFields));
         
         const elim = this.shadowRoot.getElementById(`eliminar${id}`);
-        elim.addEventListener('click', () => botonEliminar(id));
+        elim.addEventListener('click', () => botonEliminar(id, "proyecto"));
         
     }
 }

@@ -1,6 +1,6 @@
 // Importem el component de base
 import { CardComponent } from './CardComponent.js';
-import { botonModificar, botonEliminar } from '../index.js';
+import { botonModificar, botonEliminar, usuarioFields } from '../index.js';
 
 
 class EmpleatCard extends CardComponent {
@@ -20,15 +20,14 @@ class EmpleatCard extends CardComponent {
         const nom = this.getAttribute('empleats-nom') || 'Empleat desconegt';
         let HTML = `
             <style>
-                ${CardComponent.styles} /* Afegim estils del component base !! */
+                ${CardComponent.styles}
                 .card {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 10px;
                     border: 1px solid #ccc;
-                    border-radius: 5px;
-                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    border-radius: 8px;
+                    padding: 16px;
+                    margin-bottom: 8px;
+                    background: #fff;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
                 }
                 .content {
                     flex: 1;
@@ -75,10 +74,10 @@ class EmpleatCard extends CardComponent {
 
 
         const mod = this.shadowRoot.getElementById(`modificar${id}`);
-        mod.addEventListener('click', () => botonModificar(id));
+        mod.addEventListener('click', () => botonModificar(id), "usuario", usuarioFields);
         if(id >4){
             const elim = this.shadowRoot.getElementById(`eliminar${id}`);
-            elim.addEventListener('click', () => botonEliminar(id));
+            elim.addEventListener('click', () => botonEliminar(id, "usuario"));
         }
     }
     
