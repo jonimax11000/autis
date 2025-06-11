@@ -897,27 +897,91 @@ async function handleHistorial() {
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
 
-    const labelStart = document.createElement('label');
-    labelStart.setAttribute('for', 'startDate');
-    labelStart.textContent = 'Fecha de inicio:';
-    const inputStart = document.createElement('input');
-    inputStart.type = 'date';
-    inputStart.id = 'startDate';
-    inputStart.name = 'startDate';
-    inputStart.required = true;
-    inputStart.value = todayStr;
-    inputStart.max = todayStr;
+    // Tu código original (sin cambios)
+const labelStart = document.createElement('label');
+labelStart.setAttribute('for', 'startDate');
+labelStart.textContent = 'Fecha de inicio:';
+const inputStart = document.createElement('input');
+inputStart.type = 'date';
+inputStart.id = 'startDate';
+inputStart.name = 'startDate';
+inputStart.required = true;
+inputStart.value = todayStr;
+inputStart.max = todayStr;
 
-    const labelEnd = document.createElement('label');
-    labelEnd.setAttribute('for', 'endDate');
-    labelEnd.textContent = 'Fecha de fin:';
-    const inputEnd = document.createElement('input');
-    inputEnd.type = 'date';
-    inputEnd.id = 'endDate';
-    inputEnd.name = 'endDate';
-    inputEnd.max = todayStr;
-    inputEnd.required = true;
-    inputEnd.value = todayStr;
+const labelEnd = document.createElement('label');
+labelEnd.setAttribute('for', 'endDate');
+labelEnd.textContent = 'Fecha de fin:';
+const inputEnd = document.createElement('input');
+inputEnd.type = 'date';
+inputEnd.id = 'endDate';
+inputEnd.name = 'endDate';
+inputEnd.max = todayStr;
+inputEnd.required = true;
+inputEnd.value = todayStr;
+
+// --- Nuevo: Contenedores para aplicar el CSS ---
+const dateContainer = document.createElement('div');
+dateContainer.className = 'date-range-container';
+
+// Grupo para fecha de inicio
+const startGroup = document.createElement('div');
+startGroup.className = 'date-group';
+startGroup.append(labelStart, inputStart); // Aquí usamos tus elementos originales
+
+// Grupo para fecha de fin
+const endGroup = document.createElement('div');
+endGroup.className = 'date-group';
+endGroup.append(labelEnd, inputEnd); // Aquí usamos tus elementos originales
+
+// Ensamblamos todo
+dateContainer.append(startGroup, endGroup);
+
+// Finalmente lo agregamos al DOM (ajusta esto según donde deba ir)
+document.body.prepend(dateContainer); // Lo ponemos arriba a la izquierda
+// Estilos para el contenedor principal (sin cambios)
+dateContainer.style.display = 'flex';
+dateContainer.style.flexWrap = 'wrap';
+dateContainer.style.gap = '1rem';
+dateContainer.style.alignItems = 'center';
+dateContainer.style.marginBottom = '1.5rem';
+dateContainer.style.padding = '1rem';
+dateContainer.style.backgroundColor = '#f8f9fa';
+dateContainer.style.borderRadius = '8px';
+dateContainer.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+dateContainer.style.maxWidth = 'fit-content';
+
+// Estilos para los grupos - MODIFICADO para alineación perfecta
+[startGroup, endGroup].forEach(group => {
+  group.style.display = 'flex';
+  group.style.alignItems = 'baseline'; // Cambiado de 'center' a 'baseline'
+  group.style.height = '100%';
+});
+
+// Estilos para las etiquetas - MODIFICADO (eliminado color y ajustado alineación)
+[labelStart, labelEnd].forEach(label => {
+  label.style.fontWeight = '600';
+  // REMOVIDO: label.style.color = '#343a40'; (para mantener color original)
+  label.style.fontSize = '0.9rem';
+  label.style.marginRight = '0.5rem';
+  label.style.lineHeight = '1.5'; // Añadido para mejor alineación
+  label.style.paddingBottom = '1px'; // Micro-ajuste visual
+});
+
+// Estilos para los inputs - MODIFICADO para alineación
+[inputStart, inputEnd].forEach(input => {
+  input.style.padding = '0.5rem';
+  input.style.border = '1px solid #ced4da';
+  input.style.borderRadius = '4px';
+  input.style.fontSize = '0.9rem';
+  input.style.color = '#495057';
+  input.style.height = 'calc(1em + 1rem)'; // Añadido para altura consistente
+  input.style.boxSizing = 'border-box'; // Añadido
+  input.style.transition = 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
+  
+  // Ajuste específico para Chrome/Firefox
+  input.style.verticalAlign = 'middle'; 
+});
 
     formDiv.appendChild(labelStart);
     formDiv.appendChild(inputStart);
