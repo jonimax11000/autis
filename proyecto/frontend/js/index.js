@@ -900,7 +900,7 @@ async function handleHistorial() {
     // Tu código original (sin cambios)
 const labelStart = document.createElement('label');
 labelStart.setAttribute('for', 'startDate');
-labelStart.textContent = 'Fecha de inicio:';
+labelStart.textContent = '‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ Fecha de inicio:';
 const inputStart = document.createElement('input');
 inputStart.type = 'date';
 inputStart.id = 'startDate';
