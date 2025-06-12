@@ -11,12 +11,13 @@ class DashboardList extends HTMLElement {
         this.fetchDashboards();
     }
 
-    async fetchDashboards() {
+    async fetchDashboards(nombre = null) {
         try {
             const apiToken = localStorage.getItem('apiToken');
             const response = await fetch('/dashboard', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre })
             });
             if (!response.ok) throw new Error(response.statusText);
             const data = await response.json();
@@ -47,9 +48,30 @@ class DashboardList extends HTMLElement {
                     gap: 10px;
                     margin-top: 20px;
                 }
+                #buscador-proyecto{
+                    width:74%;
+                    margin-left: 11%;
+                    padding:20px;
+                    border:2px solid #000000;
+                    border-radius:5px;
+                    font-size:16px;
+                    background-color: #ffffff;
+                    align-items: center;
+                }
             </style>
+            <div class="formDiv">
+                <input class="searchInput" id="buscador-proyecto" type="text" placeholder="Buscar...">
+            </div>
             <div id="dashboards"></div>
         `;
+
+        const searchInput = this.shadowRoot.getElementById('buscador-proyecto');
+        searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const value = searchInput.value.trim();
+                this.fetchDashboards(value === '' ? null : value);
+            }
+        });
     }
 }
 

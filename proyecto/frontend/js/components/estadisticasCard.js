@@ -195,6 +195,14 @@ class EstadisticasCard extends CardComponent {
                 margin-left: 5px;
             }
 
+            #fechas {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+
             #container{
                 height: 100%;
                 width: 100%;
@@ -233,6 +241,19 @@ class EstadisticasCard extends CardComponent {
                     
                 }
 
+            input[type="date"] {
+                background-color: #c7c8c7;
+                border: 2px solid #000;
+                border-radius: 10px;
+                padding: 10px 16px;
+                font-size: 16px;
+                color: black;
+                cursor: pointer;
+                margin-left: 20px;
+            }
+
+
+
             #derecha {
                 display: flex;
                 border: 1px solid #ccc;
@@ -261,11 +282,13 @@ class EstadisticasCard extends CardComponent {
 
             <div id="menu">
             <select id="select"></select>
+            <div id="fechas">
             <label for="startDate">Fecha de inicio:</label>
             <input type="date" id="startDate" name="startDate" required value="${todayStr}" max="${todayStr}">
             
             <label for="endDate">Fecha de fin:</label>
             <input type="date" id="endDate" name="endDate" required value="${todayStr}" max="${todayStr}">
+            </div>
             </div>
             <div id="container">
             <div id="horasMiembro"></div>

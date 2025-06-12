@@ -990,27 +990,72 @@ async function handleHistorial() {
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
 
-    const labelStart = document.createElement('label');
-    labelStart.setAttribute('for', 'startDate');
-    labelStart.textContent = 'Fecha de inicio:';
-    const inputStart = document.createElement('input');
-    inputStart.type = 'date';
-    inputStart.id = 'startDate';
-    inputStart.name = 'startDate';
-    inputStart.required = true;
-    inputStart.value = todayStr;
-    inputStart.max = todayStr;
+    // Tu código original (sin cambios)
+const labelStart = document.createElement('label');
+labelStart.setAttribute('for', 'startDate');
+labelStart.textContent = '‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ Fecha de inicio:';
+const inputStart = document.createElement('input');
+inputStart.type = 'date';
+inputStart.id = 'startDate';
+inputStart.name = 'startDate';
+inputStart.required = true;
+inputStart.value = todayStr;
+inputStart.max = todayStr;
 
-    const labelEnd = document.createElement('label');
-    labelEnd.setAttribute('for', 'endDate');
-    labelEnd.textContent = 'Fecha de fin:';
-    const inputEnd = document.createElement('input');
-    inputEnd.type = 'date';
-    inputEnd.id = 'endDate';
-    inputEnd.name = 'endDate';
-    inputEnd.max = todayStr;
-    inputEnd.required = true;
-    inputEnd.value = todayStr;
+const labelEnd = document.createElement('label');
+labelEnd.setAttribute('for', 'endDate');
+labelEnd.textContent = 'Fecha de fin:';
+const inputEnd = document.createElement('input');
+inputEnd.type = 'date';
+inputEnd.id = 'endDate';
+inputEnd.name = 'endDate';
+inputEnd.max = todayStr;
+inputEnd.required = true;
+inputEnd.value = todayStr;
+
+// --- Nuevo: Contenedores para aplicar el CSS ---
+const dateContainer = document.createElement('div');
+dateContainer.className = 'date-range-container';
+
+// Grupo para fecha de inicio
+const startGroup = document.createElement('div');
+startGroup.className = 'date-group';
+startGroup.append(labelStart, inputStart);
+
+// Grupo para fecha de fin
+const endGroup = document.createElement('div');
+endGroup.className = 'date-group';
+endGroup.append(labelEnd, inputEnd);
+
+// Ensamblar
+dateContainer.append(startGroup, endGroup);
+
+[startGroup, endGroup].forEach(group => {
+    group.style.display = 'flex';
+    group.style.alignItems = 'baseline';
+    group.style.height = '100%';
+});
+
+[labelStart, labelEnd].forEach(label => {
+    label.style.fontWeight = '600';
+    label.style.fontSize = '0.9rem';
+    label.style.marginRight = '0.5rem';
+    label.style.lineHeight = '1.5';
+    label.style.paddingBottom = '1px';
+});
+
+[inputStart, inputEnd].forEach(input => {
+    input.style.padding = '0.5rem';
+    input.style.border = '1px solid #ced4da';
+    input.style.borderRadius = '4px';
+    input.style.fontSize = '0.9rem';
+    input.style.color = '#495057';
+    input.style.height = 'calc(1em + 1rem)';
+    input.style.boxSizing = 'border-box';
+    input.style.transition = 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
+  // Ajuste específico para Chrome/Firefox
+    input.style.verticalAlign = 'middle'; 
+});
 
     formDiv.appendChild(labelStart);
     formDiv.appendChild(inputStart);

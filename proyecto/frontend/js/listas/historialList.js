@@ -43,6 +43,7 @@ class ProjectsList extends HTMLElement {
                     font-size: 1.5em; 
                     text-align: center; 
                     margin-top: 20px; 
+                    width: 100%
                 ">
                     No hay tareas para este usuario.
                 </p>
@@ -64,12 +65,15 @@ class ProjectsList extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
             #historial {
+                margin-right: 40px;
                 margin-left: 40px;
                 width: auto;
                 display: flex;
                 gap: 10px;
                 margin-top: 20px;
                 flex-wrap: wrap;
+                justify-content: space-evenly;
+                align-items: flex-start;
             }
             </style>
             <div id="historial"></div>
