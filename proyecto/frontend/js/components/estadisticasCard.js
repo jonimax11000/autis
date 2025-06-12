@@ -139,6 +139,7 @@ class EstadisticasCard extends CardComponent {
                 width: 100%;
                 display: flex;
                 color: #000;
+                gap: 20px;
             }
             
             #horasMiembro {

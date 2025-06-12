@@ -101,6 +101,12 @@ body {
   color: var(--gray-light);
 }
 
+.logout a .fas { /* CHANGED THIS LINE */
+  margin-right: 5px;
+  color: white;
+  font-size: 1.2em;
+}
+
 /* Main content */
 .main-content {
   flex-grow: 1;
