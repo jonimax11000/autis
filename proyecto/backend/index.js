@@ -590,6 +590,22 @@ app.post('/horas/usuario/proyecto', async (req, res) => {
     }
 });
 
+app.post('/proyecto/igual', async (req, res) => {
+    try {
+        const body = req.body;
+        console.log(body.name);
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.proyactoMismoNombre(body.name);
+        console.log(json);
+        
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
 // Escoltem el servidor
 app.listen(PORT, () => {
     console.log(`Servidor escoltant a http://localhost:${PORT}`);

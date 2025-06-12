@@ -156,4 +156,8 @@ export class OpenProjectRepository {
     async getHorasPorUsuarioProyectoYFecha2(idUser,idProyecto,fecha1,fecha2){
         return await this.conexion.getHorasPorUsuarioProyectoYFecha2(idUser,idProyecto,fecha1,fecha2);
     }
+
+    async proyactoMismoNombre(nombre) {
+        return await this.conexion.proyactoMismoNombre(nombre);
+    }
 }

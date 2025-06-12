@@ -631,8 +631,100 @@ export async function botonCrear(entidad, fields) {
         if (entidad === 'tarea') {
             delete userData.project;
         }
+        
+        if( entidad === 'proyecto') {
+            try {
+                const response = await fetch('/proyecto/igual', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
 
-        try {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+
+                const data = await response.json();
+                if (data) {
+                    // Mostrar popup de confirmación
+                    return new Promise((resolve) => {
+                        const popup = document.createElement('div');
+                        popup.className = "popupeliminar";
+
+                        const popupContent = document.createElement('div');
+                        popupContent.className = "popupContent";
+
+                        const message = document.createElement('p');
+                        message.textContent = "Ya existe un proyecto con este nombre, ¿quieres continuar?";
+                        message.className = "message";
+
+                        const buttonContainer = document.createElement('div');
+                        buttonContainer.className = "buttonContainer";
+
+                        const btnSi = document.createElement('button');
+                        btnSi.textContent = 'Sí';
+                        btnSi.className = "btnSi";
+
+                        const btnNo = document.createElement('button');
+                        btnNo.textContent = 'No';
+                        btnNo.className = "btnNo";
+
+                        buttonContainer.appendChild(btnSi);
+                        buttonContainer.appendChild(btnNo);
+
+                        popupContent.appendChild(message);
+                        popupContent.appendChild(buttonContainer);
+                        popup.appendChild(popupContent);
+                        document.body.appendChild(popup);
+
+                        btnSi.addEventListener('click', async () => {
+                            document.body.removeChild(popup);
+                            // Continuar con la creación normal
+                            try {
+                                const response = await fetch(endpointCrear[entidad], {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(userData)
+                                });
+
+                                if (!response.ok) {
+                                    throw new Error(response.statusText);
+                                }
+
+                                alert(`${entidad} creado exitosamente`);
+                                if (entidad === "usuario") handleUsers();
+                                else if (entidad === "proyecto") {
+                                    handlerProjects();
+                                }
+                                else if (entidad === "tarea") {
+                                    handlerTareas();
+                                }
+                            } catch (error) {
+                                console.error(`Error creando ${entidad}:`, error);
+                                alert(`Error al crear ${entidad}`);
+                            }
+                            resolve();
+                        });
+
+                        btnNo.addEventListener('click', () => {
+                            document.body.removeChild(popup);
+                            // No continuar
+                            resolve();
+                        });
+                    });
+                }
+
+            } catch (error) {
+                console.error(`Error comparando ${entidad}:`, error);
+                alert(`Error al crear ${entidad}`);
+            }
+        }
+        else{
+            try {
             const response = await fetch(endpointCrear[entidad], {
                 method: 'POST',
                 headers: {
@@ -658,6 +750,7 @@ export async function botonCrear(entidad, fields) {
         } catch (error) {
             console.error(`Error creando ${entidad}:`, error);
             alert(`Error al crear ${entidad}`);
+        }
         }
     });
 }
