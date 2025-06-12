@@ -30,7 +30,6 @@ body {
   font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--gray-medium);
   color: var(--text-light);
-  display: flex;
   height: 100vh;
 }
 
@@ -328,36 +327,43 @@ body.light .txtcentral {
   color:red;
 }
 
-.formDiv{
-  display:flex;
-  gap:10px;
+.formDiv {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
+
 
 #historial-search{
   margin:0 auto;
   padding:8px;
-  border:1px solid #ccc;
+  border:2px solid #000000;
   border-radius:5px;
   font-size:16px;
   box-shadow:0 2px 4px rgba(0, 0, 0, 0.1);
   display:block;
   width:200px;
+  margin-right: 40px;
 }
 
 .searchInput{
   margin-left:40px;
-  width:50%;
-  padding:10px;
-  border:1px solid #ccc;
-  border-radius:5px;
+  width:66%;
+  padding:20px;
+  border:2px solid #000000;
+  border-radius:20px;
   font-size:16px;
-  box-sizing:0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
 }
 
 .selectFilter{
   margin-left:10px;
   padding:8px;
-  border:1px solid #ccc;
+  border:2px solid #000000;
   border-radius:5px;
   font-size:16px;
   box-shadow:0 2px 4px rgba(0, 0, 0, 0.1);
