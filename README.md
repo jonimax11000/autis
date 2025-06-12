@@ -50,7 +50,6 @@ Gestión administrativa de usuarios, proyectos y tareas; así como la visualizac
 8. Inicializar Node.js en la carpeta del autis/proyecto/backend
 9. Abrir en un navegador localhost/3000
 
-
 ## Estructura del proyecto
 
 ```bash
