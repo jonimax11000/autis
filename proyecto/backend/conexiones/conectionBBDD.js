@@ -362,6 +362,7 @@ export class ConectionBBDD extends Conection {
 
             await this.client.end();
 
+
             return result.rows;
         } catch (error) {
             return JSON.stringify({ error: error.message });
@@ -410,6 +411,98 @@ export class ConectionBBDD extends Conection {
                 AND spent_on BETWEEN '${fecha1}' AND '${fecha2}'
                 GROUP BY user_id;
             `;
+
+            const result = await this.client.query(query);
+
+            await this.client.end();
+
+            if (result.rows.length > 0 && result.rows[0].horas !== null) {
+                return { horas: result.rows[0].horas };
+            } else {
+                return { horas: 0 };
+            }
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getHorasPorUsuario(idUser,fecha1,fecha2) {
+        try {
+            await this.client.connect();
+
+            const query = `
+                SELECT SUM(hours) AS horas
+                FROM time_entries
+                WHERE user_id = ${idUser}
+                AND spent_on BETWEEN '${fecha1}' AND '${fecha2}';`;
+            const result = await this.client.query(query);
+
+            await this.client.end();
+
+            if (result.rows.length > 0 && result.rows[0].horas !== null) {
+                return { horas: result.rows[0].horas };
+            } else {
+                return { horas: 0 };
+            }
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getTareasPorUsuario(id) {
+        try {
+            await this.client.connect();
+
+            const query =`SELECT id, subject as nombre FROM work_packages where assigned_to_id=${id} ORDER BY id;`;
+            const result = await this.client.query(query);
+            await this.client.end();
+
+            return result.rows;
+        } catch (error) {
+            
+        }
+    }
+
+    async getHorasPorUsuarioTarea(idUser,idTarea,fecha1,fecha2){
+        try {
+            await this.client.connect();
+
+            const query = `
+                SELECT SUM(hours) AS horas
+                FROM time_entries
+                WHERE user_id = ${idUser}
+                AND work_package_id = ${idTarea}
+                AND spent_on BETWEEN '${fecha1}' AND '${fecha2}'
+                GROUP BY user_id;
+            `;
+
+            const result = await this.client.query(query);
+
+            await this.client.end();
+
+            if (result.rows.length > 0 && result.rows[0].horas !== null) {
+                return { horas: result.rows[0].horas };
+            } else {
+                return { horas: 0 };
+            }
+        } catch (error) {
+            return JSON.stringify({ error: error.message });
+        }
+    }
+
+    async getHorasPorUsuarioProyectoYFecha2(idUser,idProyecto,fecha1,fecha2){
+        try {
+            await this.client.connect();
+
+            const query = `
+                SELECT SUM(hours) AS horas
+                FROM time_entries
+                WHERE user_id = ${idUser}
+                AND project_id = ${idProyecto}
+                AND spent_on BETWEEN '${fecha1}' AND '${fecha2}'
+                GROUP BY user_id;
+            `;
+
 
             const result = await this.client.query(query);
 
