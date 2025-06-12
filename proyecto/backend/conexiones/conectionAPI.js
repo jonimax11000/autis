@@ -7,7 +7,12 @@ export class ConectionAPI extends Conection {
         // Tu código adicional aquí
         this.tocken = tocken;
     }
-
+    /**
+     *  Obtener todos los proyectos desde la API
+     * 
+     *  @returns {Promise<Response>} - Respuesa de la API
+     *  @throws {error} - Si la solicitud falla
+     */
     async getProjects() {
         try {
             const response = await fetch('http://localhost:8080/api/v3/projects', {
@@ -15,7 +20,7 @@ export class ConectionAPI extends Conection {
                     'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
                 }
             });
-            
+
             return await response;
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -25,7 +30,7 @@ export class ConectionAPI extends Conection {
 
     async deleteProyecto(id) {
         console.log(`http://localhost:8080/api/v3/projects/${id}`);
-        console.log('tocken',this.tocken);
+        console.log('tocken', this.tocken);
         try {
             const response = await fetch(`http://localhost:8080/api/v3/projects/${id}`, {
                 method: 'DELETE',
@@ -33,17 +38,17 @@ export class ConectionAPI extends Conection {
                     'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
                 }
             });
-            
+
             return await response;
         } catch (error) {
             console.error('Error fetching projects:', error);
             throw error;
         }
     }
-    
+
     async deleteTarea(id) {
         console.log(`http://localhost:8080/api/v3/work_packages/${id}`);
-        console.log('tocken',this.tocken);
+        console.log('tocken', this.tocken);
         try {
             const response = await fetch(`http://localhost:8080/api/v3/work_packages/${id}`, {
                 method: 'DELETE',
@@ -51,7 +56,7 @@ export class ConectionAPI extends Conection {
                     'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
                 }
             });
-            
+
             return await response;
         } catch (error) {
             console.error('Error fetching work_packages:', error);
@@ -59,9 +64,14 @@ export class ConectionAPI extends Conection {
         }
     }
 
+    /**
+     * 
+     * @param {id} id      
+     * @returns 
+     */
     async deleteUsuario(id) {
         console.log(`http://localhost:8080/api/v3/users/${id}`);
-        console.log('tocken',this.tocken);
+        console.log('tocken', this.tocken);
         try {
             const response = await fetch(`http://localhost:8080/api/v3/users/${id}`, {
                 method: 'DELETE',
@@ -69,7 +79,7 @@ export class ConectionAPI extends Conection {
                     'Authorization': 'Basic ' + btoa('apikey:' + this.tocken),
                 }
             });
-            
+
             return await response;
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -93,7 +103,7 @@ export class ConectionAPI extends Conection {
             console.log('Respuesta crear usuario:', data);
             console.log(response);
             console.log(response.json);
-            
+
             return await response.ok;
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -117,7 +127,7 @@ export class ConectionAPI extends Conection {
             console.log('Respuesta crear proyecto:', data);
             console.log(response);
             console.log(response.json);
-            
+
             return await response.ok;
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -141,7 +151,7 @@ export class ConectionAPI extends Conection {
             console.log('Respuesta crear proyecto:', data);
             console.log(response);
             console.log(response.json);
-            
+
             return await response.ok;
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -165,7 +175,7 @@ export class ConectionAPI extends Conection {
                 },
                 body: JSON.stringify(json)
             });
-            
+
             return await response.ok;
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -175,7 +185,7 @@ export class ConectionAPI extends Conection {
 
     async modificarProyecto(json) {
         const body = {
-            name: json.name,            
+            name: json.name,
         }
         try {
             const response = await fetch(`http://localhost:8080/api/v3/projects/${json.id}`, {
@@ -186,7 +196,7 @@ export class ConectionAPI extends Conection {
                 },
                 body: JSON.stringify(json)
             });
-            
+
             return await response.ok;
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -208,12 +218,12 @@ export class ConectionAPI extends Conection {
                 },
                 body: JSON.stringify(json)
             });
-            
+
             return await response.ok;
         } catch (error) {
             console.error('Error fetching projects:', error);
             throw error;
         }
     }
-    
+
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <title>AUTIS</title>
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,16 +10,16 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<script src="/js/index.js"  type="module" ></script>
+<script src="/js/index.js" type="module"></script>
 
 <script>
-  addEventListener('DOMContentLoaded',()=>{
+  addEventListener('DOMContentLoaded', () => {
     const toggleTheme = document.getElementById('theme-toggle');
     toggleTheme.addEventListener('click', () => {
       document.body.classList.toggle('light');
     });
   })
-  
+
 </script>
 
 <body>
@@ -38,7 +39,7 @@
       </ul>
     </nav>
     <!-- Botón toggle del menú -->
-      <label for="menu-toggle" class="menu-toggle-label">☰</label>
+    <label for="menu-toggle" class="menu-toggle-label">☰</label>
 
     <!-- Botón deslizante modo oscuro -->
     <div class="dark-mode-toggle" style="padding: 0 20px 10px;">
@@ -70,39 +71,43 @@
       </div>
     </div>
 
-<style>
+    <style>
+      @keyframes moveAndShrink {
+        0% {
+          left: 0;
+          transform: translateY(-200%) rotate(90deg) scale(1);
+          opacity: 1;
+        }
 
-  @keyframes moveAndShrink {
-    0% {
-      left: 0;
-      transform: translateY(-200%) rotate(90deg) scale(1);
-      opacity: 1;
-    }
-    40% {
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(90deg) scale(1);
-    }
-    50% {
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(0deg) scale(1);
-    }
-    100% {
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
-      opacity: 0;
-    }
-  }
+        40% {
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(90deg) scale(1);
+        }
 
-  @keyframes showName {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-</style>
-    </div>
+        50% {
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(0deg) scale(1);
+        }
+
+        100% {
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(0deg) scale(0.3);
+          opacity: 0;
+        }
+      }
+
+      @keyframes showName {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </div>
   </div>
 </body>
+
 </html>
