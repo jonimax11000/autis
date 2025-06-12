@@ -8,18 +8,21 @@ import './horasProjectosMiembroCardindividual.js';
 class EstadisticasCard extends CardComponent {
     constructor() {
         super();
+        this.tipo = "grupos";
         if (!this.shadowRoot) {
             this.attachShadow({ mode: 'open' });
         }
         this.grupos = []; // Almacenar grupos aquí
+        this.usuarios = [];
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         this.render();
-        this.fetchGrupos().then(() => {
-            this.setupSelectListener();
-            this.setupButtons();
-        });
+        await this.fetchGrupos();
+        await this.fetchUsuarios();
+        this.renderSelect(); // Renderizar select después de obtener los datos
+        this.setupSelectListener();
+        this.setupButtons();
     }
 
     async fetchGrupos() {
@@ -30,13 +33,28 @@ class EstadisticasCard extends CardComponent {
             });
             if (!response.ok) throw new Error(response.statusText);
             this.grupos = await response.json();
-            this.renderSelect(); // Mover renderSelect aquí después de tener los datos
             return this.grupos;
         }
         catch (error) {
             console.error("Error fetching groups:", error);
             this.grupos = [];
-            this.renderSelect(); // Renderizar incluso si hay error
+            return [];
+        }
+    }
+
+    async fetchUsuarios() {
+        try {
+            const response = await fetch('/usuarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (!response.ok) throw new Error(response.statusText);
+            this.usuarios = await response.json();
+            return this.usurios;
+        }
+        catch (error) {
+            console.error("Error fetching groups:", error);
+            this.usuarios = [];
             return [];
         }
     }
@@ -45,29 +63,56 @@ class EstadisticasCard extends CardComponent {
         const select = this.shadowRoot.getElementById("select");
         select.innerHTML = ''; // Limpiar el select
         
-        if (this.grupos.length === 0) {
-            const option = document.createElement("option");
-            option.value = "";
-            option.textContent = "No hay grupos disponibles";
-            select.appendChild(option);
-            return;
+        if (this.tipo === "grupos") {
+            if (this.grupos.length === 0) {
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = "No hay grupos disponibles";
+
+                select.appendChild(option);
+                return;
+            }
+        }
+        else if (this.tipo === "trabajadores") {
+            if (this.usuarios.length === 0) {   
+                const option = document.createElement("option");
+                option.value = "";
+
+                option.textContent = "No hay usuarios disponibles";
+                select.appendChild(option);
+                return;
+            }
         }
         
         // Agregar opción por defecto
         const defaultOption = document.createElement("option");
         defaultOption.value = "";
-        defaultOption.textContent = "Seleccione un grupo";
+        if(this.tipo === "grupos"){
+            defaultOption.textContent = "Seleccione un grupo";
+        } else {
+            defaultOption.textContent = "Seleccione un usuario";
+        }
         defaultOption.disabled = true;
         defaultOption.selected = true;
         select.appendChild(defaultOption);
         
         // Agregar grupos
-        this.grupos.forEach(grupo => {
-            const option = document.createElement("option");
-            option.value = grupo.id;
-            option.textContent = grupo.nombre;
-            select.appendChild(option);
-        });
+        if (this.tipo === "grupos") {
+            this.grupos.forEach(grupo => {
+                const option = document.createElement("option");
+                option.value = grupo.id;
+                option.textContent = grupo.nombre;
+                select.appendChild(option);
+            });
+        }
+        else if (this.tipo === "trabajadores") {
+            this.usuarios.forEach(usuario => {
+                const option = document.createElement("option");
+                option.value = usuario.id;
+                option.textContent = `${usuario.firstname} ${usuario.lastname}`;
+                select.appendChild(option);
+            });
+        }
     }
 
     setupSelectListener() {
@@ -75,18 +120,34 @@ class EstadisticasCard extends CardComponent {
         select.addEventListener("change", (event) => {
             const selectedValue = event.target.value;
             if (selectedValue) {
-                this.renderDiv("grupos");
+                this.renderDiv();
             }
         });
     }
 
     setupButtons() {
         this.shadowRoot.querySelector("button:nth-of-type(1)").addEventListener("click", () => {
-            this.renderDiv("grupos");
+            this.tipo="grupos";
+            this.renderSelect(); // Renderizar select para grupos
+            const select = this.shadowRoot.getElementById("select");
+            if (select && select.selectedIndex > 0) {
+                // Si hay una opción seleccionada (no la opción por defecto)
+                this.fetchGrupos().then(() => {
+                    this.renderDiv();
+                });
+            }
         });
     
         this.shadowRoot.querySelector("button:nth-of-type(2)").addEventListener("click", () => {
-            this.renderDiv("trabajadores");
+            this.tipo="trabajadores";
+            this.renderSelect(); // Renderizar select para trabajadores
+            const select = this.shadowRoot.getElementById("select");
+            if (select && select.selectedIndex > 0) {
+                // Si hay una opción seleccionada (no la opción por defecto)
+                this.fetchGrupos().then(() => {
+                    this.renderDiv();
+                });
+            }
         });
     }
 
@@ -243,7 +304,7 @@ class EstadisticasCard extends CardComponent {
     }
 
 
-    renderDiv(tipo = "grupos") {
+    renderDiv() {
         const izquierdaDiv = this.shadowRoot.getElementById("horasMiembro");
         const derechaDiv = this.shadowRoot.getElementById("derecha");
     
@@ -251,7 +312,7 @@ class EstadisticasCard extends CardComponent {
         derechaDiv.innerHTML = "";
     
         const izquierda = document.createElement(
-            tipo === "trabajadores" ? "horprojmiem-card-individual" : "horprojmiem-card"
+            this.tipo === "trabajadores" ? "horprojmiem-card-individual" : "horprojmiem-card"
         );
         izquierda.id = "izquierdaCard";
         const select = this.shadowRoot.getElementById("select");
@@ -266,7 +327,7 @@ class EstadisticasCard extends CardComponent {
         izquierdaDiv.appendChild(izquierda);
     
         const derecha = document.createElement(
-            tipo === "trabajadores" ? "derecha-card-individual" : "derecha-card"
+            this.tipo === "trabajadores" ? "derecha-card-individual" : "derecha-card"
         );
         derecha.id = "derechaCard";
         derecha.setAttribute("idGrupo", selectedOption.value);
@@ -289,7 +350,7 @@ class EstadisticasCard extends CardComponent {
             const select = this.shadowRoot.getElementById("select");
             const selectedOption = select.options[select.selectedIndex];
             if (selectedOption && selectedOption.value) {
-                this.renderDiv("grupos");
+                this.renderDiv();
             }
         });
 
@@ -303,7 +364,7 @@ class EstadisticasCard extends CardComponent {
             const select = this.shadowRoot.getElementById("select");
             const selectedOption = select.options[select.selectedIndex];
             if (selectedOption && selectedOption.value) {
-                this.renderDiv("grupos");
+                this.renderDiv();
             }
         });
     }

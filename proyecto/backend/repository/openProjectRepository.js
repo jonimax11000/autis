@@ -140,4 +140,24 @@ export class OpenProjectRepository {
     async getHorasPorUsuarioProyectoYFecha(idUser,idGrupo,idProyecto,fecha1,fecha2) {
         return await this.conexion.getHorasPorUsuarioProyectoYFecha(idUser,idGrupo,idProyecto,fecha1,fecha2);
     }
+
+    async getHorasPorUsuario(idUser,fecha1,fecha2) {
+        return await this.conexion.getHorasPorUsuario(idUser,fecha1,fecha2);
+    }
+
+    async getTareasPorUsuario(id) {
+        return await this.conexion.getTareasPorUsuario(id);
+    }
+    
+    async getHorasPorUsuarioTarea(idUser,idTarea,fecha1,fecha2) {
+        return await this.conexion.getHorasPorUsuarioTarea(idUser,idTarea,fecha1,fecha2);
+    }
+
+    async getHorasPorUsuarioProyectoYFecha2(idUser,idProyecto,fecha1,fecha2){
+        return await this.conexion.getHorasPorUsuarioProyectoYFecha2(idUser,idProyecto,fecha1,fecha2);
+    }
+
+    async proyactoMismoNombre(nombre) {
+        return await this.conexion.proyactoMismoNombre(nombre);
+    }
 }

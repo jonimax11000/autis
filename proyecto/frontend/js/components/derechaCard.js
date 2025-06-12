@@ -62,6 +62,7 @@ class Derecha extends CardComponent {
         const inferior = this.shadowRoot.getElementById('lista-miembros');
         const listaMiembros = document.createElement('miembros-list');
         listaMiembros.setAttribute('idGrupo', this.idGrupo);
+        listaMiembros.setAttribute('tipo', 'grupo');
         listaMiembros.setAttribute('usuarios', JSON.stringify(this.usuarios));
         listaMiembros.setAttribute('horasCumplir', this.horasCumplir);
         listaMiembros.setAttribute('fecha1', this.fecha1);
