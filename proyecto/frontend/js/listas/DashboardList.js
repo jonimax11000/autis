@@ -48,6 +48,16 @@ class DashboardList extends HTMLElement {
                     gap: 10px;
                     margin-top: 20px;
                 }
+                #buscador-proyecto{
+                    width:74%;
+                    margin-left: 11%;
+                    padding:20px;
+                    border:2px solid #000000;
+                    border-radius:5px;
+                    font-size:16px;
+                    background-color: #ffffff;
+                    align-items: center;
+                }
             </style>
             <div class="formDiv">
                 <input class="searchInput" id="buscador-proyecto" type="text" placeholder="Buscar...">
