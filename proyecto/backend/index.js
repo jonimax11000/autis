@@ -39,7 +39,6 @@ app.post('/dashboard', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
         const body = req.body;
-        console.log(body);
         let json = {
             usuarios: []
         };

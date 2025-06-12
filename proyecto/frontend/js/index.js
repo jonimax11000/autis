@@ -1000,6 +1000,7 @@ inputStart.id = 'startDate';
 inputStart.name = 'startDate';
 inputStart.required = true;
 inputStart.value = todayStr;
+inputStart.min="1999-05-20";
 inputStart.max = todayStr;
 
 const labelEnd = document.createElement('label');
@@ -1010,6 +1011,7 @@ inputEnd.type = 'date';
 inputEnd.id = 'endDate';
 inputEnd.name = 'endDate';
 inputEnd.max = todayStr;
+inputEnd.min="1999-05-20";
 inputEnd.required = true;
 inputEnd.value = todayStr;
 

@@ -284,10 +284,10 @@ class EstadisticasCard extends CardComponent {
             <select id="select"></select>
             <div id="fechas">
             <label for="startDate">Fecha de inicio:</label>
-            <input type="date" id="startDate" name="startDate" required value="${todayStr}" max="${todayStr}">
+            <input type="date" id="startDate" name="startDate" required value="${todayStr}" max="${todayStr}" min="1999-05-20">
             
             <label for="endDate">Fecha de fin:</label>
-            <input type="date" id="endDate" name="endDate" required value="${todayStr}" max="${todayStr}">
+            <input type="date" id="endDate" name="endDate" required value="${todayStr}" max="${todayStr}" min="1999-05-20">
             </div>
             </div>
             <div id="container">
