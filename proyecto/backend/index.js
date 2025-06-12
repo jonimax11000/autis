@@ -476,10 +476,7 @@ app.post('/group/projects', async (req, res) => {
         repository.cambiar(new ConectionBBDD());
         const proyectos = await repository.getProyectosPorUsuario(body.id);
         const json = {cantidad: proyectos.length,
-            proyectos: proyectos.map(proyecto => ({
-                id: proyecto.id,
-                nombre: proyecto.nombre,
-            }))
+            proyectos: proyectos
         };
         res.json(json);
     } catch (error) {
@@ -529,6 +526,77 @@ app.post('/horas/miembros/proyecto', async (req, res) => {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const json = await repository.getHorasPorUsuarioProyectoYFecha(body.idUser,body.idGrupo,body.idProyecto,body.fecha1,body.fecha2);
+        
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/horas/usuario', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getHorasPorUsuario(body.id,body.fecha1,body.fecha2);
+        
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/tareas/usuario', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getTareasPorUsuario(body.id);
+        
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/horas/usuario/tarea', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getHorasPorUsuarioTarea(body.idUser,body.idTarea,body.fecha1,body.fecha2);
+        
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/horas/usuario/proyecto', async (req, res) => {
+    try {
+        const body = req.body;
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.getHorasPorUsuarioProyectoYFecha2(body.idUser,body.idProyecto,body.fecha1,body.fecha2);
+        res.json(json);
+
+    } catch (error) {
+        console.error("Error entrant:", error);
+        res.status(500).send('Error entrant');
+    }
+});
+
+app.post('/proyecto/igual', async (req, res) => {
+    try {
+        const body = req.body;
+        console.log(body.name);
+        repository.cambiar(new ConectionBBDD());
+        const json = await repository.proyactoMismoNombre(body.name);
+        console.log(json);
         
         res.json(json);
 

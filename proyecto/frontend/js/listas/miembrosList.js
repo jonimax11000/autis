@@ -1,4 +1,5 @@
 import '../components/miembroCard.js';
+import '../components/EstadisticaProjectCard.js';
 
 class MiembrosList extends HTMLElement {
     constructor() {
@@ -8,6 +9,7 @@ class MiembrosList extends HTMLElement {
 
     connectedCallback() {
         this.idGrupo = this.getAttribute('idGrupo') || null;
+        this.tipo = this.getAttribute('tipo') || 'grupo'; // Tipo de miembros
         this.usuarios = JSON.parse(this.getAttribute('usuarios') || '[]');
         this.horasCumplir = parseInt(this.getAttribute('horasCumplir')) || 8; // Horas a cumplir por día
         this.fecha1 = this.getAttribute('fecha1') || new Date().toISOString().slice(0, 10); // Fecha de inicio
@@ -21,13 +23,26 @@ class MiembrosList extends HTMLElement {
         const contenedor = this.shadowRoot.getElementById('contenedor');
         contenedor.innerHTML = '';
         this.usuarios.forEach(usuario => {
-            const card = document.createElement('miembro-card');
-            card.setAttribute('idUsuario', usuario.id);
-            card.setAttribute('idGrupo', this.idGrupo);
-            card.setAttribute('nombre', usuario.nombre);
-            card.setAttribute('horas', this.horasCumplir || 0);
-            card.setAttribute('fecha1', this.fecha1);
-            card.setAttribute('fecha2', this.fecha2);
+            let card = null;
+            if(this.tipo === 'grupo'){
+                card = document.createElement('miembro-card');
+                card.setAttribute('idUsuario', usuario.id);
+                card.setAttribute('idGrupo', this.idGrupo);
+                card.setAttribute('nombre', usuario.nombre);
+                card.setAttribute('horas', this.horasCumplir || 0);
+                card.setAttribute('fecha1', this.fecha1);
+                card.setAttribute('fecha2', this.fecha2);
+            }
+            else{
+                card = document.createElement('estadisticas-project-card');
+                card.setAttribute('idUsuario', this.idGrupo);
+                card.setAttribute('idTarea', usuario.id);
+                card.setAttribute('nombre', usuario.nombre);
+                card.setAttribute('horas', this.horasCumplir || 0);
+                card.setAttribute('fecha1', this.fecha1);
+                card.setAttribute('fecha2', this.fecha2);
+            }
+            
             contenedor.appendChild(card);
         
         });
