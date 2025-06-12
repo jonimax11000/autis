@@ -2,7 +2,7 @@
 
 ## Requisitos
 
-- node.js: 
+- node.js: igual o superior a v.18.0.0
 - express: igual o superior a v.5.1.0
 
 ## Primeros pasos
