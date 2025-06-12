@@ -84,8 +84,8 @@ app.post('/timeEntries/dia', async (req, res) => {
         var fecha = body.fecha;
         var usuario = body.id;
         repository.cambiar(new ConectionBBDD());
-        
-        const json = await repository.getTimeEntriesPorDia(fecha,usuario);
+
+        const json = await repository.getTimeEntriesPorDia(fecha, usuario);
 
         res.json(json);
 
@@ -98,7 +98,7 @@ app.post('/timeEntries/dia', async (req, res) => {
 app.post('/usuarios', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
-        
+
         const json = await repository.getUsuarios();
 
         res.json(json);
@@ -112,7 +112,7 @@ app.post('/usuarios', async (req, res) => {
 app.post('/proyectos', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
-        
+
         const json = await repository.getProjects();
 
         res.json(json);
@@ -126,7 +126,7 @@ app.post('/proyectos', async (req, res) => {
 app.post('/tareas', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
-        
+
         const json = await repository.getTareas();
         res.json(json);
 
@@ -139,7 +139,7 @@ app.post('/tareas', async (req, res) => {
 app.post('/tipoTareas', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
-        
+
         const json = await repository.getTipoTareas();
 
         res.json(json);
@@ -157,7 +157,7 @@ app.post('/usuarios/filtrar/proyecto', async (req, res) => {
         const json = await repository.getUsuariosByProyecto(body.proyecto);
 
         res.json(json);
-        
+
 
     } catch (error) {
         console.error("Error entrant:", error);
@@ -412,8 +412,8 @@ app.post('/historial', async (req, res) => {
     try {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
-        const json = {timeEntries:[]};
-        const entries = await repository.getTimeEntriesPorUsuario(body.id,body.fecha1,body.fecha2);
+        const json = { timeEntries: [] };
+        const entries = await repository.getTimeEntriesPorUsuario(body.id, body.fecha1, body.fecha2);
         json.timeEntries = entries;
 
         res.json(json);
@@ -469,7 +469,8 @@ app.post('/group/users', async (req, res) => {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const usuarios = await repository.getUsuariosPorGrupo(body.id);
-        const json = {cantidad: usuarios.length,
+        const json = {
+            cantidad: usuarios.length,
             empleados: usuarios.map(usuario => ({
                 id: usuario.id,
                 nombre: usuario.nombre,
@@ -487,7 +488,8 @@ app.post('/group/projects', async (req, res) => {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const proyectos = await repository.getProyectosPorUsuario(body.id);
-        const json = {cantidad: proyectos.length,
+        const json = {
+            cantidad: proyectos.length,
             proyectos: proyectos
         };
         res.json(json);
@@ -501,8 +503,8 @@ app.post('/horas/miembro', async (req, res) => {
     try {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
-        const json = await repository.getHorasPorUsuarioYFecha(body.idUser,body.idGroup,body.fecha1,body.fecha2);
-        
+        const json = await repository.getHorasPorUsuarioYFecha(body.idUser, body.idGroup, body.fecha1, body.fecha2);
+
         res.json(json);
 
     } catch (error) {
@@ -516,13 +518,13 @@ app.post('/horas/miembros', async (req, res) => {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const data = await repository.getUsuariosPorGrupo(body.idGrupo);
-        
+
         const json = { horas: 0 };
-        
-        for(let i = 0; i< data.length;i++){
+
+        for (let i = 0; i < data.length; i++) {
             repository.cambiar(new ConectionBBDD());
-            const data2 = await repository.getHorasPorUsuarioYFecha(data[i].id,body.idGrupo,body.fecha1,body.fecha2);
-            json.horas+=data2.horas;
+            const data2 = await repository.getHorasPorUsuarioYFecha(data[i].id, body.idGrupo, body.fecha1, body.fecha2);
+            json.horas += data2.horas;
         }
 
         res.json(json);
@@ -537,8 +539,8 @@ app.post('/horas/miembros/proyecto', async (req, res) => {
     try {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
-        const json = await repository.getHorasPorUsuarioProyectoYFecha(body.idUser,body.idGrupo,body.idProyecto,body.fecha1,body.fecha2);
-        
+        const json = await repository.getHorasPorUsuarioProyectoYFecha(body.idUser, body.idGrupo, body.idProyecto, body.fecha1, body.fecha2);
+
         res.json(json);
 
     } catch (error) {
@@ -551,8 +553,8 @@ app.post('/horas/usuario', async (req, res) => {
     try {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
-        const json = await repository.getHorasPorUsuario(body.id,body.fecha1,body.fecha2);
-        
+        const json = await repository.getHorasPorUsuario(body.id, body.fecha1, body.fecha2);
+
         res.json(json);
 
     } catch (error) {
@@ -566,7 +568,7 @@ app.post('/tareas/usuario', async (req, res) => {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const json = await repository.getTareasPorUsuario(body.id);
-        
+
         res.json(json);
 
     } catch (error) {
@@ -579,8 +581,8 @@ app.post('/horas/usuario/tarea', async (req, res) => {
     try {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
-        const json = await repository.getHorasPorUsuarioTarea(body.idUser,body.idTarea,body.fecha1,body.fecha2);
-        
+        const json = await repository.getHorasPorUsuarioTarea(body.idUser, body.idTarea, body.fecha1, body.fecha2);
+
         res.json(json);
 
     } catch (error) {
@@ -593,7 +595,7 @@ app.post('/horas/usuario/proyecto', async (req, res) => {
     try {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
-        const json = await repository.getHorasPorUsuarioProyectoYFecha2(body.idUser,body.idProyecto,body.fecha1,body.fecha2);
+        const json = await repository.getHorasPorUsuarioProyectoYFecha2(body.idUser, body.idProyecto, body.fecha1, body.fecha2);
         res.json(json);
 
     } catch (error) {
@@ -607,7 +609,7 @@ app.post('/proyecto/igual', async (req, res) => {
         const body = req.body;
         repository.cambiar(new ConectionBBDD());
         const json = await repository.proyactoMismoNombre(body.name);
-        
+
         res.json(json);
 
     } catch (error) {
