@@ -909,15 +909,10 @@ export async function botonEliminar(id, entidad = "usuario") {
                 setTimeout(() => {
                     if (entidad === "usuario") handleUsers();
                     else if (entidad === "proyecto") {
-                        contentDiv.innerHTML = '';
-                        const projectsList = document.createElement('projects-list');
-                        contentDiv.appendChild(projectsList);
+                        handlerProjects();
                     }
                     else if (entidad === "tarea") {
-                        const contentDiv = document.getElementById("content");
-                        contentDiv.innerHTML = '';
-                        const tareasList = document.createElement('tareas-list');
-                        contentDiv.appendChild(tareasList);
+                        handlerTareas();
                     }
                 }, 100);
             });
