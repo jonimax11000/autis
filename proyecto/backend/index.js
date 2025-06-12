@@ -38,10 +38,23 @@ app.get('/', (_, res) => {
 app.post('/dashboard', async (req, res) => {
     try {
         repository.cambiar(new ConectionBBDD());
+        const body = req.body;
+        console.log(body);
         let json = {
             usuarios: []
         };
-        let usuarios = await repository.getUsuarios2();
+        let usuarios;
+        if (body.nombre == null) {
+            usuarios = await repository.getUsuarios2();
+        } else if (body.nombre != null) {
+            // Obtenemos los usuarios por nombre, pero la función devuelve {id, firstname, lastname}
+            const usuariosRaw = await repository.getUsuariosByName(body.nombre);
+            // Convertimos a la estructura {id, nombre}
+            usuarios = usuariosRaw.map(u => ({
+                id: u.id,
+                nombre: `${u.firstname} ${u.lastname}`.trim()
+            }));
+        }
 
         for (const aux of usuarios) {
             const usuario = {
@@ -593,10 +606,8 @@ app.post('/horas/usuario/proyecto', async (req, res) => {
 app.post('/proyecto/igual', async (req, res) => {
     try {
         const body = req.body;
-        console.log(body.name);
         repository.cambiar(new ConectionBBDD());
         const json = await repository.proyactoMismoNombre(body.name);
-        console.log(json);
         
         res.json(json);
 
